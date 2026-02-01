@@ -47,15 +47,27 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Inputs for multi-GPU rendering
+    hyprland = {
+      url = "git+file:///home/bunny/IdeaProjects/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.aquamarine.follows = "aquamarine";
+    };
+
+    aquamarine = {
+      url = "git+file:///home/bunny/IdeaProjects/aquamarine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, agenix, ... }@inputs: {
-    nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.iusenixbtw = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
-      # ./intel-arc-b580.nix  # TEMP: Remove when swapping back to regular GPU
+        ./dualgpu.nix
         agenix.nixosModules.default
         home-manager.nixosModules.home-manager
 

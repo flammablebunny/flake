@@ -12,7 +12,9 @@
 
   # OBS generates most of its config at runtime (scenes, profiles, etc.)
   # We only seed the global.ini with preferred settings
-  xdg.configFile."obs-studio/global.ini".text = ''
+  xdg.configFile."obs-studio/global.ini" = {
+    force = true;
+    text = ''
     [General]
     MaxLogs=10
     InfoIncrement=-1
@@ -22,5 +24,6 @@
 
     [Video]
     Renderer=OpenGL
-  '';
+    '';
+  };
 }

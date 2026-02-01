@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs, pkgs, lib, ... }:
 let
   ranked-mrpack = pkgs.fetchurl {
     url = "https://redlime.github.io/MCSRMods/modpacks/v4/MCSRRanked-Linux-1.16.1-All.mrpack";
@@ -30,6 +30,9 @@ in
         lwjglVersion = "3.3.3";
         mangohud.enable = true;
 
+        envVars = {
+        };
+
         java = {
           package = pkgs.jdk17;
           maxMemory = 4096;
@@ -38,7 +41,7 @@ in
 
         waywall = {
           enable = true;
-          binaryPath = "/home/bunny/IdeaProjects/waywall/result/bin/waywall";
+          rawCommand = "sh -c 'env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD129 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/mcsr/waywall/bin/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD128 DRI_PRIME=1 $INST_JAVA '$@''";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
         };
 
@@ -118,7 +121,7 @@ in
 
         waywall = {
           enable = true;
-          binaryPath = "/home/bunny/mcsr/waywall/bin/waywall";
+          binaryPath = "/home/bunny/IdeaProjects/waywall/result/bin/waywall";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
         };
 

@@ -56,7 +56,7 @@
       lla = "ls -la";
 
       # NixOS rebuild
-      nix-rebuild = "/etc/nixos/scripts/rebuild.sh";
+      nr = "/etc/nixos/scripts/rebuild.sh";
     };
   };
 }

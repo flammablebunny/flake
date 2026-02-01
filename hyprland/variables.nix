@@ -4,6 +4,7 @@
     browser = "zen";
     editor = "codium";
     fileExplorer = "thunar";
+    music = "spotify";
   };
 
   blur = {

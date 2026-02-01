@@ -501,11 +501,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765434601,
-        "narHash": "sha256-tRRN/ZMTvLSFMCq7XC2HcwjBt+437a/lsnPdqWu8EBs=",
+        "lastModified": 1765502048,
+        "narHash": "sha256-B1Udzqje5UBc1Sr2ZxfG0Fi8mDeExevrCiqp+DuJrrw=",
         "owner": "Flammable-Bunny",
         "repo": "nixcraft",
-        "rev": "8917a22528aa58c6ebd39e915068898ebe7fa349",
+        "rev": "6d5b5530d910e6d28d91f33e810d19071ee9d3d4",
         "type": "github"
       },
       "original": {

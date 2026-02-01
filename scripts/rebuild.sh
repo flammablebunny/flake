@@ -4,5 +4,5 @@
 set -e
 
 echo "Rebuilding NixOS..."
-sudo nixos-rebuild switch --flake /etc/nixos#default --impure
+sudo nixos-rebuild switch --flake /etc/nixos#iusenixbtw --impure
 echo "Done!"

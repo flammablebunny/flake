@@ -124,15 +124,15 @@ in
 
       # Special workspace toggles
       "${kb.systemMonitor}, exec, $caelestia toggle sysmon"
-      "${kb.music}, exec, $caelestia toggle music"
       "${kb.communication}, exec, $caelestia toggle communication"
-      "${kb.recording}, exec, hyprctl clients -j | grep -q '\"class\": \"com.obsproject.Studio\"' || app2unit -- obs; $caelestia toggle recording"
+      "${kb.recording}, exec, hyprctl clients -j | grep -q '\"class\": \"com.obsproject.Studio\"' && $caelestia toggle recording || (obs &); $caelestia toggle recording"
 
       # Apps
       "${kb.terminal}, exec, app2unit -- ${apps.terminal}"
       "${kb.browser}, exec, app2unit -- ${apps.browser}"
       "${kb.editor}, exec, app2unit -- ${apps.editor}"
       "${kb.fileExplorer}, exec, app2unit -- ${apps.fileExplorer}"
+      "${kb.music}, exec, hyprctl clients -j | grep -q '\"class\": \"Spotify\"' || app2unit -- ${apps.music}; $caelestia toggle music"
       "Ctrl+Alt, Escape, exec, app2unit -- qps"
       "Ctrl+Alt, V, exec, app2unit -- pavucontrol"
 

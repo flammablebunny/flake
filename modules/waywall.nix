@@ -96,6 +96,8 @@ in
               debug = false,
               jit = false,
               tearing = false,
+              force_composition = true,
+              subprocess_dri_prime = "1",
       		scene_add_text = true,
           },
       }
