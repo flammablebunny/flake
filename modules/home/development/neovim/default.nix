@@ -18,7 +18,7 @@ let
       owner = "vyfor";
       repo = "cord.nvim";
       rev = "master";
-      sha256 = "sha256-iatVlFU44iigiQKuXO3fS0OnKAZbgpBImaTLi6uECXs=";
+      sha256 = "sha256-lQgto4Sp50P9PZ3lxdqFaMA1bwidHII9GhTaXwSMW7o=";
     };
     doCheck = false;
   };
