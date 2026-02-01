@@ -61,6 +61,7 @@ in
       nvim-lint
       nvim-lspconfig
       persistence-nvim
+      plenary-nvim
       snacks-nvim
       telescope-nvim
       todo-comments-nvim
@@ -68,6 +69,8 @@ in
       trouble-nvim
       ts-comments-nvim
       which-key-nvim
+      catppuccin-nvim
+      claude-code-nvim
     ];
 
     extraPackages = with pkgs; [
