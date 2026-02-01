@@ -1,4 +1,8 @@
-{ vars, ... }:
+{ ... }:
+
+let
+  vars = import ../common/variables.nix;
+in
 
 {
   wayland.windowManager.hyprland.settings = {
@@ -6,12 +10,11 @@
       # Themes
       "QT_QPA_PLATFORMTHEME, qt6ct"
       "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
-      "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
+      "QT_AUTO_SCREEN_SCALE_FACTOR, 0.8"
       "XCURSOR_THEME, ${vars.cursor.theme}"
       "XCURSOR_SIZE, ${toString vars.cursor.size}"
       "HYPRCURSOR_THEME, ${vars.cursor.theme}"
       "HYPRCURSOR_SIZE, ${toString vars.cursor.size}"
-      
 
       # Toolkit backends
       "GDK_BACKEND, wayland,x11"

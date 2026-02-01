@@ -1,5 +1,9 @@
-{ vars, colors, ... }:
+{ ... }:
 
+let
+  vars = import ../common/variables.nix;
+  colors = import ../common/colors.nix;
+in
 {
   wayland.windowManager.hyprland.settings = {
     general = {

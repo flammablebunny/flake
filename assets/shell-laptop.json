@@ -1,8 +1,8 @@
-
+{
   "appearance": {
     "anim": {
       "durations": {
-        "scale": 0.8
+        "scale": 0.6
       }
     },
     "font": {
@@ -12,7 +12,7 @@
         "sans": "Rubik"
       },
       "size": {
-        "scale": 1
+        "scale": 0.8
       }
     },
     "padding": {
@@ -37,9 +37,9 @@
     },
     "idle": {
       "inhibitWhenAudio": true,
-      "lockTimeout": 420,
-      "dpmsTimeout": 420,
-      "sleepTimeout": 900
+      "lockTimeout": 90,
+      "dpmsTimeout": 180,
+      "sleepTimeout": 420
     }
   },
   "background": {
@@ -106,10 +106,10 @@
     "showOnHover": true,
     "status": {
       "showAudio": true,
-      "showBattery": false,
-      "showBluetooth": false,
+      "showBattery": true,
+      "showBluetooth": true,
       "showKbLayout": false,
-      "showMicrophone": true,
+      "showMicrophone": false,
       "showNetwork": true,
       "showLockStatus": true
     },
@@ -283,7 +283,7 @@
   "paths": {
     "mediaGif": "/home/bunny/.config/obs-studio/gifs/bongobunny.gif",
     "sessionGif": "root:/assets/spin.gif",
-    "wallpaperDir": "~/Pictures/Wallpapers"
+    "wallpaperDir": "/home/bunny/Pictures/Wallpapers"
   },
   "services": {
     "audioIncrement": 0.1,

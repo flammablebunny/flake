@@ -2,7 +2,9 @@
 
 {
   imports = [
-    ../../modules/home/desktop/hyprland/env-laptop.nix
+    ../../modules/home/desktop/hyprland/laptop/env.nix
+    ../../modules/home/desktop/hyprland/laptop/input.nix
+    ../../modules/home/desktop/hyprland/laptop/general.nix
   ];
 
   xdg.configFile."caelestia/shell.json".source = ../../assets/shell-laptop.json;

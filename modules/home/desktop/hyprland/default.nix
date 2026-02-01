@@ -2,25 +2,23 @@
 
 let
   # Import configuration data
-  colors = import ./colors.nix;
-  vars = import ./variables.nix;
+  colors = import ./common/colors.nix;
+  vars = import ./common/variables.nix;
 
   # Common arguments passed to all submodules
   moduleArgs = { inherit colors vars pkgs lib config; };
 in
 {
   imports = [
-    # env.nix is imported per-host in hosts/*/home.nix
-    (import ./general.nix moduleArgs)
-    (import ./input.nix moduleArgs)
-    (import ./decoration.nix moduleArgs)
-    (import ./animations.nix moduleArgs)
-    (import ./misc.nix moduleArgs)
-    (import ./group.nix moduleArgs)
-    (import ./rules.nix moduleArgs)
-    (import ./execs.nix moduleArgs)
-    (import ./keybinds.nix moduleArgs)
-    (import ./scripts.nix moduleArgs)
+    # Device-specific configs (env.nix, input.nix, general.nix) are imported per-host in hosts/*/home.nix
+    (import ./common/decoration.nix moduleArgs)
+    (import ./common/animations.nix moduleArgs)
+    (import ./common/misc.nix moduleArgs)
+    (import ./common/group.nix moduleArgs)
+    (import ./common/rules.nix moduleArgs)
+    (import ./common/execs.nix moduleArgs)
+    (import ./common/keybinds.nix moduleArgs)
+    (import ./common/scripts.nix moduleArgs)
   ];
 
   # Enable Hyprland via Home Manager

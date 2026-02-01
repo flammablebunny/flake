@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  vars = import ./variables.nix;
+  vars = import ../common/variables.nix;
 in
 
 {
