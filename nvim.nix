@@ -25,7 +25,7 @@ in
       -- All plugin specifications defined directly in Nix for reproducibility
       require("lazy").setup({
         spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          -- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
           -- Catppuccin theme with Mocha flavor
           {
