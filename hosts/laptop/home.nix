@@ -1,4 +1,4 @@
-{ inputs, pkgs, config, ... }:
+{ inputs, pkgs, config, userName, ... }:
 
 {
   # Laptop home-manager config
