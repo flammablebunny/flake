@@ -32,9 +32,11 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- Minimal test: just cord and noice, no LazyVim
+      -- Test: cord, noice, AND LazyVim
       require("lazy").setup({
         spec = {
+          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+
           -- Cord.nvim for Discord RPC
           {
             "vyfor/cord.nvim",
@@ -65,10 +67,30 @@ in
 
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
+      LazyVim
+
       plenary-nvim
       noice-nvim
       nui-nvim
       cord-nvim
+
+      blink-cmp
+      bufferline-nvim
+      flash-nvim
+      mini-ai
+      mini-icons
+      mini-pairs
+      neo-tree-nvim
+      nvim-lint
+      nvim-lspconfig
+      persistence-nvim
+      snacks-nvim
+      telescope-nvim
+      todo-comments-nvim
+      tokyonight-nvim
+      trouble-nvim
+      ts-comments-nvim
+      which-key-nvim
     ];
 
     extraPackages = with pkgs; [
