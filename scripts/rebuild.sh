@@ -3,9 +3,16 @@
 
 set -euo pipefail
 
-echo "Rebuilding NixOS..."
+# Detect which host to build based on username
+if [[ "$USER" == "bunny" ]]; then
+  HOST="pc"
+else
+  HOST="laptop"
+fi
 
-# Only kill Caelestia Shell if it's currently runnin
+echo "Rebuilding NixOS for $HOST..."
+
+# Only kill Caelestia Shell if it's currently running
 if command -v caelestia-shell >/dev/null 2>&1; then
   if caelestia-shell list 2>/dev/null | grep -q "^Instance "; then
     caelestia-shell kill
@@ -14,10 +21,14 @@ if command -v caelestia-shell >/dev/null 2>&1; then
   fi
 fi
 
-sudo nixos-rebuild switch --flake /etc/nixos#iusenixbtw --impure
+# Remove Equicord settings.json so home-manager can recreate symlink
+# (discord-streaming service will convert it back to a real file)
+rm -f ~/.config/Equicord/settings/settings.json
+
+sudo nixos-rebuild switch --flake /etc/nixos#"$HOST" --impure
 
 # Relaunch Caelestia Shell if available
 if command -v caelestia-shell >/dev/null 2>&1; then
-  env QSG_RENDER_LOOP=basic caelestia-shell -d
+  env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic caelestia-shell -d
 fi
 echo "Done!"

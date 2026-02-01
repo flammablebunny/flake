@@ -29,7 +29,16 @@
       "Bash(cat:*)",
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "Bash(nixcraft-skin apply:*)"
+      "Bash(nixcraft-skin apply:*)",
+      "Bash(wc:*)",
+      "Bash(cp:*)",
+      "Bash(sudo chown:*)",
+      "Bash(systemctl status:*)",
+      "Bash(agenix:*)",
+      "Bash(chmod:*)",
+      "Bash(git -C /etc/nixos add:*)",
+      "Bash(git -C /etc/nixos status)",
+      "Bash(git -C /etc/nixos status --short)"
     ],
     "deny": [],
     "ask": []

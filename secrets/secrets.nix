@@ -1,19 +1,32 @@
 let
+  # User's personal age key (for encrypting/editing secrets)
   bunnyAge = "age1vt7xwl0rgxcn2dadz7cq33vq74wzvcf6n9c4c09wgca0hrdqsecssyth5t";
 
-  users = [ bunnyAge ];
+  # SSH key locations
+  pc = "/run/agenix.d/17/ssh-private-key";
+  laptop = ""; # TODO: Add after installing nix on laptop
+
+  # All keys that can decrypt (user key always included for editing)
+  allKeys = [ bunnyAge ] ++ (if pc != "" then [ pc ] else []) ++ (if laptop != "" then [ laptop ] else []);
+  pcKeys = [ bunnyAge ] ++ (if pc != "" then [ pc ] else []);
 in
 {
-  "waywall-oauth.age".publicKeys = users;
+  # SSH keys (needed on all machines)
+  "ssh/id_ed25519.age".publicKeys = allKeys;
+  "ssh/id_ed25519.pub.age".publicKeys = allKeys;
+  "ssh/known_hosts.age".publicKeys = allKeys;
 
-  "paceman-key.age".publicKeys = users;
+  # App secrets
+  "waywall-oauth.age".publicKeys = pcKeys;
+  "paceman-key.age".publicKeys = pcKeys;
 
-  "wallpapers/rabbit_forest.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_grain.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_grain_no_particles.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_particles.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_sign.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_sign_no_grain.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_sign_no_grain_no_particles.png.age".publicKeys = users;
-  "wallpapers/rabbit_forest_no_sign_no_particles.png.age".publicKeys = users;
+  # Wallpapers
+  "wallpapers/rabbit_forest.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_grain.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_grain_no_particles.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_particles.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_sign.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_sign_no_grain.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_sign_no_grain_no_particles.png.age".publicKeys = allKeys;
+  "wallpapers/rabbit_forest_no_sign_no_particles.png.age".publicKeys = allKeys;
 }

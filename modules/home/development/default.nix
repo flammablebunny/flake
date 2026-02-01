@@ -1,0 +1,8 @@
+{ ... }:
+
+{
+  imports = [
+    ./neovim
+    ./fish.nix
+  ];
+}
