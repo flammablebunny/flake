@@ -37,6 +37,16 @@
    # Wooting Keyboard
   hardware.wooting.enable = true;
 
+  # OpenRGB for RGB Control (Airgoo controller + motherboard)
+  services.hardware.openrgb = {
+    enable = true;
+    package = pkgs.openrgb-with-all-plugins;
+    motherboard = "amd";
+  };
+
+  # I2C for better RGB device detection
+  hardware.i2c.enable = true;
+
   # PC Specific Apps
   environment.systemPackages = with pkgs; [
     wootility

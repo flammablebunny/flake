@@ -130,9 +130,9 @@ in
       "Ctrl+Alt, Escape, exec, app2unit -- qps"
       "Ctrl+Alt, V, exec, app2unit -- pavucontrol"
 
-      # Utilities - Screenshots with grim/slurp/swappy
-      "Super+Shift, S, exec, grim -g \"$(slurp)\" - | swappy -f -"
-      "Super+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | wl-copy"
+      # Utilities - Screenshots (QuickShell region selector)
+      "Super+Shift, S, exec, quickshell ipc call region edit"
+      "Super+Shift+Alt, S, exec, quickshell ipc call region screenshot"
       "Super+Shift, C, exec, hyprpicker -a"
 
       # Sleep

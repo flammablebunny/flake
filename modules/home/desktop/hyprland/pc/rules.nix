@@ -110,6 +110,7 @@ in
       # QuickShell
       "match:namespace quickshell:.*, animation fade"
       "match:namespace quickshell:.*, blur true"
+      "match:namespace quickshell:.*, ignore_alpha 0.57"
     ];
   };
 }

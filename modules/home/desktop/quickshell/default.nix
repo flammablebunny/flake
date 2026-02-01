@@ -40,7 +40,7 @@ in {
   xdg.configFile."quickshell" = {
     source = quickshellConfigSrc;
     recursive = true;
-    force = true; 
+    force = true;
   };
 
   # Shapes library
@@ -84,7 +84,7 @@ in {
     };
 
     background = {
-      wallpaperPath = "/home/AionFan/Pictures/Wallpapers/rabbit forest.png";
+      wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers/rabbit forest.png";
     };
 
     bar = {

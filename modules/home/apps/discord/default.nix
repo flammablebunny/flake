@@ -27,8 +27,9 @@
       themes = {
         "Caelestia" = builtins.readFile ./themes/caelestia/caelestia.theme.css;
       };
+    };
 
-      plugins = {
+    equicordConfig.plugins = {
 
         alwaysAnimate = {
           enable = true;
@@ -257,7 +258,27 @@
           noMirroredCamera = false;
           removeActivitySection = false;
         };
+
+        dragFavoriteEmotes = {
+          enable = true;
+        };
+
+        messageClickActions = {
+          enable = true;
+          reactEmoji = "nyachlOeYum:1449749512657703137";
+          singleClickAction = "DELETE";
+          singleClickModifier = "CTRL";
+          doubleClickAction = "EDIT";
+          doubleClickOthersAction = "REPLY";
+          doubleClickModifier = "NONE";
+          tripleClickAction = "REACT";
+          tripleClickModifier = "NONE";
+          disableInDms = false;
+          disableInSystemDms = true;
+          clickTimeout = 300;
+          quoteWithReply = true;
+          useSelectionForQuote = false;
+        };
       };
-    };
   };
 }

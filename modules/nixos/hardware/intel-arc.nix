@@ -29,6 +29,8 @@ in
       KERNEL=="dri/card*", GROUP="video"
       KERNEL=="dri/renderD*", GROUP="video"
     '';
+      
+    boot.kernelModules = [ "xe" ];
 
     boot.kernelParams = [
       "amdgpu.sg_display=0"

@@ -21,14 +21,27 @@
   # Use latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Disable IOMMU
+  boot.kernelParams = [
+    "iommu=off"
+    "amd_iommu=off"
+  ];
+
   # Network
   networking.networkmanager.enable = true;
 
   # Disable WiFi power saving to prevent disconnects on screen lock
   networking.networkmanager.wifi.powersave = false;
 
+  # Mullvad VPN
+  services.mullvad-vpn.enable = true;
+  networking.firewall.checkReversePath = "loose";  # Required for WireGuard
+
   # Libvirt for VMs
   virtualisation.libvirtd.enable = true;
+
+  # Podman for distrobox/containers
+  virtualisation.podman.enable = true;
 
   services.gvfs.enable = true;  # For file manager integration
 
@@ -103,7 +116,7 @@
 
     # ── CLI Utils ──────────────────────────────────────────────────────
 
-    android-tools  # adb & fastboot
+    android-tools 
     git
     wget
     curl
@@ -117,6 +130,8 @@
     toybox
     btop
     inotify-tools
+    radeontop
+    amdgpu_top
 
     # ── Wayland Utilities ──────────────────────────────────────────────
     
@@ -137,7 +152,7 @@
 
     # ── Security & Privacy ─────────────────────────────────────────────
     
-    mullvad
+    mullvad-vpn
     mullvad-browser
 
     # ── Gaming ─────────────────────────────────────────────────────────
@@ -173,8 +188,9 @@
     # AI 
     antigravity
 
-    # VM
+    # VM & Containers
     virt-manager
+    distrobox
 
     # ── Libraries ──────────────────────────────────────────────────────
     
@@ -222,12 +238,16 @@
     pavucontrol
     easyeffects
 
+    # Misc
+    icu
+
     # Neovim Plugins (Managed By /modules/home/development/nixos)
     vimPlugins.nvim-tree-lua
     vimPlugins.nvim-web-devicons
 
     # ── Misc ────────────────────────────────────────────────────────────
     
+    chromium
 
 
   ];

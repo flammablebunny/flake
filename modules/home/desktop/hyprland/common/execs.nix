@@ -1,4 +1,7 @@
-{ vars, ... }:
+{ vars, pkgs, ... }:
+let
+  kirigamiQml = "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml";
+in
 
 {
   wayland.windowManager.hyprland.settings = {
@@ -27,7 +30,7 @@
       "mpris-proxy"
 
       # Start QuickShell (QSG_RHI_BACKEND=opengl needed for DMA-BUF textures)
-      "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d"
+      "env QML2_IMPORT_PATH=${kirigamiQml}:/run/current-system/sw/lib/qt-6/qml QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell"
 
       # Start hypridle for screen lock timeout
       "hypridle"
