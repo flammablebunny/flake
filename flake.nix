@@ -63,7 +63,12 @@
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
   let
     system = "x86_64-linux";
-    currentUser = builtins.getEnv "USER";
+
+    # Read laptop username from local file (because my laptop name is my real name)
+    laptopUserFile = /etc/nixos/username.txt;
+    laptopUser = if builtins.pathExists laptopUserFile
+      then builtins.replaceStrings ["\n"] [""] (builtins.readFile laptopUserFile)
+      else "nixos"; 
 
     mkHost = { hostDir, userName }: nixpkgs.lib.nixosSystem {
       inherit system;
@@ -95,7 +100,7 @@
   in {
     nixosConfigurations = {
       pc = mkHost { hostDir = "pc"; userName = "bunny"; };
-      laptop = mkHost { hostDir = "laptop"; userName = currentUser; };
+      laptop = mkHost { hostDir = "laptop"; userName = laptopUser; };
       iusenixbtw = mkHost { hostDir = "pc"; userName = "bunny"; };
     };
   };

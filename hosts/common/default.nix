@@ -85,7 +85,6 @@
     foot
     fastfetch
     starship
-    btop
     eza
     fzf
 
@@ -102,6 +101,7 @@
     p7zip
     socat
     toybox
+    btop
     inotify-tools
 
     # ── Wayland Utilities ──────────────────────────────────────────────
@@ -187,6 +187,12 @@
     # Neovim Plugins (Managed By /modules/home/development/nixos)
     vimPlugins.nvim-tree-lua
     vimPlugins.nvim-web-devicons
+
+    # ── Misc ────────────────────────────────────────────────────────────
+    
+    zoom-us
+
+
   ];
 
   system.stateVersion = "25.11";
