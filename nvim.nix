@@ -32,7 +32,7 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- Test: cord, noice, AND LazyVim
+      -- Test: LazyVim + cord (no noice)
       require("lazy").setup({
         spec = {
           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -43,15 +43,6 @@ in
             build = false,
             config = function()
               require("cord").setup()
-            end,
-          },
-
-          -- Noice for enhanced command-line UI
-          {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim" },
-            config = function()
-              require("noice").setup()
             end,
           },
         },
@@ -70,8 +61,6 @@ in
       LazyVim
 
       plenary-nvim
-      noice-nvim
-      nui-nvim
       cord-nvim
 
       blink-cmp
