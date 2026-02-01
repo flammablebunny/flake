@@ -41,8 +41,6 @@ in
           binaryPath = "/home/bunny/IdeaProjects/waywall/builddir/waywall/waywall";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
           rawCommand = "env WAYWALL_VK_PROXY_GAME=1 WAYWALL_VK_VENDOR=amd WAYWALL_DMABUF_ALLOW_MODIFIERS=1 WAYWALL_SUBPROC_DRI_PRIME=0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
-         # ZINK | rawCommand = "env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 /home/bunny/IdeaProjects/waywall/waywall-zink/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=mesa WAYWALL_ZINK_FORCE_CPU_COPY=1 MESA_LOADER_DRIVER_OVERRIDE=zink GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT"; 
-         #  rawCommand = "env WAYWALL_VK_PROXY_GAME=1 WAYWALL_VK_VENDOR=amd __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
         };
 
         binEntry = {

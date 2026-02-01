@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 
 let
-  # Font path needs to be dynamic based on the nix store
+  # Nix Dynamic Font Path 
   jetbrainsMono = pkgs.nerd-fonts.jetbrains-mono;
   fontPath = "${jetbrainsMono}/share/fonts/truetype/NerdFonts/JetBrainsMono/JetBrainsMonoNerdFontMono-Medium.ttf";
   javaX11LibPath = pkgs.lib.makeLibraryPath [
@@ -20,8 +20,6 @@ let
   ];
 in
 {
-  # The priv.lua file will be created by agenix activation
-  # See secrets.nix for the secret definition
 
   xdg.configFile = {
     "waywall/init.lua".text = ''
@@ -61,11 +59,9 @@ in
       local toggle_remaps_key = keybinds.toggle_remaps_key
       local open_chat_key = keybinds.open_chat_key
       local emote_key = keybinds.emote_key
+      local test_1 = keybinds.test_1
 
       local remaps_text_config = { text = "REBINDS OFF", x = 100, y = 100, size = 2 }
-
-      -- DON'T CHANGE ANYTHING AFTER THIS UNLESS YOU KNOW WHAT YOU"RE DOING
-
 
       local bg_path      = paths.bg_path
       local pacem_path   = paths.pacem_path
@@ -176,6 +172,52 @@ in
       	end
       end
 
+      local function toggler(make_fn)
+      	local this
+      	return function(on)
+      		if on and not this then
+      			this = make_fn()
+      		elseif not on and this then
+      			this:close()
+      			this = nil
+      		end
+      	end
+      end
+
+      local function mirror(src, dst, ki, ko)
+      	return toggler(function()
+      		return waywall.mirror({ src = src, dst = dst, color_key = (ki and ko) and { input = ki, output = ko } or nil })
+      	end)
+      end
+
+      local function make_pie(src, dst)
+      	return {
+      		ent = mirror(src, dst, "#e145c2", "#800080"),
+      		be = mirror(src, dst, "#e96d4d", "#800000"),
+      		uns = mirror(src, dst, "#45cb65", "#008000"),
+      	}
+      end
+
+      local normal_percent = { enabled = true, x = thin_percent.x, y = thin_percent.y, size = thin_percent.size }
+
+      local pie_mirrors = {
+      	thin = make_pie(
+      		{ x = 257, y = 879, w = 33, h = 25 },
+      		{ x = thin_percent.x, y = thin_percent.y, w = 33*thin_percent.size, h = 25*thin_percent.size }
+      	),
+      	tall = make_pie(
+      		{ x = 291, y = 16163, w = 33, h = 25 },
+      		{ x = tall_percent.x, y = tall_percent.y, w = 33*tall_percent.size, h = 25*tall_percent.size }
+      	),
+
+      	-- Normal source: capture pie chart area at native 2560x1440 GUI scale 3
+      	-- Pie is in bottom-right corner
+      	normal = make_pie(
+      		{ x = 2100, y = 550, w = 400, h = 300 },
+      		{ x = normal_percent.x, y = normal_percent.y, w = 400, h = 300 }
+      	),
+      }
+
       local mirrors = {
           e_counter = make_mirror({
       		src = { x = 13, y = 37, w = 37, h = 9 },
@@ -237,22 +279,6 @@ in
       		src = { x = 257, y = 879, w = 33, h = 25 },
       		dst = { x = thin_percent.x, y = thin_percent.y, w = 33*thin_percent.size, h = 25*thin_percent.size },
           }),
-      	thin_percent_blockentities = make_mirror({
-      		src = { x = 257, y = 879, w = 33, h = 25 },
-      		dst = { x = thin_percent.x, y = thin_percent.y, w = 33*thin_percent.size, h = 25*thin_percent.size },
-      		color_key = {
-      			input = "#e96d4d",
-      			output = secondary_col,
-      		},
-          }),
-      	thin_percent_unspecified = make_mirror({
-      		src = { x = 257, y = 879, w = 33, h = 25 },
-      		dst = { x = thin_percent.x, y = thin_percent.y, w = 33*thin_percent.size, h = 25*thin_percent.size },
-      		color_key = {
-      			input = "#45cb65",
-      			output = secondary_col,
-      		},
-          }),
 
 
       	tall_pie_all = make_mirror({
@@ -305,22 +331,6 @@ in
       		src = { x = 291, y = 16163, w = 33, h = 25 },
       		dst = { x = tall_percent.x, y = tall_percent.y, w = 33*tall_percent.size, h = 25*tall_percent.size },
           }),
-      	tall_percent_blockentities = make_mirror({
-      		src = { x = 291, y = 16163, w = 33, h = 25 },
-      		dst = { x = tall_percent.x, y = tall_percent.y, w = 33*tall_percent.size, h = 25*tall_percent.size },
-      		color_key = {
-      			input = "#e96d4d",
-      			output = secondary_col,
-      		},
-          }),
-      	tall_percent_unspecified = make_mirror({
-      		src = { x = 291, y = 16163, w = 33, h = 25 },
-      		dst = { x = tall_percent.x, y = tall_percent.y, w = 33*tall_percent.size, h = 25*tall_percent.size },
-      		color_key = {
-      			input = "#45cb65",
-      			output = secondary_col,
-      		},
-          }),
 
 
       	eye_measure = make_mirror({
@@ -363,6 +373,17 @@ in
           	mirrors.e_counter(f3)
       	end
 
+      	for _, m in pairs(pie_mirrors.thin) do
+      		m(thin)
+      	end
+      	for _, m in pairs(pie_mirrors.tall) do
+      		m(tall)
+      	end
+      	local normal_pie_active = not tall and not thin
+      	for _, m in pairs(pie_mirrors.normal) do
+      		m(normal_pie_active)
+      	end
+
       	if thin_pie.enabled then
       		-- mirrors.thin_pie_all(thin)
       		mirrors.thin_pie_entities(thin)
@@ -370,12 +391,6 @@ in
       		mirrors.thin_pie_blockentities(thin)
       		mirrors.thin_pie_destroyProgress(thin)
       		mirrors.thin_pie_prepare(thin)
-      	end
-
-      	if thin_percent.enabled then
-      		-- mirrors.thin_percent_all(thin)
-      		mirrors.thin_percent_blockentities(thin)
-      		mirrors.thin_percent_unspecified(thin)
       	end
 
       	if tall_pie.enabled then
@@ -387,11 +402,6 @@ in
       		mirrors.tall_pie_prepare(tall)
       	end
 
-      	if tall_percent.enabled then
-      		-- mirrors.tall_percent_all(tall)
-      		mirrors.tall_percent_blockentities(tall)
-      		mirrors.tall_percent_unspecified(tall)
-      	end
 
 
       end
@@ -501,8 +511,12 @@ in
       	[open_chat_key] = function()
       	    chat1:open()
       	end,
-      }
 
+         [test_1] = function() 
+            print(waywall.state().screen) 
+         end,
+
+      }
 
       return config
     '';
@@ -518,6 +532,7 @@ in
           toggle_remaps_key = "SEMICOLON",
           open_chat_key = "Shift-U",
           emote_key = "Shift-Y",
+          test_1 = "Shift-U"
       }
 
       return keybinds

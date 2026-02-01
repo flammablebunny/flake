@@ -154,6 +154,8 @@
             MOZ_ENABLE_WAYLAND = "1";
             XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
             JAVA_HOME = "${pkgs.jdk17}/lib/openjdk";
+            HYPRLAND_DMABUF_LOG = "1";
+            HYPRLAND_DMABUF_DISABLE_CPU_FALLBACK = "1";
           };
 
           environment.systemPackages = [
@@ -224,6 +226,7 @@
             pkgs.virt-manager
             pkgs.radeontop
             pkgs.amdgpu_top
+            pkgs.wootility
 
             # CLI tools
             pkgs.fastfetch
@@ -248,6 +251,7 @@
             pkgs.fzf
             pkgs.luajitPackages.luarocks
             pkgs.python3
+            pkgs.gpp
 
             # Caelestia dependencies
             pkgs.brightnessctl
