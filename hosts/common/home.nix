@@ -50,7 +50,6 @@
   ];
 
   xdg.portal.config.common.default = "*";
-  xdg.configFile."caelestia/shell.json".source = ../../assets/shell.json;
 
   xdg.desktopEntries."org.quickshell" = {
     name = "Quickshell";

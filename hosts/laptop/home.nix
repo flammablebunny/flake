@@ -1,6 +1,5 @@
 { inputs, pkgs, config, userName, ... }:
 
 {
-  # Laptop home-manager config
-  # Nothing Here Yet
+  xdg.configFile."caelestia/shell.json".source = ../../assets/shell-laptop.json;
 }
