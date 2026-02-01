@@ -12,16 +12,6 @@ let
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
   };
 
-  cord-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "cord.nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "vyfor";
-      repo = "cord.nvim";
-      rev = "master";
-      sha256 = "sha256-iatVlFU44iigiQKuXO3fS0OnKAZbgpBImaTLi6uECXs=";
-    };
-    doCheck = false;
-  };
 
 in
 {
@@ -56,14 +46,11 @@ in
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Cord.nvim for Discord RPC (DISABLED - causes segfault on load)
-          -- {
-          --   "vyfor/cord.nvim",
-          --   build = false,
-          --   config = function()
-          --     require("cord").setup()
-          --   end,
-          -- },
+          -- Presence.nvim for Discord RPC (simpler alternative to cord)
+          {
+            "andweeb/presence.nvim",
+            lazy = false,  -- Load immediately
+          },
 
           -- Noice for enhanced command-line UI (DISABLED - causes segfault on load)
           -- {
@@ -119,7 +106,7 @@ in
 
       catppuccin-nvim
       claude-code-nvim
-      cord-nvim
+      presence-nvim
     ];
 
     extraPackages = with pkgs; [
