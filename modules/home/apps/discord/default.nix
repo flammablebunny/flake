@@ -8,12 +8,8 @@
   programs.nixcord = {
     enable = true;
 
-    discord = {
-      enable = true;
-      package = pkgs.discord.override { withOpenASAR = true; };
-      equicord.enable = true;
-      vencord.enable = false;
-    };
+    discord.enable = false;
+    equibop.enable = true;
 
     config = {
       autoUpdate = false;
@@ -23,13 +19,7 @@
       notifyAboutUpdates = false;
       transparent = false;
 
-      enabledThemes = [ "Caelestia" ];
-      themes = {
-        "Caelestia" = builtins.readFile ./themes/caelestia/caelestia.theme.css;
-      };
-    };
-
-    equicordConfig.plugins = {
+      plugins = {
 
         alwaysAnimate = {
           enable = true;
@@ -248,37 +238,26 @@
           showPanel = true;
         };
 
-        webRichPresence = {
-          enable = true;
-        };
-
-
         equicordHelper = {
           enable = true;
           noMirroredCamera = false;
           removeActivitySection = false;
         };
 
-        dragFavoriteEmotes = {
-          enable = true;
-        };
+#dragFavoriteEmotes = {
+#enable = true;
+#};
 
-        messageClickActions = {
-          enable = true;
-          reactEmoji = "nyachlOeYum:1449749512657703137";
-          singleClickAction = "DELETE";
-          singleClickModifier = "CTRL";
-          doubleClickAction = "EDIT";
-          doubleClickOthersAction = "REPLY";
-          doubleClickModifier = "NONE";
-          tripleClickAction = "REACT";
-          tripleClickModifier = "NONE";
-          disableInDms = false;
-          disableInSystemDms = true;
-          clickTimeout = 300;
-          quoteWithReply = true;
-          useSelectionForQuote = false;
-        };
+#messageClickActions = {
+# enable = true;
+#  backspaceClickAction = "delete";
+#   doubleClickAction = "edit";
+#   doubleClickOthersAction = "reply";
+#    disableInDms = false;
+#     disableInSystemDms = true;
+#     clickTimeout = 300;
+#    };
       };
+    };
   };
 }

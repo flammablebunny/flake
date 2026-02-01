@@ -53,7 +53,7 @@ in
       # Special workspaces
       "match:class btop, workspace special:sysmon"
       "match:class Spotify, workspace special:music"
-      "match:class discord, workspace special:communication"
+      "match:class discord|equibop, workspace special:communication"
       "match:class Slack, workspace special:slack"
       "match:class com.obsproject.Studio|obs, workspace special:recording"
 

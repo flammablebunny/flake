@@ -118,7 +118,8 @@ in
 
       # Special workspace toggles (using toggle-workspace.sh)
       "${kb.systemMonitor}, exec, $toggleWs sysmon btop 'foot --app-id=btop btop'"
-      "${kb.communication}, exec, $toggleWs communication discord discord"
+      # "${kb.communication}, exec, $toggleWs communication discord discord"
+      "${kb.communication}, exec, $toggleWs communication equibop equibop"
       "${kb.slack}, exec, $toggleWs slack Slack slack"
       "${kb.recording}, exec, $toggleWs recording com.obsproject.Studio obs"
       "${kb.music}, exec, $toggleWs music Spotify spotify"

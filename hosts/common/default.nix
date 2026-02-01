@@ -22,10 +22,10 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Disable IOMMU
-  boot.kernelParams = [
-    "iommu=off"
-    "amd_iommu=off"
-  ];
+# boot.kernelParams = [
+#     "iommu=off"
+#     "amd_iommu=off"
+#  ];
 
   # Network
   networking.networkmanager.enable = true;
@@ -39,6 +39,9 @@
 
   # Libvirt for VMs
   virtualisation.libvirtd.enable = true;
+
+  # SPICE USB redirection (for USB passthrough to VMs)
+  virtualisation.spiceUSBRedirection.enable = true;
 
   # Podman for distrobox/containers
   virtualisation.podman.enable = true;
