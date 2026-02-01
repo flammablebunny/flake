@@ -56,16 +56,22 @@ in
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Disable only cord.nvim (requires zig, not compatible)
+          -- Cord.nvim for Discord RPC
           {
             "vyfor/cord.nvim",
-            enabled = false,
+            build = false,  -- Disable native build to avoid segfault
+            config = function()
+              require("cord").setup()
+            end,
           },
 
-          -- Disable noice.nvim (causes command-line segfaults)
+          -- Noice for enhanced command-line UI
           {
             "folke/noice.nvim",
-            enabled = false,
+            dependencies = { "MunifTanjim/nui.nvim" },
+            config = function()
+              require("noice").setup()
+            end,
           },
 
           {
