@@ -23,16 +23,6 @@ let
     doCheck = false;
   };
 
-  caelestia-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "caelestia.nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "gonstoll";
-      repo = "caelestia.nvim";
-      rev = "main";
-      sha256 = "sha256-ZrChkqW1LVvZHPU0YaF6kNMuqAZhXpZWKkfmVZ8VDZA=";
-    };
-  };
-
 in
 {
   programs.neovim = {
@@ -64,18 +54,13 @@ in
 
           -- Visual and UI plugins
           {
-            "gonstoll/caelestia.nvim",
-            lazy = false,
-            priority = 1000,
-            config = function()
-              vim.cmd.colorscheme("caelestia")
-            end,
-          },
-          {
             "catppuccin/nvim",
             name = "catppuccin",
             lazy = false,
-            priority = 999,
+            priority = 1000,
+            config = function()
+              dofile(vim.fn.expand("~/.config/nvim/lua/caelestia.lua"))
+            end,
           },
           { "nvim-lualine/lualine.nvim" },
           { "akinsho/bufferline.nvim" },
@@ -165,7 +150,6 @@ in
       # Custom & extras
       catppuccin-nvim
       claude-code-nvim
-      caelestia-nvim
     ];
 
     extraPackages = with pkgs; [
@@ -181,5 +165,6 @@ in
   xdg.configFile = {
     "nvim/lua/config/options.lua".source = ./lua/config/options.lua;
     "nvim/lua/config/keymaps.lua".source = ./lua/config/keymaps.lua;
+    "nvim/lua/caelestia.lua".source = ./lua/caelestia.lua;
   };
 }
