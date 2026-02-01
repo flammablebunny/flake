@@ -22,22 +22,6 @@ DelegateChooser {
 
     role: "type"
 
-    DelegateChoice { roleValue: "antiFlashbang"; AndroidAntiFlashbangToggle {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-        onOpenMenu: {
-            root.openNightLightDialog()
-        }
-    } }
-
     DelegateChoice { roleValue: "audio"; AndroidAudioToggle {
         required property int index
         required property var modelData
@@ -70,19 +54,6 @@ DelegateChooser {
         }
     } }
 
-    DelegateChoice { roleValue: "cloudflareWarp"; AndroidCloudflareWarpToggle {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-    } }
-
     DelegateChoice { roleValue: "colorPicker"; AndroidColorPickerToggle {
         required property int index
         required property var modelData
@@ -97,19 +68,6 @@ DelegateChooser {
     } }
 
     DelegateChoice { roleValue: "darkMode"; AndroidDarkModeToggle {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-    } }
-
-    DelegateChoice { roleValue: "easyEffects"; AndroidEasyEffectsToggle {
         required property int index
         required property var modelData
         buttonIndex: root.startingIndex + index
@@ -164,19 +122,6 @@ DelegateChooser {
         }
     } }
 
-    DelegateChoice { roleValue: "musicRecognition"; AndroidMusicRecognition {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-    } }
-
     DelegateChoice { roleValue: "network"; AndroidNetworkToggle {
         required property int index
         required property var modelData
@@ -222,33 +167,7 @@ DelegateChooser {
         cellSize: modelData.size
     } }
 
-    DelegateChoice { roleValue: "onScreenKeyboard"; AndroidOnScreenKeyboardToggle {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-    } }
-
     DelegateChoice { roleValue: "powerProfile"; AndroidPowerProfileToggle {
-        required property int index
-        required property var modelData
-        buttonIndex: root.startingIndex + index
-        buttonData: modelData
-        editMode: root.editMode
-        expandedSize: modelData.size > 1
-        baseCellWidth: root.baseCellWidth
-        baseCellHeight: root.baseCellHeight
-        cellSpacing: root.spacing
-        cellSize: modelData.size
-    } }
-
-    DelegateChoice { roleValue: "screenSnip"; AndroidScreenSnipToggle {
         required property int index
         required property var modelData
         buttonIndex: root.startingIndex + index

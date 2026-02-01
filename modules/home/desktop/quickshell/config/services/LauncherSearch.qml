@@ -100,12 +100,6 @@ Singleton {
             }
         },
         {
-            action: "todo",
-            execute: args => {
-                Todo.addTask(args);
-            }
-        },
-        {
             action: "wallpaper",
             execute: () => {
                 GlobalStates.wallpaperSelectorOpen = true;

@@ -78,32 +78,6 @@ Singleton {
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii" // "ii", "waffle"
-
-            property JsonObject policies: JsonObject {
-                property int ai: 1 // 0: No | 1: Yes | 2: Local
-                property int weeb: 1 // 0: No | 1: Open | 2: Closet
-            }
-
-            property JsonObject ai: JsonObject {
-                property string systemPrompt: "## Style\n- Use casual tone, don't be formal! Make sure you answer precisely without hallucination and prefer bullet points over walls of text. You can have a friendly greeting at the beginning of the conversation, but don't repeat the user's question\n\n## Context (ignore when irrelevant)\n- You are a helpful and inspiring sidebar assistant on a {DISTRO} Linux system\n- Desktop environment: {DE}\n- Current date & time: {DATETIME}\n- Focused app: {WINDOWCLASS}\n\n## Presentation\n- Use Markdown features in your response: \n  - **Bold** text to **highlight keywords** in your response\n  - **Split long information into small sections** with h2 headers and a relevant emoji at the start of it (for example `## 🐧 Linux`). Bullet points are preferred over long paragraphs, unless you're offering writing support or instructed otherwise by the user.\n- Asked to compare different options? You should firstly use a table to compare the main aspects, then elaborate or include relevant comments from online forums *after* the table. Make sure to provide a final recommendation for the user's use case!\n- Use LaTeX formatting for mathematical and scientific notations whenever appropriate. Enclose all LaTeX '$$' delimiters. NEVER generate LaTeX code in a latex block unless the user explicitly asks for it. DO NOT use LaTeX for regular documents (resumes, letters, essays, CVs, etc.).\n"
-                property string tool: "functions" // search, functions, or none
-                property list<var> extraModels: [
-                    {
-                        "api_format": "openai", // Most of the time you want "openai". Use "gemini" for Google's models
-                        "description": "This is a custom model. Edit the config to add more! | Anyway, this is DeepSeek R1 Distill LLaMA 70B",
-                        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
-                        "homepage": "https://openrouter.ai/deepseek/deepseek-r1-distill-llama-70b:free", // Not mandatory
-                        "icon": "spark-symbolic", // Not mandatory
-                        "key_get_link": "https://openrouter.ai/settings/keys", // Not mandatory
-                        "key_id": "openrouter",
-                        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
-                        "name": "Custom: DS R1 Dstl. LLaMA 70B",
-                        "requires_key": true
-                    }
-                ]
-            }
-
             property JsonObject appearance: JsonObject {
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
@@ -150,15 +124,15 @@ Singleton {
             }
 
             property JsonObject apps: JsonObject {
-                property string bluetooth: "kcmshell6 kcm_bluetooth"
-                property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
-                property string network: "kcmshell6 kcm_networkmanagement"
-                property string manageUser: "kcmshell6 kcm_users"
-                property string networkEthernet: "kcmshell6 kcm_networkmanagement"
-                property string taskManager: "plasma-systemmonitor --page-name Processes"
-                property string terminal: "kitty -1" // This is only for shell actions
-                property string update: "kitty -1 --hold=yes fish -i -c 'pkexec pacman -Syu'"
-                property string volumeMixer: `~/.config/hypr/hyprland/scripts/launch_first_available.sh "pavucontrol-qt" "pavucontrol"`
+                property string bluetooth: "blueman-manager"
+                property string changePassword: "foot fish -c 'passwd; read'"
+                property string network: "foot nmtui"
+                property string manageUser: "foot nmtui"
+                property string networkEthernet: "foot nmtui"
+                property string taskManager: "~/.config/hypr/scripts/toggle-workspace.sh sysmon btop 'foot --app-id=btop btop'"
+                property string terminal: "foot"
+                property string update: "foot fish -c 'sudo nixos-rebuild switch; read'"
+                property string volumeMixer: "pavucontrol"
             }
 
             property JsonObject background: JsonObject {
@@ -237,7 +211,6 @@ Singleton {
                 property int cornerStyle: 0 // 0: Hug | 1: Float | 2: Plain rectangle
                 property bool floatStyleShadow: true // Show shadow behind bar when cornerStyle == 1 (Float)
                 property bool borderless: false // true for no grouping of items
-                property string topLeftIcon: "spark" // Options: "distro" or any icon name in ~/.config/quickshell/ii/assets/icons
                 property bool showBackground: true
                 property bool verbose: true
                 property bool vertical: false
@@ -290,26 +263,6 @@ Singleton {
                 property int full: 101
                 property bool automaticSuspend: true
                 property int suspend: 3
-            }
-
-            property JsonObject calendar: JsonObject {
-                property string locale: "en-GB"
-            }
-
-            property JsonObject cheatsheet: JsonObject {
-                // Use a nerdfont to see the icons
-                // 0: 󰖳  | 1: 󰌽 | 2: 󰘳 | 3:  | 4: 󰨡
-                // 5:  | 6:  | 7: 󰣇 | 8:  | 9: 
-                // 10:  | 11:  | 12:  | 13:  | 14: 󱄛
-                property string superKey: ""
-                property bool useMacSymbol: false
-                property bool splitButtons: false
-                property bool useMouseSymbol: false
-                property bool useFnSymbol: false
-                property JsonObject fontSize: JsonObject {
-                    property int key: Appearance.font.pixelSize.smaller
-                    property int comment: Appearance.font.pixelSize.smaller
-                }
             }
 
             property JsonObject conflictKiller: JsonObject {
@@ -465,11 +418,6 @@ Singleton {
                 property bool filterPassive: true
             }
 
-            property JsonObject musicRecognition: JsonObject {
-                property int timeout: 16
-                property int interval: 4
-            }
-
             property JsonObject search: JsonObject {
                 property int nonAppResultDelay: 30 // This prevents lagging when typing
                 property string engineBaseUrl: "https://www.google.com/search?q="
@@ -493,13 +441,6 @@ Singleton {
 
             property JsonObject sidebar: JsonObject {
                 property bool keepRightSidebarLoaded: true
-                property JsonObject translator: JsonObject {
-                    property bool enable: false
-                    property int delay: 300 // Delay before sending request. Reduces (potential) rate limits and lag.
-                }
-                property JsonObject ai: JsonObject {
-                    property bool textFadeIn: false
-                }
                 property JsonObject booru: JsonObject {
                     property bool allowNsfw: false
                     property string defaultProvider: "yandere"
@@ -553,7 +494,6 @@ Singleton {
 
             property JsonObject sounds: JsonObject {
                 property bool battery: false
-                property bool pomodoro: false
                 property string theme: "freedesktop"
             }
 
@@ -563,12 +503,6 @@ Singleton {
                 property string shortDateFormat: "dd/MM"
                 property string dateWithYearFormat: "dd/MM/yyyy"
                 property string dateFormat: "ddd, dd/MM"
-                property JsonObject pomodoro: JsonObject {
-                    property int breakTime: 300
-                    property int cyclesBeforeLongBreak: 4
-                    property int focus: 1500
-                    property int longBreak: 900
-                }
                 property bool secondPrecision: false
             }
 
@@ -603,26 +537,6 @@ Singleton {
                 }
             }
 
-            property JsonObject waffles: JsonObject {
-                // Some spots are kinda janky/awkward. Setting the following to
-                // false will make (some) stuff also be like that for accuracy. 
-                // Example: the right-click menu of the Start button
-                property JsonObject tweaks: JsonObject {
-                    property bool switchHandlePositionFix: true
-                    property bool smootherMenuAnimations: true
-                    property bool smootherSearchBar: true
-                }
-                property JsonObject bar: JsonObject {
-                    property bool bottom: true
-                    property bool leftAlignApps: false
-                }
-                property JsonObject actionCenter: JsonObject {
-                    property list<string> toggles: [ "network", "bluetooth", "easyEffects", "powerProfile", "idleInhibitor", "nightLight", "darkMode", "antiFlashbang", "cloudflareWarp", "mic", "musicRecognition", "notifications", "onScreenKeyboard", "gameMode", "screenSnip", "colorPicker" ]
-                }
-                property JsonObject calendar: JsonObject {
-                    property bool force2CharDayOfWeek: true
-                }
-            }
         }
     }
 }
