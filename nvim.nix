@@ -12,6 +12,16 @@ let
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
   };
 
+  cord-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "cord.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "vyfor";
+      repo = "cord.nvim";
+      rev = "master";
+      sha256 = "sha256-iatVlFU44iigiQKuXO3fS0OnKAZbgpBImaTLi6uECXs=";
+    };
+    doCheck = false;
+  };
 
 in
 {
@@ -22,52 +32,26 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- All plugin specifications defined directly in Nix for reproducibility
+      -- Minimal test: just cord and noice, no LazyVim
       require("lazy").setup({
         spec = {
-          -- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-
-          -- Catppuccin theme with Mocha flavor
+          -- Cord.nvim for Discord RPC
           {
-            "catppuccin/nvim",
-            name = "catppuccin",
-            priority = 1000,
+            "vyfor/cord.nvim",
+            build = false,
             config = function()
-              require("catppuccin").setup({
-                flavour = "mocha",
-              })
-              vim.cmd("colorscheme catppuccin")
+              require("cord").setup()
             end,
           },
 
-          -- Claude Code plugin integration
+          -- Noice for enhanced command-line UI
           {
-            "greggh/claude-code.nvim",
-            dependencies = { "nvim-lua/plenary.nvim" },
+            "folke/noice.nvim",
+            dependencies = { "MunifTanjim/nui.nvim" },
+            config = function()
+              require("noice").setup()
+            end,
           },
-
-          -- Presence.nvim for Discord RPC (DISABLED - causes segfault on load)
-          -- {
-          --   "andweeb/presence.nvim",
-          --   lazy = false,
-          -- },
-
-          -- Noice for enhanced command-line UI (DISABLED - causes segfault on load)
-          -- {
-          --   "folke/noice.nvim",
-          --   dependencies = { "MunifTanjim/nui.nvim" },
-          --   config = function()
-          --     require("noice").setup()
-          --   end,
-          -- },
-
-          {
-            "saghen/blink.cmp",
-            build = false,  -- Disable native fuzzy matcher
-          },
-
-          -- Import any user plugins (if plugins dir exists)
-          { import = "plugins" },
         },
         defaults = { lazy = false, version = false },
         install = { missing = true },
@@ -81,29 +65,10 @@ in
 
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
-      LazyVim
-
-      blink-cmp
-      bufferline-nvim
-      flash-nvim
-      mini-ai
-      mini-icons
-      mini-pairs
-      neo-tree-nvim
-      nvim-lint
-      nvim-lspconfig
-      persistence-nvim
       plenary-nvim
-      snacks-nvim
-      telescope-nvim
-      todo-comments-nvim
-      tokyonight-nvim
-      trouble-nvim
-      ts-comments-nvim
-      which-key-nvim
-
-      catppuccin-nvim
-      claude-code-nvim
+      noice-nvim
+      nui-nvim
+      cord-nvim
     ];
 
     extraPackages = with pkgs; [
