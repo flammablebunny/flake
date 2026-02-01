@@ -32,10 +32,43 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- LazyVim only (both cord and noice cause segfaults with LazyVim)
+      -- LazyVim + cord + noice (without LazyVim's default imports which conflict)
       require("lazy").setup({
         spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          -- LazyVim without auto-importing plugins (to avoid conflicts)
+          { "folke/LazyVim", version = false },
+
+          -- Core LazyVim plugins manually
+          { "LazyVim/LazyVim", version = false },
+          { "nvim-lua/plenary.nvim" },
+          { "folke/snacks.nvim" },
+          { "folke/trouble.nvim" },
+          { "folke/which-key.nvim" },
+          { "telescope-nvim" },
+          { "nvim-neo-tree/neo-tree.nvim" },
+          { "nvim-treesitter/nvim-treesitter" },
+          { "nvim-treesitter/nvim-treesitter-textobjects" },
+          { "nvim-lspconfig" },
+          { "nvim-cmp", lazy = true },
+          { "LuaSnip", lazy = true },
+
+          -- Cord for Discord RPC
+          {
+            "vyfor/cord.nvim",
+            build = false,
+            config = function()
+              require("cord").setup()
+            end,
+          },
+
+          -- Noice for enhanced command-line UI
+          {
+            "folke/noice.nvim",
+            dependencies = { "MunifTanjim/nui.nvim" },
+            config = function()
+              require("noice").setup()
+            end,
+          },
         },
         defaults = { lazy = false, version = false },
         install = { missing = true },
