@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   claude-code-nvim = pkgs.vimUtils.buildVimPlugin {
@@ -25,134 +25,212 @@ let
 
 in
 {
-  programs.neovim = {
+  imports = [ inputs.nvf.homeManagerModules.default ];
+
+  programs.nvf = {
     enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
 
-    extraLuaConfig = ''
-      vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
-      require("nvim-treesitter.configs").setup({
-        parser_install_dir = vim.fn.stdpath("data") .. "/site",
-      })
+    settings.vim = {
+      # Aliases
+      viAlias = true;
+      vimAlias = true;
 
-      require("lazy").setup({
-        spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-          { "nvim-lua/plenary.nvim" },
-          { "folke/snacks.nvim" },
-          { "folke/trouble.nvim" },
-          { "folke/which-key.nvim" },
-          { "nvim-telescope/telescope.nvim" },
-          { "nvim-neo-tree/neo-tree.nvim" },
-          { "nvim-treesitter/nvim-treesitter" },
-          { "nvim-treesitter/nvim-treesitter-textobjects" },
-          { "neovim/nvim-lspconfig" },
-          { "hrsh7th/nvim-cmp", lazy = true },
-          { "L3MON4D3/LuaSnip", lazy = true },
-          { "saghen/blink.cmp", build = false },
-          { "folke/flash.nvim" },
-          { "folke/tokyonight.nvim" },
-          { "folke/ts-comments.nvim" },
-          { "MagicDuck/grug-far.nvim" },
-          { "folke/lazydev.nvim" },
-          { "rafamadriz/friendly-snippets" },
-          { "mason-org/mason.nvim" },
-          { "mason-org/mason-lspconfig.nvim" },
-          { "catppuccin/nvim", name = "catppuccin", lazy = false, priority = 1000,
-            config = function() dofile(vim.fn.expand("~/.config/nvim/lua/caelestia.lua")) end },
-          { "nvim-lualine/lualine.nvim" },
-          { "akinsho/bufferline.nvim" },
-          { "nvim-tree/nvim-web-devicons" },
-          { "nvim-mini/mini.nvim" },
-          { "stevearc/conform.nvim" },
-          { "mfussenegger/nvim-lint" },
-          { "lewis6991/gitsigns.nvim" },
-          { "folke/todo-comments.nvim" },
-          { "folke/persistence.nvim" },
-          { "windwp/nvim-ts-autotag" },
-          { "wellle/targets.vim" },
-          { "tpope/vim-surround" },
-          { "vyfor/cord.nvim", build = false, config = function() require("cord").setup() end },
-          { "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim" },
-            config = function() require("noice").setup() end },
-        },
-        defaults = { lazy = false, version = false },
-        install = { missing = false },
-        checker = { enabled = false },
-        change_detection = { enabled = false },
-        rocks = { enabled = false },
-        pkg = { enabled = false },
-        performance = { reset_packpath = false, rtp = { reset = false } },
-      })
-    '';
+      # Editor options
+      options = {
+        shiftwidth = 3;
+        tabstop = 3;
+        softtabstop = 3;
+        expandtab = true;
+        number = true;
+        relativenumber = true;
+        cursorline = true;
+        wrap = false;
+        list = false;
+        ignorecase = true;
+        smartcase = true;
+      };
 
-    plugins = with pkgs.vimPlugins; [
-      lazy-nvim
-      LazyVim
+      # Theme - catppuccin (caelestia.lua will override colors)
+      theme = {
+        enable = true;
+        name = "catppuccin";
+        style = "mocha";
+      };
 
-      # Core plugins
-      plenary-nvim
-      snacks-nvim
-      trouble-nvim
-      which-key-nvim
-      telescope-nvim
-      neo-tree-nvim
-      nvim-treesitter
-      nvim-treesitter-textobjects
-      nvim-lspconfig
-      blink-cmp
-      luasnip
+      # Treesitter
+      treesitter = {
+        enable = true;
+        autotagHtml = true;
+      };
 
-      # Visual & UI
-      catppuccin-nvim
-      lualine-nvim
-      bufferline-nvim
-      nvim-web-devicons
-      conform-nvim
-      nvim-lint
-      gitsigns-nvim
-      todo-comments-nvim
-      persistence-nvim
-      nvim-ts-autotag
+      # LSP
+      lsp = {
+        enable = true;
+        lspconfig.enable = true;
+      };
 
-      # Editor enhancements
-      flash-nvim
-      nui-nvim
-      noice-nvim
-      targets-vim
-      vim-surround
+      # Languages
+      languages = {
+        enableLSP = true;
+        enableTreesitter = true;
+        nix.enable = true;
+        lua.enable = true;
+        rust.enable = true;
+        ts.enable = true;
+        html.enable = true;
+        css.enable = true;
+        bash.enable = true;
+      };
 
-      # Mini plugins
-      mini-nvim
+      # Autocomplete - DISABLED (causes segfault on ";" key)
+      autocomplete.nvim-cmp.enable = false;
 
-      # Custom & extras
-      catppuccin-nvim
-      claude-code-nvim
-      tokyonight-nvim
-      ts-comments-nvim
-      grug-far-nvim
-      lazydev-nvim
-      friendly-snippets
-      mason-nvim
-      mason-lspconfig-nvim
-      nvim-cmp
-    ];
+      # Snippets
+      snippets.luasnip.enable = true;
 
-    extraPackages = with pkgs; [
-      git lazygit ripgrep fd unzip gzip curl
-      gcc gnumake
-      nodejs_22
-      lua-language-server nil stylua shfmt
-      cargo rustc
-      tree-sitter
-    ];
-  };
+      # Telescope
+      telescope.enable = true;
 
-  xdg.configFile = {
-    "nvim/lua/config/options.lua".source = ./lua/config/options.lua;
-    "nvim/lua/config/keymaps.lua".source = ./lua/config/keymaps.lua;
-    "nvim/lua/caelestia.lua".source = ./lua/caelestia.lua;
+      # File tree
+      filetree.neo-tree.enable = true;
+
+      # Status line
+      statusline.lualine.enable = true;
+
+      # Tab line / bufferline
+      tabline.nvimBufferline.enable = true;
+
+      # Git
+      git = {
+        enable = true;
+        gitsigns.enable = true;
+      };
+
+      # Which-key
+      binds.whichKey.enable = true;
+
+      # Extra plugins not built into nvf
+      extraPlugins = {
+        # Discord Rich Presence
+        cord = {
+          package = cord-nvim;
+          setup = ''
+            require('cord').setup {
+              usercmds = true,
+              timer = {
+                enable = true,
+                show_time = true,
+              },
+              editor = {
+                client = "neovim",
+                tooltip = "The Superior Text Editor",
+              },
+              display = {
+                theme = "default",
+              },
+            }
+          '';
+        };
+
+        # Claude Code integration
+        claude-code = {
+          package = claude-code-nvim;
+          setup = "require('claude-code').setup {}";
+        };
+
+        # Surround
+        surround = {
+          package = pkgs.vimPlugins.vim-surround;
+        };
+
+        # Targets.vim for text objects
+        targets = {
+          package = pkgs.vimPlugins.targets-vim;
+        };
+
+        # Noice for better UI
+        noice = {
+          package = pkgs.vimPlugins.noice-nvim;
+          setup = "require('noice').setup {}";
+        };
+
+        # Nui (dependency for noice)
+        nui = {
+          package = pkgs.vimPlugins.nui-nvim;
+        };
+
+        # Todo comments
+        todo-comments = {
+          package = pkgs.vimPlugins.todo-comments-nvim;
+          setup = "require('todo-comments').setup {}";
+        };
+
+        # Conform for formatting
+        conform = {
+          package = pkgs.vimPlugins.conform-nvim;
+          setup = ''
+            require('conform').setup {
+              formatters_by_ft = {
+                lua = { "stylua" },
+                nix = { "nixfmt" },
+                sh = { "shfmt" },
+              },
+            }
+          '';
+        };
+
+        # Persistence for session management
+        persistence = {
+          package = pkgs.vimPlugins.persistence-nvim;
+          setup = "require('persistence').setup {}";
+        };
+
+        # Mini.nvim collection
+        mini = {
+          package = pkgs.vimPlugins.mini-nvim;
+        };
+
+        # Plenary (dependency for many plugins)
+        plenary = {
+          package = pkgs.vimPlugins.plenary-nvim;
+        };
+      };
+
+      # Custom Lua config - caelestia colorscheme integration
+      luaConfigRC.caelestia = ''
+        -- Caelestia colorscheme integration
+        ${builtins.readFile ./lua/caelestia.lua}
+      '';
+
+      # Disable Arrow Keys - FT. Arsoniv
+      luaConfigRC.keymaps = ''
+        -- Disable arrow keys
+        vim.keymap.set("n", "<left>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+        vim.keymap.set("n", "<right>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+        vim.keymap.set("n", "<up>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+        vim.keymap.set("n", "<down>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+      '';
+
+      # Extra packages for LSP, formatters, etc.
+      extraPackages = with pkgs; [
+        git
+        lazygit
+        ripgrep
+        fd
+        unzip
+        gzip
+        curl
+        gcc
+        gnumake
+        nodejs_22
+        lua-language-server
+        nil
+        stylua
+        shfmt
+        cargo
+        rustc
+        tree-sitter
+      ];
+    };
   };
 }
