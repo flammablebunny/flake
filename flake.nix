@@ -91,7 +91,6 @@
             DEFAULT_BROWSER = "zen";
             GTK_THEME = "adw-gtk3";
             MOZ_ENABLE_WAYLAND = "1";
-            # FIXED: This is now correctly inside the sessionVariables block
             XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
           };
 
