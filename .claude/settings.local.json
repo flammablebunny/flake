@@ -14,7 +14,17 @@
       "Bash(sudo nixos-rebuild switch:*)",
       "Bash(timeout 15 nvim:*)",
       "Bash(home-manager switch:*)",
-      "Bash(~/.config/home-manager/home-manager switch:*)"
+      "Bash(~/.config/home-manager/home-manager switch:*)",
+      "Bash(sudo -S nixos-rebuild switch:*)",
+      "Bash(nixos-rebuild:*)",
+      "Bash(dmesg:*)",
+      "Bash(timeout 20 nvim:*)",
+      "Bash(timeout 3 nvim:*)",
+      "Bash(nix flake update:*)",
+      "Bash(nix run:*)",
+      "Bash(nix flake show:*)",
+      "Bash(nix-env:*)",
+      "Bash(nix search:*)"
     ],
     "deny": [],
     "ask": []
