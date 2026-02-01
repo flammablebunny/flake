@@ -23,6 +23,16 @@ let
     doCheck = false;
   };
 
+  caelestia-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "caelestia.nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "gonstoll";
+      repo = "caelestia.nvim";
+      rev = "main";
+      sha256 = "sha256-ZrChkqW1LVvZHPU0YaF6kNMuqAZhXpZWKkfmVZ8VDZA=";
+    };
+  };
+
 in
 {
   programs.neovim = {
@@ -52,6 +62,35 @@ in
           { "hrsh7th/nvim-cmp", lazy = true },
           { "L3MON4D3/LuaSnip", lazy = true },
 
+          -- Visual and UI plugins
+          {
+            "gonstoll/caelestia.nvim",
+            lazy = false,
+            priority = 1000,
+            config = function()
+              vim.cmd.colorscheme("caelestia")
+            end,
+          },
+          {
+            "catppuccin/nvim",
+            name = "catppuccin",
+            lazy = false,
+            priority = 999,
+          },
+          { "nvim-lualine/lualine.nvim" },
+          { "akinsho/bufferline.nvim" },
+          { "nvim-tree/nvim-web-devicons" },
+          { "echasnovski/mini.nvim" },
+          { "stevearc/conform.nvim" },
+          { "mfussenegger/nvim-lint" },
+          { "lewis6991/gitsigns.nvim" },
+          { "folke/todo-comments.nvim" },
+          { "folke/persistence.nvim" },
+          { "nvim-ts-autotag" },
+          { "wellle/targets.vim" },
+          { "jiangmiao/auto-pairs" },
+          { "tpope/vim-surround" },
+
           -- Cord for Discord RPC
           {
             "vyfor/cord.nvim",
@@ -73,9 +112,11 @@ in
         defaults = { lazy = false, version = false },
         install = { missing = true },
         change_detection = { enabled = false, notify = false },
+        ui = { backdrop = 100 },
+        rocks = { enabled = false },
         performance = {
           reset_packpath = false,
-          rtp = { reset = false },
+          rtp = { reset = false, disabled_plugins = { "editorconfig", "gzip", "netrw", "netrwPlugin", "netrwSettings", "netrwFileHandlers", "matchit", "2html_plugin", "getscript", "getscriptPlugin", "logipat", "rrhelper", "spellfile_plugin", "vimball", "vimballPlugin" } },
         },
       })
     '';
@@ -84,26 +125,47 @@ in
       lazy-nvim
       LazyVim
 
+      # Core plugins
+      plenary-nvim
+      snacks-nvim
+      trouble-nvim
+      which-key-nvim
+      telescope-nvim
+      neo-tree-nvim
+      nvim-treesitter
+      nvim-treesitter-textobjects
+      nvim-lspconfig
       blink-cmp
+      luasnip
+
+      # Visual & UI
+      catppuccin-nvim
+      lualine-nvim
       bufferline-nvim
+      nvim-web-devicons
+      conform-nvim
+      nvim-lint
+      gitsigns-nvim
+      todo-comments-nvim
+      persistence-nvim
+      nvim-ts-autotag
+
+      # Editor enhancements
       flash-nvim
+      nui-nvim
+      noice-nvim
+      targets-vim
+      vim-surround
+
+      # Mini plugins
       mini-ai
       mini-icons
       mini-pairs
-      neo-tree-nvim
-      nvim-lint
-      nvim-lspconfig
-      persistence-nvim
-      plenary-nvim
-      snacks-nvim
-      telescope-nvim
-      todo-comments-nvim
-      tokyonight-nvim
-      trouble-nvim
-      ts-comments-nvim
-      which-key-nvim
+
+      # Custom & extras
       catppuccin-nvim
       claude-code-nvim
+      caelestia-nvim
     ];
 
     extraPackages = with pkgs; [
