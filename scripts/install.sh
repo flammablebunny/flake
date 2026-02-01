@@ -19,7 +19,8 @@ set -euo pipefail
 
 REPO_URL="https://github.com/Flammable-Bunny/nix.git"
 VENTOY_KEY="/mnt/Ventoy/secrets/key.txt"
-AGE_KEY_DEST="$HOME/.config/agenix/key.txt"
+# Will be set properly after we know the username
+AGE_KEY_DEST=""
 
 # Colors
 RED='\033[0;31m'
@@ -82,6 +83,13 @@ detect_environment() {
     fi
 
     info "Host: $HOST (user: $USERNAME)"
+
+    # Set age key destination based on actual username
+    if [[ "$INSTALL_MODE" == "fresh" ]]; then
+        AGE_KEY_DEST="/mnt/home/$USERNAME/.config/agenix/key.txt"
+    else
+        AGE_KEY_DEST="/home/$USERNAME/.config/agenix/key.txt"
+    fi
 }
 
 # ============================================================================
@@ -93,17 +101,23 @@ setup_age_key() {
 
     # Already have key?
     if [[ -f "$AGE_KEY_DEST" ]]; then
-        success "Age key already exists"
+        success "Age key already exists at $AGE_KEY_DEST"
         return 0
     fi
 
     # Check Ventoy USB
     if [[ -f "$VENTOY_KEY" ]]; then
         info "Found age key on Ventoy USB"
-        mkdir -p "$(dirname "$AGE_KEY_DEST")"
-        cp "$VENTOY_KEY" "$AGE_KEY_DEST"
-        chmod 600 "$AGE_KEY_DEST"
-        success "Age key copied from Ventoy"
+        sudo mkdir -p "$(dirname "$AGE_KEY_DEST")"
+        sudo cp "$VENTOY_KEY" "$AGE_KEY_DEST"
+        sudo chmod 600 "$AGE_KEY_DEST"
+        # Set ownership to UID 1000 (first user) for fresh installs
+        if [[ "$INSTALL_MODE" == "fresh" ]]; then
+            sudo chown 1000:users "$AGE_KEY_DEST"
+        else
+            sudo chown "$USERNAME:users" "$AGE_KEY_DEST"
+        fi
+        success "Age key copied to $AGE_KEY_DEST"
         return 0
     fi
 
@@ -117,10 +131,15 @@ setup_age_key() {
     for path in "${backup_paths[@]}"; do
         if [[ -f "$path" ]]; then
             info "Found age key at: $path"
-            mkdir -p "$(dirname "$AGE_KEY_DEST")"
-            cp "$path" "$AGE_KEY_DEST"
-            chmod 600 "$AGE_KEY_DEST"
-            success "Age key copied"
+            sudo mkdir -p "$(dirname "$AGE_KEY_DEST")"
+            sudo cp "$path" "$AGE_KEY_DEST"
+            sudo chmod 600 "$AGE_KEY_DEST"
+            if [[ "$INSTALL_MODE" == "fresh" ]]; then
+                sudo chown 1000:users "$AGE_KEY_DEST"
+            else
+                sudo chown "$USERNAME:users" "$AGE_KEY_DEST"
+            fi
+            success "Age key copied to $AGE_KEY_DEST"
             return 0
         fi
     done
@@ -229,16 +248,6 @@ run_install() {
     if [[ "$INSTALL_MODE" == "fresh" ]]; then
         info "Running nixos-install for $HOST..."
         sudo nixos-install --flake "$NIXOS_DIR#$HOST" --impure --no-root-passwd
-
-        # Copy age key to installed system
-        if [[ -f "$AGE_KEY_DEST" ]]; then
-            local target_key="/mnt/home/$USERNAME/.config/agenix/key.txt"
-            sudo mkdir -p "$(dirname "$target_key")"
-            sudo cp "$AGE_KEY_DEST" "$target_key"
-            sudo chown -R 1000:users "/mnt/home/$USERNAME/.config/agenix"
-            sudo chmod 600 "$target_key"
-            success "Age key copied to installed system"
-        fi
     else
         info "Rebuilding NixOS for $HOST..."
         sudo nixos-rebuild switch --flake "$NIXOS_DIR#$HOST" --impure
