@@ -152,15 +152,15 @@
             pkgs.glib
             pkgs.adw-gtk3
             pkgs.papirus-icon-theme
-            pkgs.bibata-cursors
+            pkgs.catppuccin-cursors.frappeDark
             pkgs.gtk3
 
             # Core tools
             pkgs.git
-	    pkgs.wget
+	         pkgs.wget
             pkgs.socat
-	    pkgs.os-prober
-	    pkgs.toybox
+	         pkgs.os-prober
+	         pkgs.toybox
             pkgs.libnotify
             pkgs.qt6.qtwayland
             pkgs.qt6.qmake
@@ -199,6 +199,10 @@
             pkgs.slurp
             pkgs.playerctl
             pkgs.p7zip
+            pkgs.go
+            pkgs.fzf
+            pkgs.luajitPackages.luarocks
+            pkgs.python3
 
             # Caelestia dependencies
             pkgs.brightnessctl

@@ -32,14 +32,14 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- LazyVim + cord + noice (without LazyVim's default imports which conflict)
+      vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
+      require("nvim-treesitter.configs").setup({
+        parser_install_dir = vim.fn.stdpath("data") .. "/site",
+      })
+
       require("lazy").setup({
         spec = {
-          -- LazyVim without auto-importing plugins (to avoid conflicts)
-          { "folke/LazyVim", version = false },
-
-          -- Core LazyVim plugins manually
-          { "LazyVim/LazyVim", version = false },
+          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
           { "nvim-lua/plenary.nvim" },
           { "folke/snacks.nvim" },
           { "folke/trouble.nvim" },
@@ -51,58 +51,40 @@ in
           { "neovim/nvim-lspconfig" },
           { "hrsh7th/nvim-cmp", lazy = true },
           { "L3MON4D3/LuaSnip", lazy = true },
-
-          -- Visual and UI plugins
-          {
-            "catppuccin/nvim",
-            name = "catppuccin",
-            lazy = false,
-            priority = 1000,
-            config = function()
-              dofile(vim.fn.expand("~/.config/nvim/lua/caelestia.lua"))
-            end,
-          },
+          { "saghen/blink.cmp", build = false },
+          { "folke/flash.nvim" },
+          { "folke/tokyonight.nvim" },
+          { "folke/ts-comments.nvim" },
+          { "MagicDuck/grug-far.nvim" },
+          { "folke/lazydev.nvim" },
+          { "rafamadriz/friendly-snippets" },
+          { "mason-org/mason.nvim" },
+          { "mason-org/mason-lspconfig.nvim" },
+          { "catppuccin/nvim", name = "catppuccin", lazy = false, priority = 1000,
+            config = function() dofile(vim.fn.expand("~/.config/nvim/lua/caelestia.lua")) end },
           { "nvim-lualine/lualine.nvim" },
           { "akinsho/bufferline.nvim" },
           { "nvim-tree/nvim-web-devicons" },
-          { "echasnovski/mini.nvim" },
+          { "nvim-mini/mini.nvim" },
           { "stevearc/conform.nvim" },
           { "mfussenegger/nvim-lint" },
           { "lewis6991/gitsigns.nvim" },
           { "folke/todo-comments.nvim" },
           { "folke/persistence.nvim" },
-          { "nvim-ts-autotag" },
+          { "windwp/nvim-ts-autotag" },
           { "wellle/targets.vim" },
-          { "jiangmiao/auto-pairs" },
           { "tpope/vim-surround" },
-
-          -- Cord for Discord RPC
-          {
-            "vyfor/cord.nvim",
-            build = false,
-            config = function()
-              require("cord").setup()
-            end,
-          },
-
-          -- Noice for enhanced command-line UI
-          {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim" },
-            config = function()
-              require("noice").setup()
-            end,
-          },
+          { "vyfor/cord.nvim", build = false, config = function() require("cord").setup() end },
+          { "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim" },
+            config = function() require("noice").setup() end },
         },
         defaults = { lazy = false, version = false },
-        install = { missing = true },
-        change_detection = { enabled = false, notify = false },
-        ui = { backdrop = 100 },
+        install = { missing = false },
+        checker = { enabled = false },
+        change_detection = { enabled = false },
         rocks = { enabled = false },
-        performance = {
-          reset_packpath = false,
-          rtp = { reset = false, disabled_plugins = { "editorconfig", "gzip", "netrw", "netrwPlugin", "netrwSettings", "netrwFileHandlers", "matchit", "2html_plugin", "getscript", "getscriptPlugin", "logipat", "rrhelper", "spellfile_plugin", "vimball", "vimballPlugin" } },
-        },
+        pkg = { enabled = false },
+        performance = { reset_packpath = false, rtp = { reset = false } },
       })
     '';
 
@@ -143,13 +125,19 @@ in
       vim-surround
 
       # Mini plugins
-      mini-ai
-      mini-icons
-      mini-pairs
+      mini-nvim
 
       # Custom & extras
       catppuccin-nvim
       claude-code-nvim
+      tokyonight-nvim
+      ts-comments-nvim
+      grug-far-nvim
+      lazydev-nvim
+      friendly-snippets
+      mason-nvim
+      mason-lspconfig-nvim
+      nvim-cmp
     ];
 
     extraPackages = with pkgs; [
