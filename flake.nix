@@ -159,12 +159,13 @@
             pkgs.git
 	    pkgs.wget
             pkgs.socat
+	    pkgs.os-prober
+	    pkgs.toybox
             pkgs.libnotify
             pkgs.qt6.qtwayland
             pkgs.qt6.qmake
             pkgs.libsForQt5.qt5ct
             pkgs.qt6Packages.qt6ct
-            pkgs.os-prober
             pkgs.vimPlugins.nvim-tree-lua
             pkgs.vimPlugins.nvim-web-devicons
 

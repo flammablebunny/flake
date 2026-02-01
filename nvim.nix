@@ -23,64 +23,6 @@ let
     doCheck = false;
   };
 
-  claudeLua = ''
-    return {
-      {
-        "greggh/claude-code.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        cmd = "ClaudeCode",
-        keys = { { "<leader>cc", "<cmd>ClaudeCode<CR>", desc = "Toggle Claude Code" } },
-        config = function() require("claude-code").setup() end,
-      }
-    }
-  '';
-
-  caelestiaLua = ''
-    return {
-      {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        priority = 1000,
-        opts = function(_, opts)
-          opts.flavour = "mocha"
-          opts.transparent_background = true
-
-          local function get_caelestia_data()
-            local home = os.getenv("HOME")
-            local cmd = 'ls -td ' .. home .. '/.cache/caelestia/schemes/*/ 2>/dev/null | head -1'
-            local handle = io.popen(cmd)
-            local latest_dir = handle:read("*a"):gsub("\n", "")
-            handle:close()
-
-            if latest_dir == "" then return nil end
-            local file = io.open(latest_dir .. "/vibrant/dark.json", "r")
-            if not file then return nil end
-            local content = file:read("*a")
-            file:close()
-            local ok, data = pcall(vim.json.decode, content)
-            if not ok then return nil end
-            return data
-          end
-
-          local c = get_caelestia_data()
-          if c then
-            local function h(hex) return "#" .. (hex or "000000") end
-            opts.color_overrides = {
-              mocha = {
-                base = h(c.base),
-                mantle = h(c.mantle),
-                crust = h(c.crust),
-                text = h(c.text),
-                blue = h(c.blue),
-              },
-            }
-          end
-        end,
-      },
-      { "LazyVim/LazyVim", opts = { colorscheme = "catppuccin" } },
-    }
-  '';
-
 in
 {
   programs.neovim = {
@@ -90,9 +32,60 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
+      -- All plugin specifications defined directly in Nix for reproducibility
+      -- Plugins with native builds that cause ABI incompatibility are disabled
       require("lazy").setup({
         spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          { "LazyVim/LazyVim", import = "lazyvim.plugins", build = false },
+
+          -- Catppuccin theme with Mocha flavor
+          {
+            "catppuccin/nvim",
+            name = "catppuccin",
+            priority = 1000,
+            build = false,
+            config = function()
+              require("catppuccin").setup({
+                flavour = "mocha",
+              })
+              vim.cmd("colorscheme catppuccin")
+            end,
+          },
+
+          -- Claude Code plugin integration
+          {
+            "greggh/claude-code.nvim",
+            build = false,
+            dependencies = { "nvim-lua/plenary.nvim" },
+          },
+
+          -- Disable problematic plugins with native builds or command-line hooks
+          {
+            "vyfor/cord.nvim",
+            enabled = false,  -- Requires zig build, causes segfault
+          },
+
+          {
+            "nvim-treesitter/nvim-treesitter",
+            enabled = false,  -- Parser compilation causes ABI issues
+          },
+
+          {
+            "folke/noice.nvim",
+            enabled = false,  -- UI replacement causes segfault on command mode
+          },
+
+          {
+            "folke/snacks.nvim",
+            enabled = false,  -- UI modifications cause segfault with command-line
+          },
+
+          {
+            "saghen/blink.cmp",
+            build = false,  -- Disable native fuzzy matcher
+          },
+
+          -- Import any user plugins (if plugins dir exists)
           { import = "plugins" },
         },
         defaults = { lazy = false, version = false },
@@ -108,7 +101,7 @@ in
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
       LazyVim
-      
+
       blink-cmp
       bufferline-nvim
       flash-nvim
@@ -137,16 +130,15 @@ in
 
     extraPackages = with pkgs; [
       git lazygit ripgrep fd unzip gzip curl
-      gcc gnumake 
+      gcc gnumake
       nodejs_22
       lua-language-server nil stylua shfmt
-      cargo rustc 
+      cargo rustc
     ];
   };
 
-  xdg.configFile."nvim/lua/plugins/caelestia.lua".text = caelestiaLua;
-  xdg.configFile."nvim/lua/plugins/claude.lua".text = claudeLua;
-  xdg.configFile."nvim/lua/config/options.lua".source = ./lua/config/options.lua;
-  xdg.configFile."nvim/lua/config/keymaps.lua".source = ./lua/config/keymaps.lua;
-  xdg.configFile."nvim/lua/plugins/cord.lua".source = ./lua/plugins/cord.lua;
+  xdg.configFile = {
+    "nvim/lua/config/options.lua".source = ./lua/config/options.lua;
+    "nvim/lua/config/keymaps.lua".source = ./lua/config/keymaps.lua;
+  };
 }

@@ -1,7 +1,6 @@
 return {
   {
     "vyfor/cord.nvim",
-    build = "./build", -- Runs the build script (fetches binary)
     event = "VeryLazy", -- Loads slightly later to not slow down startup
     opts = {
       usercmds = true, -- Enable commands like :CordConnect

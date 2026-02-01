@@ -2,7 +2,6 @@
 
 {
   imports = [
-    inputs.lazyvim-module.homeManagerModules.default
     ./nvim.nix
     ./spicetify.nix
     ./nixcraft.nix

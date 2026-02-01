@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 120 nvim:*)",
+      "Bash(nvim:*)",
+      "Bash(timeout 5 nvim:*)",
+      "Bash(timeout 10 nvim:*)",
+      "Bash(echo:*)",
+      "Bash(timeout 3 strace:*)",
+      "Bash(alias rm:*)",
+      "Bash(/bin/rm:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(sudo nixos-rebuild switch:*)",
+      "Bash(timeout 15 nvim:*)",
+      "Bash(home-manager switch:*)",
+      "Bash(~/.config/home-manager/home-manager switch:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
