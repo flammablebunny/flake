@@ -13,13 +13,24 @@
     }
   ];
 
-  # Duplicate Dual GPU Kernel Params 
+  # Duplicate Dual GPU Kernel Params
   boot.kernelParams = [
     "amdgpu.sg_display=0"
+    "amdgpu.ppfeaturemask=0xffffffff"  # Enable AMD GPU overclocking
     "i915.enable_guc=3"
     "xe.vram_bar_size=0"
-    "loglevel=3" 
+    "xe.dmabuf_pin_vram=1"
+    "loglevel=3"
+    "xe.enable_flipq=1"
   ];
+
+  boot.kernelPatches = [
+    { name = "xe-p2p-no-wait-gpu"; patch = /home/bunny/waywall-chat-vulkan/patches/xe-p2p-no-wait-gpu-6.18.7.patch; }
+    { name = "xe-dmabuf-pin-vram"; patch = /home/bunny/waywall-chat-vulkan/patches/xe-dmabuf-pin-vram-6.18.7.patch; }
+    { name = "amdgpu-allow-p2p-scanout"; patch = /home/bunny/waywall-chat-vulkan/patches/amdgpu-allow-p2p-scanout-6.18.7.patch; }
+   ];
+
+  environment.sessionVariables.HYPRLAND_TRACE_FENCE_WAIT = "1";
 
   # Duplicate Audio Params to Enable Pulse on PC 
   services.pipewire = {
@@ -53,6 +64,16 @@
   environment.systemPackages = with pkgs; [
     wootility
   ];
+  
+  systemd.services.lactd = {
+    description = "AMDGPU Control Daemon";
+    after = [ "multi-user.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.lact}/bin/lact daemon";
+      Restart = "always";
+    };
+  };
 
   # Tmpfs for practice maps)
   fileSystems."/home/bunny/mcsr/tmpfs" = {
@@ -63,6 +84,7 @@
 
   systemd.tmpfiles.rules = [
     "d /home/bunny/mcsr/tmpfs/ranked 0755 bunny users -"
+    "d /home/bunny/mcsr/tmpfs/SeedQueue 0755 bunny users -"
   ];
 
   systemd.services.mc-tmpfs-setup = {
@@ -75,6 +97,7 @@
       RemainAfterExit = true;
       ExecStart = pkgs.writeShellScript "mc-setup" ''
         mkdir -p /home/bunny/mcsr/tmpfs/ranked
+        mkdir -p /home/bunny/mcsr/tmpfs/SeedQueue
         ln -sf "/home/bunny/mcsr/practice-maps/Z_Blaze Practice" /home/bunny/mcsr/tmpfs/ranked/
         ln -sf "/home/bunny/mcsr/practice-maps/Z_BT Practice v1.3" /home/bunny/mcsr/tmpfs/ranked/
         ln -sf "/home/bunny/mcsr/practice-maps/Z_Crafting Practice v2" /home/bunny/mcsr/tmpfs/ranked/
@@ -96,11 +119,18 @@
       User = "bunny";
       Restart = "always";
       ExecStart = pkgs.writeShellScript "mc-cleanup" ''
+        # Cleanup for ranked and SeedQueue minecraft saves
         while true; do
           if [ -d /home/bunny/mcsr/tmpfs/ranked ]; then
             cd /home/bunny/mcsr/tmpfs/ranked
-            ls -t1 --ignore='Z*' 2>/dev/null | tail -n +6 | while read save; do
+            ls -t1 --ignore='Z*' 2>/dev/null | tail -n +7 | while read save; do
               rm -rf "/home/bunny/mcsr/tmpfs/ranked/$save"
+            done
+          fi
+          if [ -d /home/bunny/mcsr/tmpfs/SeedQueue ]; then
+            cd /home/bunny/mcsr/tmpfs/SeedQueue
+            ls -t1 --ignore='Z*' 2>/dev/null | tail -n +7 | while read save; do
+              rm -rf "/home/bunny/mcsr/tmpfs/SeedQueue/$save"
             done
           fi
           sleep 300

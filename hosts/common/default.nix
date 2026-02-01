@@ -11,6 +11,17 @@
   # Enable Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Intel Mesa (iris) linear dmabuf stride padding for cross-GPU P2P
+  nixpkgs.overlays = [
+    (final: prev: {
+      mesa = prev.mesa.overrideAttrs (old: {
+        patches = (old.patches or []) ++ [
+          /home/bunny/waywall-chat-vulkan/patches/mesa-iris-linear-stride-256.patch
+        ];
+      });
+    })
+  ];
+
   # Boot loader
   boot.loader.grub.enable = true;
   boot.loader.grub.devices = [ "nodev" ];
@@ -66,14 +77,25 @@
   # User definition 
   users.users.${userName} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "libvirtd" ];
+    extraGroups = [ "wheel" "libvirtd" "video" "render" ];
     packages = with pkgs; [ tree ];
   };
 
   nixpkgs.config.allowUnfree = true;
 
   # Universal Packages 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; let
+    btop-gpu = btop.overrideAttrs (old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/btop \
+          --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
+            rocmPackages.rocm-smi
+            rocmPackages.amdsmi
+          ]}
+      '';
+    });
+  in [
 
     (writeShellScriptBin "app2unit" ''
       #!/bin/sh
@@ -130,7 +152,11 @@
     p7zip
     socat
     toybox
-    btop
+    btop-gpu
+    rocmPackages.rocm-device-libs
+    rocmPackages.rocm-smi
+    rocmPackages.amdsmi
+    lm_sensors
     inotify-tools
     radeontop
     amdgpu_top
@@ -171,7 +197,7 @@
     # ── Development ────────────────────────────────────────────────────
     
     # IDEs
-    jetbrains.idea-ultimate
+    jetbrains.idea-oss
 
     # Languages
     go
@@ -251,7 +277,7 @@
     # ── Misc ────────────────────────────────────────────────────────────
     
     chromium
-
+    lact
 
   ];
 

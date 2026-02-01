@@ -543,7 +543,7 @@ in
 
       local paths = {
           bg_path = toggles.toggle_bg_picture and (home .. "/Pictures/Wallpapers/rabbit forest.png") or nil,
-          pacem_path   = home .. "/mcsr/paceman-tracker-0.7.1.jar",
+          pacem_path   = home .. "/mcsr/paceman-tracker-0.7.2.jar",
           nb_path      = home .. "/mcsr/Ninjabrain-Bot-1.5.1.jar",
           overlay_path = home .. "/.config/waywall/images/measuring_overlay.png",
           lingle_path  = home .. "/IdeaProjects/Lingle/build/libs/Lingle-v1.0.0.jar",

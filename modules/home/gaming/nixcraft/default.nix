@@ -36,12 +36,20 @@ in
           minMemory = 512;
         };
 
+        envVars = {
+          DRI_PRIME = "pci-0000_09_00_0";
+          __GLX_VENDOR_LIBRARY_NAME = "intel";
+          GBM_DEVICE = "/dev/dri/renderD128";
+        };
+
         waywall = {
           enable = true;
-          binaryPath = "/home/bunny/IdeaProjects/waywall/builddir/waywall/waywall";
-          glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
-          rawCommand = "env WAYWALL_VK_PROXY_GAME=1 WAYWALL_VK_VENDOR=amd WAYWALL_DMABUF_ALLOW_MODIFIERS=1 WAYWALL_SUBPROC_DRI_PRIME=0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD130 DRI_PRIME=pci-0000_09_00_0 $GAME_SCRIPT";
+          binaryPath = "/home/bunny/waywall-chat-vulkan/build/waywall/waywall";
+          glfwPath = "/nix/store/bqa2lamm4z1iw5q95dj02mh7abh3zskz-glfw-minecraft-3.4/lib/libglfw.so";
+          rawCommand = "env WAYWALL_ASYNC_PIPELINING=1 DRI_PRIME=pci-0000_03_00_0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD130 /home/bunny/waywall-chat-vulkan/build/waywall/waywall wrap -- env DRI_PRIME=pci-0000_09_00_0 __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD128 $GAME_SCRIPT";
         };
+
+        useDiscreteGPU = false;
 
         binEntry = {
           enable = true;

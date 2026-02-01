@@ -4,9 +4,9 @@
   imports = [
     ./discord
     ./spicetify
-    ./obs.nix
-    ./easyeffects.nix
+    ./obs
+    ./easyeffects
     ./fastfetch
-    ./thunar.nix
+    ./thunar
   ];
 }

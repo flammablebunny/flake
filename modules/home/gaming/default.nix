@@ -2,9 +2,9 @@
 
 {
   imports = [
-    ./nixcraft.nix
+    ./nixcraft
     ./waywall
-    ./mangohud.nix
-    ./paceman.nix
+    ./mangohud
+    ./paceman
   ];
 }

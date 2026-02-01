@@ -77,6 +77,9 @@ in
       "match:class steam_app_[0-9]+, immediate true"
       "match:class steam_app_[0-9]+, idle_inhibit always"
 
+      # Waywall
+      "match:class waywall, immediate true"
+
       # ATLauncher console
       "match:class com-atlauncher-App, match:title ATLauncher Console, float true"
 

@@ -8,7 +8,7 @@ in
   wayland.windowManager.hyprland.settings = {
     general = {
       layout = "dwindle";
-      allow_tearing = false; 
+      allow_tearing = true; 
 
       gaps_workspaces = vars.gaps.workspaces;
       gaps_in = vars.gaps.windowsIn;

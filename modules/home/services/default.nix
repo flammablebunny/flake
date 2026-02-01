@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ./discord-streaming.nix
+    ./discord-streaming
   ];
 }

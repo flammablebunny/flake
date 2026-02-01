@@ -41,6 +41,7 @@
     hyprland = {
       url = "github:flammablebunny/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.aquamarine.url = "github:flammablebunny/aquamarine";
     };
 
     agenix = {

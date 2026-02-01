@@ -43,17 +43,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1765657670,
-        "narHash": "sha256-eMotLnRYH1dtdA0CLJWQ+biZG9PYTCZh8+RnhVpVu70=",
-        "owner": "Flammable-Bunny",
-        "repo": "aquamarine",
-        "rev": "3e882e7a8be2dd63741b02ed2b54d557d85391e8",
-        "type": "github"
+        "lastModified": 1769887794,
+        "narHash": "sha256-xvafam9KR2BuxnG2p3Ywc0PKDDRoMfHTxt0ZY+LthGw=",
+        "ref": "refs/heads/main",
+        "rev": "630207b85686814ac761c49d34d0b5c540268dc3",
+        "revCount": 336,
+        "type": "git",
+        "url": "file:///home/bunny/IdeaProjects/aquamarine"
       },
       "original": {
-        "owner": "Flammable-Bunny",
-        "repo": "aquamarine",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/bunny/IdeaProjects/aquamarine"
       }
     },
     "cachix": {
@@ -385,11 +385,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769397130,
-        "narHash": "sha256-TTM4KV9IHwa181X7afBRbhLJIrgynpDjAXJFMUOWfyU=",
+        "lastModified": 1769872935,
+        "narHash": "sha256-07HMIGQ/WJeAQJooA7Kkg1SDKxhAiV6eodvOwTX6WKI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c37679d37bdbecf11bbe3c5eb238d89ca4f60641",
+        "rev": "f4ad5068ee8e89e4a7c2e963e10dd35cd77b37b7",
         "type": "github"
       },
       "original": {
@@ -496,17 +496,17 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1769401550,
-        "narHash": "sha256-MUITuu+a6xB63+M2pcm6M5lMGRTjX7ph/dpOLgg0PQU=",
-        "owner": "Flammable-Bunny",
-        "repo": "Hyprland",
-        "rev": "7adec9c86e702d96b237ced1ff559cb545587a9b",
-        "type": "github"
+        "lastModified": 1769744609,
+        "narHash": "sha256-9cVfbBAsPJzTJfPNUa4CNUOabOQD1ogSVdRSR0/Asqs=",
+        "ref": "refs/heads/main",
+        "rev": "08272a9e1d4ce32c1b9cf7eb3f3f8b5af8bafc32",
+        "revCount": 6872,
+        "type": "git",
+        "url": "file:///home/bunny/IdeaProjects/Hyprland"
       },
       "original": {
-        "owner": "flammablebunny",
-        "repo": "Hyprland",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/bunny/IdeaProjects/Hyprland"
       }
     },
     "hyprland-guiutils": {
@@ -830,11 +830,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1769385793,
-        "narHash": "sha256-GtAyfMHGNAf8Oz+Gz0dBO2L/ZyZO7AVmgVOpCr/FZc8=",
+        "lastModified": 1769847318,
+        "narHash": "sha256-dtn4DcXRekEowv87x1LtDTpRvsCIwc473ViL3sRpZIc=",
         "owner": "kaylorben",
         "repo": "nixcord",
-        "rev": "de37fd12b9344786841e53bc0f3556148d4ce5df",
+        "rev": "c7d3828af413799cffb3d312cb5c427124e892d6",
         "type": "github"
       },
       "original": {
@@ -898,11 +898,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1769170682,
-        "narHash": "sha256-oMmN1lVQU0F0W2k6OI3bgdzp2YOHWYUAw79qzDSjenU=",
+        "lastModified": 1769461804,
+        "narHash": "sha256-msG8SU5WsBUfVVa/9RPLaymvi5bI8edTavbIq3vRlhI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c5296fdd05cfa2c187990dd909864da9658df755",
+        "rev": "bfc1b8a4574108ceef22f02bafcf6611380c100d",
         "type": "github"
       },
       "original": {
@@ -924,11 +924,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1769391030,
-        "narHash": "sha256-hLNHp6XiDF8IxNF5OOM3Rzz2knahQmTLaPFaB9fSi5I=",
+        "lastModified": 1769786801,
+        "narHash": "sha256-i5130O0JEAgZZ/d3mksGbXriNPZiXrvDOh9JWMQZh3w=",
         "owner": "notashelf",
         "repo": "nvf",
-        "rev": "1824789d99f90f03781923feca5a11890c6a55b3",
+        "rev": "fde1338793aeb88810122030cf0badd3297936b0",
         "type": "github"
       },
       "original": {
@@ -967,11 +967,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768985439,
-        "narHash": "sha256-qkU4r+l+UPz4dutMMRZSin64HuVZkEv9iFpu9yMWVY0=",
+        "lastModified": 1769593411,
+        "narHash": "sha256-WW00FaBiUmQyxvSbefvgxIjwf/WmRrEGBbwMHvW/7uQ=",
         "ref": "refs/heads/master",
-        "rev": "191085a8821b35680bba16ce5411fc9dbe912237",
-        "revCount": 731,
+        "rev": "1e4d804e7f3fa7465811030e8da2bf10d544426a",
+        "revCount": 732,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -1124,11 +1124,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769383295,
-        "narHash": "sha256-NPoMjIh57tDuRY6BG/SKwyxHicyICvQRLQgu9jHR46A=",
+        "lastModified": 1769748063,
+        "narHash": "sha256-H5XCtJMS3RQKHeaS+axX7CAJ0WwuTUYGy4uzLFSm0Xc=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "337d5df89d17caf32d39f3efc9a868beded6933a",
+        "rev": "efdd1e683da9412f515b9bd42c37861978c2fd3a",
         "type": "github"
       },
       "original": {
