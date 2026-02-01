@@ -29,15 +29,6 @@
       };
 
       plugins = {
-        allCallTimers = {
-          enable = true;
-          format = "stopwatch";
-          showRoleColor = true;
-          showSeconds = true;
-          showWithoutHover = true;
-          trackSelf = true;
-          watchLargeGuilds = false;
-        };
 
         alwaysAnimate = {
           enable = true;
@@ -181,14 +172,6 @@
           memberList = true;
           toolTip = true;
           voiceActivity = true;
-        };
-
-        messageClickActions = {
-          enable = true;
-          enableDeleteOnClick = true;
-          enableDoubleClickToEdit = true;
-          enableDoubleClickToReply = true;
-          requireModifier = false;
         };
 
         noF1 = {

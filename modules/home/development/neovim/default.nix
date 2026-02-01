@@ -53,7 +53,7 @@ in
       # Leader key
       globals.mapleader = " ";
 
-      # Theme - catppuccin (caelestia.lua will override colors)
+      # Theme
       theme = {
         enable = true;
         name = "catppuccin";
@@ -91,8 +91,8 @@ in
       # Telescope
       telescope.enable = true;
 
-      # File tree (using rnvimr/ranger instead)
-      filetree.neo-tree.enable = false;
+      # File tree
+      filetree.neo-tree.enable = true;
 
       # Status line
       statusline.lualine.enable = true;
@@ -195,23 +195,54 @@ in
           package = pkgs.vimPlugins.plenary-nvim;
         };
 
-        # Ranger file manager integration
-        rnvimr = {
-          package = pkgs.vimPlugins.rnvimr;
+        # Auto-close brackets/quotes
+        autopairs = {
+          package = pkgs.vimPlugins.nvim-autopairs;
+          setup = "require('nvim-autopairs').setup {}";
+        };
+
+        # Toggle comments (gcc, gc)
+        comment = {
+          package = pkgs.vimPlugins.comment-nvim;
+          setup = "require('Comment').setup {}";
+        };
+
+        # Floating terminal
+        toggleterm = {
+          package = pkgs.vimPlugins.toggleterm-nvim;
           setup = ''
-            -- Make Ranger replace Netrw and be the file explorer
-            vim.g.rnvimr_enable_ex = 1
-            -- Make Ranger to be hidden after picking a file
-            vim.g.rnvimr_enable_picker = 1
+            require('toggleterm').setup {
+              open_mapping = [[<C-\>]],
+              direction = 'float',
+              float_opts = {
+                border = 'curved',
+              },
+            }
           '';
         };
-      };
 
-      # Custom Lua config - caelestia colorscheme integration
-      luaConfigRC.caelestia = ''
-        -- Caelestia colorscheme integration
-        ${builtins.readFile ./lua/caelestia.lua}
-      '';
+        # Better Lua LSP for nvim configs
+        lazydev = {
+          package = pkgs.vimPlugins.lazydev-nvim;
+          setup = "require('lazydev').setup {}";
+        };
+
+        # Enhanced Rust tooling
+        rustaceanvim = {
+          package = pkgs.vimPlugins.rustaceanvim;
+        };
+
+        # Better TypeScript/JS support
+        typescript-tools = {
+          package = pkgs.vimPlugins.typescript-tools-nvim;
+          setup = "require('typescript-tools').setup {}";
+        };
+
+        # Java LSP
+        nvim-jdtls = {
+          package = pkgs.vimPlugins.nvim-jdtls;
+        };
+      };
 
       # Disable Arrow Keys
       luaConfigRC.keymaps = ''
@@ -224,8 +255,9 @@ in
           end
         end
 
-        -- File explorer (Ranger)
-        vim.keymap.set("n", "<leader>e", "<cmd>RnvimrToggle<CR>", { desc = "Toggle Ranger" })
+        -- File explorer (Neo-tree)
+        vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Neo-tree" })
+        vim.keymap.set("n", "<leader>E", "<cmd>Neotree reveal<CR>", { desc = "Reveal file in Neo-tree" })
       '';
 
       # Extra packages for LSP, formatters, etc.
@@ -247,7 +279,8 @@ in
         cargo
         rustc
         tree-sitter
-        ranger
+        jdt-language-server
+        maven
       ];
     };
   };
