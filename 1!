@@ -146,9 +146,6 @@ in
     ];
 
 
-      
-    # Lock-screen-safe binds (bindl)
-    bindl = [
       # Restore lock
       "${kb.restoreLock}, exec, quickshell ipc call lock focus"
 
@@ -156,6 +153,7 @@ in
       ", XF86MonBrightnessUp, exec, quickshell ipc call brightness increment"
       ", XF86MonBrightnessDown, exec, quickshell ipc call brightness decrement"
 
+     
       # Media (QuickShell)
       "Ctrl+Super, Space, exec, quickshell ipc call mpris playPause"
       ", XF86AudioPlay, exec, quickshell ipc call mpris playPause"
@@ -169,9 +167,6 @@ in
       # Volume
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       "Super+Shift, M, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-
-      # Screenshot
-      ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
 
       # Clipboard paste
       "Ctrl+Shift+Alt, V, exec, sleep 0.5s && ydotool type -d 1 \"$(cliphist list | head -1 | cliphist decode)\""
