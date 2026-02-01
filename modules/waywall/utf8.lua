@@ -1092,8 +1092,18 @@ function M.codes(s)
 			return nil
 		end
 		local start_pos = pos
-		local char_bytes = utf8charbytes(s, pos)
-		local codepoint = utf8unicode(s, nil, nil, pos)
+		local ok_len, char_bytes = pcall(utf8charbytes, s, pos)
+		if not ok_len then
+			-- Invalid UTF-8 byte; advance 1 and return replacement character.
+			pos = pos + 1
+			return start_pos, 0xFFFD
+		end
+
+		local ok_cp, codepoint = pcall(utf8unicode, s, nil, nil, pos)
+		if not ok_cp then
+			codepoint = 0xFFFD
+		end
+
 		pos = pos + char_bytes
 		return start_pos, codepoint
 	end

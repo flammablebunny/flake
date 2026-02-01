@@ -1,92 +1,89 @@
-# Window, workspace, and layer rules for Hyprland
-# Converted from ~/.config/hypr/hyprland/rules.conf
 { vars, ... }:
 
 {
   wayland.windowManager.hyprland.settings = {
-    # Window rules
+    # Window rules (v3 syntax: match:<prop> <value>, <effect> <value>)
     windowrule = [
       # Opacity for non-fullscreen windows
-      "opacity ${toString vars.window.opacity} override, fullscreen:0"
+      "match:fullscreen 0, opacity ${toString vars.window.opacity} override"
 
       # Opaque windows (native transparency or we want them opaque)
-      "opaque, class:foot|equibop|org\\.quickshell|imv|swappy"
+      "match:class foot|equibop|org\\.quickshell|imv|swappy, opaque true"
 
       # Center all floating windows (not xwayland cause popups)
-      "center 1, floating:1, xwayland:0"
+      "match:float 1, match:xwayland 0, center 1"
 
       # Float rules
-      "float, class:guifetch"
-      "float, class:yad"
-      "float, class:zenity"
-      "float, class:wev"
-      "float, class:org\\.gnome\\.FileRoller"
-      "float, class:file-roller"
-      "float, class:blueman-manager"
-      "float, class:com\\.github\\.GradienceTeam\\.Gradience"
-      "float, class:feh"
-      "float, class:imv"
-      "float, class:system-config-printer"
-      "float, class:org\\.quickshell"
+      "match:class guifetch, float true"
+      "match:class yad, float true"
+      "match:class zenity, float true"
+      "match:class wev, float true"
+      "match:class org\\.gnome\\.FileRoller, float true"
+      "match:class file-roller, float true"
+      "match:class blueman-manager, float true"
+      "match:class com\\.github\\.GradienceTeam\\.Gradience, float true"
+      "match:class feh, float true"
+      "match:class imv, float true"
+      "match:class system-config-printer, float true"
+      "match:class org\\.quickshell, float true"
 
       # Float, resize and center - nmtui
-      "float, class:foot, title:nmtui"
-      "size 60% 70%, class:foot, title:nmtui"
-      "center 1, class:foot, title:nmtui"
+      "match:class foot, match:title nmtui, float true"
+      "match:class foot, match:title nmtui, size 60% 70%"
+      "match:class foot, match:title nmtui, center 1"
 
       # Float, resize and center - GNOME Settings
-      "float, class:org\\.gnome\\.Settings"
-      "size 70% 80%, class:org\\.gnome\\.Settings"
-      "center 1, class:org\\.gnome\\.Settings"
+      "match:class org\\.gnome\\.Settings, float true"
+      "match:class org\\.gnome\\.Settings, size 70% 80%"
+      "match:class org\\.gnome\\.Settings, center 1"
 
       # Float, resize and center - pavucontrol/yad-icon-browser
-      "float, class:org\\.pulseaudio\\.pavucontrol|yad-icon-browser"
-      "size 60% 70%, class:org\\.pulseaudio\\.pavucontrol|yad-icon-browser"
-      "center 1, class:org\\.pulseaudio\\.pavucontrol|yad-icon-browser"
+      "match:class org\\.pulseaudio\\.pavucontrol|yad-icon-browser, float true"
+      "match:class org\\.pulseaudio\\.pavucontrol|yad-icon-browser, size 60% 70%"
+      "match:class org\\.pulseaudio\\.pavucontrol|yad-icon-browser, center 1"
 
       # Float, resize and center - nwg-look
-      "float, class:nwg-look"
-      "size 50% 60%, class:nwg-look"
-      "center 1, class:nwg-look"
+      "match:class nwg-look, float true"
+      "match:class nwg-look, size 50% 60%"
+      "match:class nwg-look, center 1"
 
       # Special workspaces
-      "workspace special:sysmon, class:btop"
-      "workspace special:music, class:feishin|Spotify|Supersonic|Cider"
-      "workspace special:music, initialTitle:Spotify( Free)?"
-      "workspace special:communication, class:discord|equibop|vesktop|whatsapp|legcord|Legcord"
-      "workspace special:recording, class:com.obsproject.Studio|obs"
+      "match:class btop, workspace special:sysmon"
+      "match:class Spotify, workspace special:music"
+      "match:class discord, workspace special:communication"
+      "match:class com.obsproject.Studio|obs, workspace special:recording"
 
       # Dialogs
-      "float, title:(Select|Open)( a)? (File|Folder)(s)?"
-      "float, title:File (Operation|Upload)( Progress)?"
-      "float, title:.* Properties"
-      "float, title:Export Image as PNG"
-      "float, title:GIMP Crash Debug"
-      "float, title:Save As"
-      "float, title:Library"
+      "match:title (Select|Open)( a)? (File|Folder)(s)?, float true"
+      "match:title File (Operation|Upload)( Progress)?, float true"
+      "match:title .* Properties, float true"
+      "match:title Export Image as PNG, float true"
+      "match:title GIMP Crash Debug, float true"
+      "match:title Save As, float true"
+      "match:title Library, float true"
 
       # Picture in picture
-      "move 100%-w-2% 100%-w-3%, title:Picture(-| )in(-| )[Pp]icture"
-      "keepaspectratio, title:Picture(-| )in(-| )[Pp]icture"
-      "float, title:Picture(-| )in(-| )[Pp]icture"
-      "pin, title:Picture(-| )in(-| )[Pp]icture"
+      "match:title Picture(-| )in(-| )[Pp]icture, move 100%-w-2% 100%-w-3%"
+      "match:title Picture(-| )in(-| )[Pp]icture, keep_aspect_ratio true"
+      "match:title Picture(-| )in(-| )[Pp]icture, float true"
+      "match:title Picture(-| )in(-| )[Pp]icture, pin true"
 
       # Steam
-      "rounding 10, title:, class:steam"
-      "float, title:Friends List, class:steam"
-      "immediate, class:steam_app_[0-9]+"
-      "idleinhibit always, class:steam_app_[0-9]+"
+      "match:class steam, match:title ^$, rounding 10"
+      "match:class steam, match:title Friends List, float true"
+      "match:class steam_app_[0-9]+, immediate true"
+      "match:class steam_app_[0-9]+, idle_inhibit always"
 
       # ATLauncher console
-      "float, class:com-atlauncher-App, title:ATLauncher Console"
+      "match:class com-atlauncher-App, match:title ATLauncher Console, float true"
 
       # Autodesk Fusion 360
-      "noblur, title:Fusion360|(Marking Menu), class:fusion360\\.exe"
+      "match:class fusion360\\.exe, match:title Fusion360|(Marking Menu), no_blur true"
 
       # XWayland popups
-      "nodim, xwayland:1, title:win[0-9]+"
-      "noshadow, xwayland:1, title:win[0-9]+"
-      "rounding 10, xwayland:1, title:win[0-9]+"
+      "match:xwayland 1, match:title win[0-9]+, no_dim true"
+      "match:xwayland 1, match:title win[0-9]+, no_shadow true"
+      "match:xwayland 1, match:title win[0-9]+, rounding 10"
     ];
 
     # Workspace rules
@@ -95,23 +92,23 @@
       "f[1]s[false], gapsout:${toString vars.gaps.singleWindowOut}"
     ];
 
-    # Layer rules
+    # Layer rules (v2 syntax: match:namespace <pattern>, <effect> <value>)
     layerrule = [
       # Animations
-      "animation fade, hyprpicker"
-      "animation fade, logout_dialog"
-      "animation fade, selection"
-      "animation fade, wayfreeze"
+      "match:namespace hyprpicker, animation fade"
+      "match:namespace logout_dialog, animation fade"
+      "match:namespace selection, animation fade"
+      "match:namespace wayfreeze, animation fade"
 
       # Fuzzel
-      "animation popin 80%, launcher"
-      "blur, launcher"
+      "match:namespace launcher, animation popin 80%"
+      "match:namespace launcher, blur true"
 
       # Shell
-      "noanim, caelestia-(border-exclusion|area-picker)"
-      "animation fade, caelestia-(drawers|background)"
-      "blur, caelestia-drawers"
-      "ignorealpha 0.57, caelestia-drawers"
+      "match:namespace caelestia-(border-exclusion|area-picker), no_anim true"
+      "match:namespace caelestia-(drawers|background), animation fade"
+      "match:namespace caelestia-drawers, blur true"
+      "match:namespace caelestia-drawers, ignore_alpha 0.57"
     ];
   };
 }

@@ -39,7 +39,12 @@
     };
 
     nixcraft = {
-      url = "github:Flammable-Bunny/nixcraft";
+      url = "git+file:///home/bunny/IdeaProjects/nixcraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland = {
+      url = "github:Flammable-Bunny/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -48,33 +53,26 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Inputs for multi-GPU rendering
-    hyprland = {
-      url = "git+file:///home/bunny/IdeaProjects/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.aquamarine.follows = "aquamarine";
+    ninjabrainbot = {
+      url = "github:RoshanAH/ninjabrainbot-flake";
     };
 
-    aquamarine = {
-      url = "git+file:///home/bunny/IdeaProjects/aquamarine";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, agenix, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, hyprland, agenix, ninjabrainbot, ... }@inputs: {
     nixosConfigurations.iusenixbtw = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
         ./dualgpu.nix
+        hyprland.nixosModules.default
         agenix.nixosModules.default
         home-manager.nixosModules.home-manager
 
         ({ pkgs, inputs, ... }: {
           nixpkgs.config.allowUnfree = true;
 
-          # Overlay to build quickshell with Release mode for better performance
           nixpkgs.overlays = [
             (final: prev: {
               quickshell = prev.quickshell.overrideAttrs (old: {
@@ -93,6 +91,8 @@
           programs.dconf.enable = true;
           programs.hyprland = {
             enable = true;
+            package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+            portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
             xwayland.enable = true;
             withUWSM = false;
           };
@@ -100,12 +100,17 @@
           programs.xfconf.enable = true;
 
           programs.thunar = {
-            enable = true;
-            plugins = with pkgs.xfce; [
+            enable = true;            plugins = with pkgs.xfce; [
               thunar-archive-plugin
               thunar-volman
             ];
           };
+
+         programs.steam = {
+            enable = true;
+            remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+            dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+         };
 
           services.gvfs.enable = true;
           services.tumbler.enable = true;
@@ -168,6 +173,7 @@
               dontStrip = false;
               postPatch = (old.postPatch or "") + ''
                 find . -type f -name "*.qml" -exec sed -i 's|https://wttr.in|http://wttr.in|g' {} +
+                find . -type f -name "shell.qml" -exec sed -i 's|//@ pragma Env QSG_RENDER_LOOP=threaded|//@ pragma Env QSG_RENDER_LOOP=basic|g' {} +
               '';
             }))
 
@@ -182,7 +188,7 @@
             pkgs.polkit_gnome
             pkgs.gnome-keyring
 
-            # GTK theming
+            # Theming
             pkgs.gsettings-desktop-schemas
             pkgs.glib
             pkgs.adw-gtk3
@@ -210,13 +216,17 @@
             (pkgs.wrapOBS {
               plugins = with pkgs.obs-studio-plugins; [
                 wlrobs
-                obs-pipewire-audio-capture
+                obs-pipewire-audio-capture 
               ];
             })
             pkgs.pavucontrol
             pkgs.easyeffects
             pkgs.prismlauncher
             pkgs.file-roller
+            pkgs.vlc
+            pkgs.wineWowPackages.wayland
+            pkgs.steam
+            pkgs.virt-manager
 
             # CLI tools
             pkgs.fastfetch
@@ -230,6 +240,8 @@
             pkgs.hyprpicker
             pkgs.wl-clipboard
             pkgs.cliphist
+            pkgs.mullvad
+            pkgs.mullvad-browser
             pkgs.inotify-tools
             pkgs.grim
             pkgs.slurp
@@ -254,7 +266,7 @@
             pkgs.antigravity
 
             # Java
-            pkgs.jdk21
+            pkgs.jdk17
             pkgs.graalvmPackages.graalvm-oracle_17
 
             # Nixcraft tools
@@ -264,13 +276,9 @@
 
             # Waywall dependencies
             pkgs.waywall
-            pkgs.gcc
-            pkgs.gnumake
             pkgs.cmake
             pkgs.meson
             pkgs.ninja
-            pkgs.pkg-config
-            pkgs.libGL
             pkgs.mesa
             pkgs.luajit
             pkgs.libspng
@@ -278,24 +286,16 @@
             pkgs.wayland.dev
             pkgs.wayland-scanner
             pkgs.wayland-protocols
-            pkgs.xorg.libxcb
-            pkgs.xorg.libxcb.dev
-            pkgs.xorg.xcbutilwm
-            pkgs.xorg.xcbutilimage
-            pkgs.xorg.libXcomposite
-            pkgs.xorg.libXres
-            pkgs.xorg.libXtst
             pkgs.xwayland
             pkgs.libxkbcommon
             pkgs.libxkbcommon.dev
-	    pkgs.mangohud
+	         pkgs.mangohud
 
             # Secrets management
             agenix.packages.${pkgs.system}.default
           ];
 
           # Agenix secrets configuration
-          # Uses dedicated age key (no passphrase) for automatic decryption
           age.identityPaths = [ "/home/bunny/.config/agenix/key.txt" ];
           age.secrets = {
             waywall-oauth = {
@@ -310,7 +310,6 @@
               group = "users";
               mode = "0400";
             };
-            # Wallpapers
             "wallpaper-rabbit-forest" = {
               file = ./secrets/wallpapers/rabbit_forest.png.age;
               path = "/home/bunny/Pictures/Wallpapers/rabbit forest.png";
@@ -369,7 +368,6 @@
             };
           };
 
-          # Ensure wallpapers directory exists
           systemd.tmpfiles.rules = [
             "d /home/bunny/Pictures/Wallpapers 0755 bunny users -"
           ];

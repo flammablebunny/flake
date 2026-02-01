@@ -16,6 +16,14 @@
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.useOSProber = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Dual Gpu Kernel Perams
+
+  boot.kernelParams = [
+    "amdgpu.sg_display=0"
+    "i915.enable_guc=3"
+    "xe.vram_bar_size=0"
+  ];
   
   # Enable Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -30,6 +38,12 @@
 
   # Set your time zone.
   time.timeZone = "America/Vancouver";
+
+  fileSystems."/mnt/OBS" = {
+    device = "/dev/disk/by-uuid/d561203b-5da5-436a-ae47-732bd2310955";
+    fsType = "ext4";
+    options = [ "defaults" "nofail" ]; 
+  };
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";

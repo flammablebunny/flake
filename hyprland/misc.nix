@@ -1,5 +1,3 @@
-# Miscellaneous settings for Hyprland
-# Converted from ~/.config/hypr/hyprland/misc.conf
 { colors, ... }:
 
 {
@@ -13,8 +11,8 @@
 
       disable_hyprland_logo = true;
       force_default_wallpaper = 0;
+      disable_watchdog_warning = true;
 
-      new_window_takes_over_fullscreen = 2;
       allow_session_lock_restore = true;
       middle_click_paste = false;
       focus_on_activate = true;
@@ -28,6 +26,7 @@
 
     debug = {
       error_position = 1;
+      # suppress_errors = true;
     };
   };
 }

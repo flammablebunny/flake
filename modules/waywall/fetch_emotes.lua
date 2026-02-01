@@ -7,6 +7,22 @@
 local waywall = require("waywall")
 local json = require("dkjson")
 
+local function url_encode(s)
+    return (tostring(s):gsub("([^%w%-_%.~])", function(c)
+        return string.format("%%%02X", string.byte(c))
+    end))
+end
+
+local function safe_filename(s)
+    s = tostring(s)
+    s = s:gsub("[/\\%z]", "_")
+    s = s:gsub("[^%w%._%-]", "_")
+    if s == "" then
+        s = "emote"
+    end
+    return s
+end
+
 -- ---------------------------------------------------------------------------
 -- Module structure
 -- ---------------------------------------------------------------------------
@@ -72,7 +88,8 @@ function M.Fetch(id)
     -- Process individual emote download
     -- -----------------------------------------------------------------------
     local function process_emote(data, url)
-        local name = url:match("[?&]n=([^&]+)")
+        local name_enc = url:match("[?&]n=([^&]+)")
+        local name = name_enc and name_enc:gsub("%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end)
         local width = tonumber(url:match("[?&]w=(%d+)")) or 32
         local height = tonumber(url:match("[?&]h=(%d+)")) or 32
         local is_animated = url:match("%.avif") ~= nil
@@ -83,7 +100,7 @@ function M.Fetch(id)
 
         if is_animated then
             -- Animated emote: saved individually as AVIF
-            local filename = state.emotes_dir .. name .. ".avif"
+            local filename = state.emotes_dir .. safe_filename(name) .. ".avif"
             write_file(filename, data)
             state.emote_set[name] = {
                 animated = true,
@@ -157,12 +174,12 @@ function M.Fetch(id)
             if emote.data.animated then
                 url = string.format(
                     "https://cdn.7tv.app/emote/%s/1x.avif?n=%s&a=1&w=%d&h=%d",
-                    emote.id, emote.name, width, height
+                    emote.id, url_encode(emote.name), width, height
                 )
             else
                 url = string.format(
                     "https://cdn.7tv.app/emote/%s/1x.png?n=%s&w=%d&h=%d",
-                    emote.id, emote.name, width, height
+                    emote.id, url_encode(emote.name), width, height
                 )
             end
 

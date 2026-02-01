@@ -30,7 +30,7 @@
       "caelestia resizer -d"
 
       # Start shell
-      "caelestia shell -d"
+      "env QSG_RENDER_LOOP=basic caelestia shell -d"
 
       # Start EasyEffects
       "easyeffects --gapplication-service"

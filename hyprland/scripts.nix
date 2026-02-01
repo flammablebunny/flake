@@ -1,5 +1,3 @@
-# Scripts for Hyprland
-# Converted from ~/.config/hypr/scripts/
 { pkgs, ... }:
 
 {

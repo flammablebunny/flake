@@ -125,14 +125,14 @@ in
       # Special workspace toggles
       "${kb.systemMonitor}, exec, $caelestia toggle sysmon"
       "${kb.communication}, exec, $caelestia toggle communication"
-      "${kb.recording}, exec, hyprctl clients -j | grep -q '\"class\": \"com.obsproject.Studio\"' && $caelestia toggle recording || (obs &); $caelestia toggle recording"
+      "${kb.recording}, exec, $caelestia toggle recording"
+      "${kb.music}, exec, $caelestia toggle music"
 
       # Apps
       "${kb.terminal}, exec, app2unit -- ${apps.terminal}"
       "${kb.browser}, exec, app2unit -- ${apps.browser}"
       "${kb.editor}, exec, app2unit -- ${apps.editor}"
       "${kb.fileExplorer}, exec, app2unit -- ${apps.fileExplorer}"
-      "${kb.music}, exec, hyprctl clients -j | grep -q '\"class\": \"Spotify\"' || app2unit -- ${apps.music}; $caelestia toggle music"
       "Ctrl+Alt, Escape, exec, app2unit -- qps"
       "Ctrl+Alt, V, exec, app2unit -- pavucontrol"
 
@@ -158,7 +158,7 @@ in
       "${kb.clearNotifs}, global, caelestia:clearNotifs"
 
       # Restore lock
-      "${kb.restoreLock}, exec, $caelestia shell -d"
+      "${kb.restoreLock}, exec, env QSG_RENDER_LOOP=basic $caelestia shell -d"
       "${kb.restoreLock}, global, caelestia:lock"
 
       # Brightness
@@ -223,7 +223,15 @@ in
     bindr = [
       # Kill/restart shell
       "Ctrl+Super+Shift, R, exec, $caelestia shell -k"
-      "Ctrl+Super+Alt, R, exec, $caelestia shell -k; $caelestia shell -d"
+      "Ctrl+Super+Alt, R, exec, $caelestia shell -k; env QSG_RENDER_LOOP=basic $caelestia shell -d"
+    ];
+
+    # Mouse binds (bindm) - for dragging windows
+    bindm = [
+      "Super, mouse:272, movewindow"
+      "Super, mouse:273, resizewindow"
+      "Super, X, movewindow"
+      "Super, Z, resizewindow"
     ];
   };
 }

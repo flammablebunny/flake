@@ -57,6 +57,9 @@
 
       # NixOS rebuild
       nr = "/etc/nixos/scripts/rebuild.sh";
+
+      csd = "env QSG_RENDER_LOOP=basic caelestia shell -d";
+      csk = "caelestia-shell kill";
     };
   };
 }

@@ -16,9 +16,27 @@ local INVISIBLE_CHARS = {
 local function strip_invisible(s)
 	local t = {}
 	for _, c in utf8.codes(s) do
-		if not INVISIBLE_CHARS[c] then t[#t+1] = utf8.char(c) end
+		if not INVISIBLE_CHARS[c] then
+			if type(c) == "number" and c >= 0 and c <= 0x10FFFF then
+				local ok, ch = pcall(utf8.char, c)
+				if ok and ch then
+					t[#t+1] = ch
+				end
+			end
+		end
 	end
 	return table.concat(t)
+end
+
+-- Keep chat strictly ASCII (printable) to avoid crashes on massive non-ASCII pastes.
+-- Allowed: space/newline plus bytes 0x21-0x7E.
+local function sanitize_ascii(s, max_len)
+	if type(s) ~= "string" then return "" end
+	if max_len and #s > max_len then
+		s = s:sub(1, max_len)
+	end
+	-- Preserve newline, otherwise drop non-ASCII bytes.
+	return (s:gsub("[^\n -~]", ""))
 end
 
 -- === File helpers ===
@@ -115,7 +133,9 @@ local function new_chat(channel, x, y, size)
 
             -- 3. Loop through every word in the message (No string.sub truncation)
             for word in msg.text:gmatch("%S+") do
-                word = strip_invisible(word)
+                word = sanitize_ascii(word, 256)
+                if word ~= "" then
+                    word = strip_invisible(word)
 
                 -- Determine if this word is an emote
                 local e = CHAT.emote_set[word]
@@ -130,7 +150,7 @@ local function new_chat(channel, x, y, size)
                     local emote_w = CHAT.emote_h * (e.w / e.h)
                     item_pixel_width = emote_w + spacing_before + spacing_after
                     -- The special spacer tag for waywall text
-                    emote_spacing_str = "<+" .. (item_pixel_width) .. ">"
+                    emote_spacing_str = "<+" .. math.floor(item_pixel_width + 0.5) .. ">"
                 else
                     -- Calculate text width
                     local adv = waywall.text_advance(word .. " ", CHAT.size)
@@ -193,6 +213,8 @@ local function new_chat(channel, x, y, size)
                     message_body_full = message_body_full .. word .. " "
                     current_line_str = current_line_str .. word .. " "
                 end
+
+                end
             end
 
             -- Add the finished message to the main buffer
@@ -215,6 +237,7 @@ local function new_chat(channel, x, y, size)
 		local msg_id = line:match("id=([^;]+)") or next_id()
 
 		if not text then return end
+		text = sanitize_ascii(text, 600)
 
 		table.insert(CHAT.messages, {
 			user = user, color = color, text = text, _id = msg_id,
@@ -232,7 +255,7 @@ local function new_chat(channel, x, y, size)
 
 		table.insert(self.messages, {
 			user = self.username, color = "#1a7286",
-			text = strip_invisible(message), _id = id,
+			text = strip_invisible(sanitize_ascii(message, 600)), _id = id,
 		})
 		if #self.messages > self.max_lines then table.remove(self.messages, 1) end
 		self.redraw()

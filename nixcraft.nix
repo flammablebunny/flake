@@ -1,4 +1,4 @@
-{ inputs, pkgs, lib, ... }:
+{ inputs, pkgs, ... }:
 let
   ranked-mrpack = pkgs.fetchurl {
     url = "https://redlime.github.io/MCSRMods/modpacks/v4/MCSRRanked-Linux-1.16.1-All.mrpack";
@@ -30,9 +30,6 @@ in
         lwjglVersion = "3.3.3";
         mangohud.enable = true;
 
-        envVars = {
-        };
-
         java = {
           package = pkgs.jdk17;
           maxMemory = 4096;
@@ -41,8 +38,10 @@ in
 
         waywall = {
           enable = true;
-          rawCommand = "sh -c 'env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD129 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/mcsr/waywall/bin/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD128 DRI_PRIME=1 $INST_JAVA '$@''";
+          binaryPath = "/home/bunny/IdeaProjects/waywall/builddir/waywall/waywall";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
+          rawCommand = "env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
+          # rawCommand = "env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/build/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=mesa MESA_LOADER_DRIVER_OVERRIDE=zink GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
         };
 
         binEntry = {
@@ -81,48 +80,13 @@ in
           package = pkgs.graalvmPackages.graalvm-oracle_17;
           maxMemory = 14000;
           minMemory = 11500;
-          extraArguments = [
-            "-XX:+UnlockExperimentalVMOptions"
-            "-XX:+AlwaysPreTouch"
-            "-XX:+UseZGC"
-            "-XX:+UseNUMA"
-            "-Dgraal.TuneInlinerExploration=1"
-            "-XX:MaxInlineLevel=25"
-            "-XX:CompileThreshold=100"
-            "-XX:+TieredCompilation"
-            "-XX:TieredStopAtLevel=4"
-            "-XX:+UseBiasedLocking"
-            "-XX:+EliminateLocks"
-            "-XX:+OptimizeStringConcat"
-            "-XX:+ExplicitGCInvokesConcurrent"
-            "-XX:ReservedCodeCacheSize=768m"
-            "-XX:+InlineSynchronizedMethods"
-            "-XX:+TrustFinalNonStaticFields"
-            "-XX:+UseCondCardMark"
-            "-XX:+UseFPUForSpilling"
-            "-XX:+UseFastUnorderedTimeStamps"
-            "-XX:+OptimizeFill"
-            "-XX:+UseLargePages"
-            "-XX:ZUncommitDelay=10"
-            "-XX:+ZUncommit"
-            "-XX:+EnableJVMCI"
-            "-XX:+EagerJVMCI"
-            "-Dgraal.CompileGraalWithC1Only=false"
-            "-Dgraal.OptAssumptions=false"
-            "-Djdk.graal.CompilerConfiguration=enterprise"
-            "-Djdk.graal.ShowConfiguration=info"
-            "-Djdk.graal.SpectrePHTBarriers=AllTargets"
-            "-Djdk.graal.Vectorization=true"
-            "-Djdk.graal.OptDuplication=true"
-            "-Djdk.graal.CompilationFailureAction=Diagnose"
-            "-Dengine.CompilerThreads=32"
-          ];
         };
 
         waywall = {
           enable = true;
-          binaryPath = "/home/bunny/IdeaProjects/waywall/result/bin/waywall";
+          binaryPath = "/home/bunny/IdeaProjects/waywall/builddir/waywall/waywall";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
+          rawCommand = "env __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
         };
 
         binEntry = {
