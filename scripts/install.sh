@@ -55,13 +55,32 @@ detect_environment() {
         info "Mode: Existing system rebuild"
     fi
 
-    # Detect host type based on username
-    if [[ "$USER" == "bunny" ]] || [[ "$USER" == "nixos" && -d /mnt/home/bunny ]]; then
+    # Detect host type
+    # Check for username.txt on Ventoy first
+    local ventoy_username="/mnt/Ventoy/secrets/username.txt"
+    if [[ -f "$ventoy_username" ]]; then
+        USERNAME=$(tr -d '\n' < "$ventoy_username")
+        if [[ "$USERNAME" == "bunny" ]]; then
+            HOST="pc"
+        else
+            HOST="laptop"
+        fi
+        info "Found username on Ventoy: $USERNAME"
+    elif [[ "$USER" == "bunny" ]] || [[ "$USER" == "nixos" && -d /mnt/home/bunny ]]; then
         HOST="pc"
         USERNAME="bunny"
     else
         HOST="laptop"
-        USERNAME="$USER"
+        # Ask for username during laptop install
+        if [[ "$INSTALL_MODE" == "fresh" ]]; then
+            echo ""
+            read -rp "Enter your laptop username: " USERNAME
+            if [[ -z "$USERNAME" ]]; then
+                error "Username cannot be empty"
+            fi
+        else
+            USERNAME="$USER"
+        fi
     fi
 
     info "Host: $HOST (user: $USERNAME)"
@@ -161,6 +180,26 @@ setup_repo() {
 }
 
 # ============================================================================
+# Username Setup (for laptop)
+# ============================================================================
+
+setup_username() {
+    step "Setting up username"
+
+    local username_file="$NIXOS_DIR/username.txt"
+
+    # Only needed for laptop
+    if [[ "$HOST" == "pc" ]]; then
+        success "PC uses hardcoded username (bunny)"
+        return 0
+    fi
+
+    # Create username.txt for laptop
+    echo "$USERNAME" > "$username_file"
+    success "Created username.txt with: $USERNAME"
+}
+
+# ============================================================================
 # Hardware Configuration
 # ============================================================================
 
@@ -224,6 +263,7 @@ main() {
     detect_environment
     setup_age_key
     setup_repo
+    setup_username
     setup_hardware_config
     run_install
 
