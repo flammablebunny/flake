@@ -56,14 +56,14 @@ in
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Cord.nvim for Discord RPC
-          {
-            "vyfor/cord.nvim",
-            build = false,  -- Disable native build to avoid segfault
-            config = function()
-              require("cord").setup()
-            end,
-          },
+          -- Cord.nvim for Discord RPC (TEMPORARILY DISABLED FOR TESTING)
+          -- {
+          --   "vyfor/cord.nvim",
+          --   build = false,  -- Disable native build to avoid segfault
+          --   config = function()
+          --     require("cord").setup()
+          --   end,
+          -- },
 
           -- Noice for enhanced command-line UI
           {
