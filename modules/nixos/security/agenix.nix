@@ -53,55 +53,6 @@
       group = "users";
       mode = "0644";
     };
-    "wallpaper-rabbit-forest-no-grain" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_grain.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no grain.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-grain-no-particles" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_grain_no_particles.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no grain no particles.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-particles" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_particles.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no particles.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-sign" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_sign.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no sign.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-sign-no-grain" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_sign_no_grain.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no sign no grain.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-sign-no-grain-no-particles" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_sign_no_grain_no_particles.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no sign no grain no particles.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
-    "wallpaper-rabbit-forest-no-sign-no-particles" = {
-      file = ../../../secrets/wallpapers/rabbit_forest_no_sign_no_particles.png.age;
-      path = "/home/${userName}/Pictures/Wallpapers/rabbit forest no sign no particles.png";
-      owner = userName;
-      group = "users";
-      mode = "0644";
-    };
   };
 
   systemd.tmpfiles.rules = [

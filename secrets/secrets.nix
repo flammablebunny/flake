@@ -22,11 +22,4 @@ in
 
   # Wallpapers
   "wallpapers/rabbit_forest.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_grain.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_grain_no_particles.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_particles.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_sign.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_sign_no_grain.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_sign_no_grain_no_particles.png.age".publicKeys = allKeys;
-  "wallpapers/rabbit_forest_no_sign_no_particles.png.age".publicKeys = allKeys;
 }
