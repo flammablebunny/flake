@@ -56,23 +56,23 @@ in
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Cord.nvim for Discord RPC (TEMPORARILY DISABLED FOR TESTING)
-          -- {
-          --   "vyfor/cord.nvim",
-          --   build = false,  -- Disable native build to avoid segfault
-          --   config = function()
-          --     require("cord").setup()
-          --   end,
-          -- },
-
-          -- Noice for enhanced command-line UI
+          -- Cord.nvim for Discord RPC
           {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim" },
+            "vyfor/cord.nvim",
+            build = false,  -- Disable native build to avoid segfault
             config = function()
-              require("noice").setup()
+              require("cord").setup()
             end,
           },
+
+          -- Noice for enhanced command-line UI (TEMPORARILY DISABLED FOR TESTING)
+          -- {
+          --   "folke/noice.nvim",
+          --   dependencies = { "MunifTanjim/nui.nvim" },
+          --   config = function()
+          --     require("noice").setup()
+          --   end,
+          -- },
 
           {
             "saghen/blink.cmp",
