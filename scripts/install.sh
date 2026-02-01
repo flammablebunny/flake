@@ -66,20 +66,18 @@ detect_environment() {
             HOST="laptop"
         fi
         info "Found username on Ventoy: $USERNAME"
-    elif [[ "$USER" == "bunny" ]] || [[ "$USER" == "nixos" && -d /mnt/home/bunny ]]; then
+    elif [[ -d /mnt/home/bunny ]] || [[ -d /home/bunny ]]; then
+        # PC detected (bunny's home exists)
         HOST="pc"
         USERNAME="bunny"
     else
         HOST="laptop"
-        # Ask for username during laptop install
-        if [[ "$INSTALL_MODE" == "fresh" ]]; then
-            echo ""
-            read -rp "Enter your laptop username: " USERNAME
-            if [[ -z "$USERNAME" ]]; then
-                error "Username cannot be empty"
-            fi
-        else
-            USERNAME="$USER"
+        # Always ask for laptop username (can't trust $USER when running as root)
+        echo ""
+        echo "Laptop installation detected."
+        read -rp "Enter your laptop username: " USERNAME
+        if [[ -z "$USERNAME" ]]; then
+            error "Username cannot be empty"
         fi
     fi
 
