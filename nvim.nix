@@ -32,17 +32,17 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- Test: LazyVim + noice (no cord)
+      -- LazyVim + cord for Discord RPC (noice conflicts with LazyVim)
       require("lazy").setup({
         spec = {
           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-          -- Noice for enhanced command-line UI
+          -- Cord.nvim for Discord RPC
           {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim" },
+            "vyfor/cord.nvim",
+            build = false,
             config = function()
-              require("noice").setup()
+              require("cord").setup()
             end,
           },
         },
@@ -61,8 +61,7 @@ in
       LazyVim
 
       plenary-nvim
-      noice-nvim
-      nui-nvim
+      cord-nvim
 
       blink-cmp
       bufferline-nvim
