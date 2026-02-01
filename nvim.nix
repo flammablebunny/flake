@@ -33,17 +33,15 @@ in
 
     extraLuaConfig = ''
       -- All plugin specifications defined directly in Nix for reproducibility
-      -- Plugins with native builds that cause ABI incompatibility are disabled
       require("lazy").setup({
         spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins", build = false },
+          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
           -- Catppuccin theme with Mocha flavor
           {
             "catppuccin/nvim",
             name = "catppuccin",
             priority = 1000,
-            build = false,
             config = function()
               require("catppuccin").setup({
                 flavour = "mocha",
@@ -55,29 +53,19 @@ in
           -- Claude Code plugin integration
           {
             "greggh/claude-code.nvim",
-            build = false,
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Disable problematic plugins with native builds or command-line hooks
+          -- Disable only cord.nvim (requires zig, not compatible)
           {
             "vyfor/cord.nvim",
-            enabled = false,  -- Requires zig build, causes segfault
+            enabled = false,
           },
 
-          {
-            "nvim-treesitter/nvim-treesitter",
-            enabled = false,  -- Parser compilation causes ABI issues
-          },
-
+          -- Disable noice.nvim (causes command-line segfaults)
           {
             "folke/noice.nvim",
-            enabled = false,  -- UI replacement causes segfault on command mode
-          },
-
-          {
-            "folke/snacks.nvim",
-            enabled = false,  -- UI modifications cause segfault with command-line
+            enabled = false,
           },
 
           {
