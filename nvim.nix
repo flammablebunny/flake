@@ -90,8 +90,6 @@ in
       mini-icons
       mini-pairs
       neo-tree-nvim
-      noice-nvim
-      nui-nvim
       nvim-lint
       nvim-lspconfig
       persistence-nvim
