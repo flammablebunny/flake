@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lazyvim-module = {
+      url = "github:matadaniel/LazyVim-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,7 +44,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, zen-browser, spicetify-nix, nixcord, nixcraft, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, ... }@inputs: {
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -103,10 +108,9 @@
           xdg.portal = {
             enable = true;
             extraPortals = [
-              pkgs.xdg-desktop-portal-hyprland
               pkgs.xdg-desktop-portal-gtk
             ];
-            config.common.default = "hyprland";
+            config.common.default = "gtk";
           };
 
           environment.sessionVariables = {
@@ -139,6 +143,7 @@
             pkgs.xfce.thunar
             pkgs.nwg-look
             pkgs.gvfs
+            pkgs.tree
             pkgs.polkit_gnome
             pkgs.gnome-keyring
 
@@ -159,7 +164,6 @@
             pkgs.qt6.qmake
             pkgs.libsForQt5.qt5ct
             pkgs.qt6Packages.qt6ct
-            pkgs.neovim
             pkgs.os-prober
             pkgs.vimPlugins.nvim-tree-lua
             pkgs.vimPlugins.nvim-web-devicons
@@ -206,9 +210,11 @@
             pkgs.jetbrains.idea-ultimate
             pkgs.gradle
             pkgs.claude-code
+            pkgs.antigravity
 
             # Java
             pkgs.jdk17
+            pkgs.graalvmPackages.graalvm-oracle_17
 
             # Waywall dependencies
             pkgs.waywall

@@ -2,7 +2,7 @@
 
 {
   imports = [ 
-    inputs.nixcord.homeManagerModules.nixcord 
+    inputs.nixcord.homeModules.nixcord 
   ];
 
   programs.nixcord = {
@@ -11,7 +11,8 @@
     discord = {
       enable = true;
       
-      openasar.enable = true;
+      package = pkgs.discord.override { withOpenASAR = true; };
+
       equicord.enable = true;
       vencord.enable = false;
     };
