@@ -122,6 +122,7 @@ in
       nodejs_22
       lua-language-server nil stylua shfmt
       cargo rustc
+      tree-sitter
     ];
   };
 
