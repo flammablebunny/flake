@@ -18,6 +18,7 @@
     "amdgpu.sg_display=0"
     "i915.enable_guc=3"
     "xe.vram_bar_size=0"
+    "loglevel=3" 
   ];
 
   # Duplicate Audio Params to Enable Pulse on PC 

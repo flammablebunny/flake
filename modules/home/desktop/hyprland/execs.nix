@@ -5,7 +5,7 @@
     exec-once = [
       # Keyring and auth
       "gnome-keyring-daemon --start --components=secrets"
-      # polkit-gnome is handled by systemd service in flake.nix
+      # polkit-gnome is handled by a systemd service in flake.nix
 
       # Clipboard history
       "wl-paste --type text --watch cliphist store"
