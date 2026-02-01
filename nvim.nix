@@ -32,19 +32,10 @@ in
     vimAlias = true;
 
     extraLuaConfig = ''
-      -- LazyVim + cord for Discord RPC (noice conflicts with LazyVim)
+      -- LazyVim only (both cord and noice cause segfaults with LazyVim)
       require("lazy").setup({
         spec = {
           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-
-          -- Cord.nvim for Discord RPC
-          {
-            "vyfor/cord.nvim",
-            build = false,
-            config = function()
-              require("cord").setup()
-            end,
-          },
         },
         defaults = { lazy = false, version = false },
         install = { missing = true },
@@ -59,9 +50,6 @@ in
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
       LazyVim
-
-      plenary-nvim
-      cord-nvim
 
       blink-cmp
       bufferline-nvim
