@@ -1,16 +1,6 @@
 { pkgs, inputs, ... }:
 
 let
-  # Pin nvim-treesitter to master branch (old API) until nvf catches up
-  nvim-treesitter-master = pkgs.vimPlugins.nvim-treesitter.overrideAttrs (old: {
-    src = pkgs.fetchFromGitHub {
-      owner = "nvim-treesitter";
-      repo = "nvim-treesitter";
-      rev = "master";
-      sha256 = "sha256-GUwkRJzDWNKy4kLMh9O/WAU/zQfzLFdvLqQbSyStXbU=";
-    };
-  });
-
   claude-code-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "claude-code-nvim";
     src = pkgs.fetchFromGitHub {
@@ -60,6 +50,9 @@ in
         smartcase = true;
       };
 
+      # Leader key
+      globals.mapleader = " ";
+
       # Theme - catppuccin (caelestia.lua will override colors)
       theme = {
         enable = true;
@@ -67,9 +60,9 @@ in
         style = "mocha";
       };
 
-      # Treesitter - disabled until nvf updates for new API
+      # Treesitter
       treesitter = {
-        enable = false;
+        enable = true;
       };
 
       # LSP
@@ -98,8 +91,8 @@ in
       # Telescope
       telescope.enable = true;
 
-      # File tree
-      filetree.neo-tree.enable = true;
+      # File tree (using rnvimr/ranger instead)
+      filetree.neo-tree.enable = false;
 
       # Status line
       statusline.lualine.enable = true;
@@ -201,6 +194,17 @@ in
         plenary = {
           package = pkgs.vimPlugins.plenary-nvim;
         };
+
+        # Ranger file manager integration
+        rnvimr = {
+          package = pkgs.vimPlugins.rnvimr;
+          setup = ''
+            -- Make Ranger replace Netrw and be the file explorer
+            vim.g.rnvimr_enable_ex = 1
+            -- Make Ranger to be hidden after picking a file
+            vim.g.rnvimr_enable_picker = 1
+          '';
+        };
       };
 
       # Custom Lua config - caelestia colorscheme integration
@@ -209,13 +213,19 @@ in
         ${builtins.readFile ./lua/caelestia.lua}
       '';
 
-      # Disable Arrow Keys - FT. Arsoniv
+      # Disable Arrow Keys
       luaConfigRC.keymaps = ''
-        -- Disable arrow keys
-        vim.keymap.set("n", "<left>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
-        vim.keymap.set("n", "<right>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
-        vim.keymap.set("n", "<up>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
-        vim.keymap.set("n", "<down>", '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+        -- Disable arrow keys in all modes
+        local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
+        local modes = { "n", "i", "v", "x", "s", "o", "c" }
+        for _, mode in ipairs(modes) do
+          for _, key in ipairs(arrows) do
+            vim.keymap.set(mode, key, '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+          end
+        end
+
+        -- File explorer (Ranger)
+        vim.keymap.set("n", "<leader>e", "<cmd>RnvimrToggle<CR>", { desc = "Toggle Ranger" })
       '';
 
       # Extra packages for LSP, formatters, etc.
@@ -237,6 +247,7 @@ in
         cargo
         rustc
         tree-sitter
+        ranger
       ];
     };
   };

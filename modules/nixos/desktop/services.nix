@@ -11,9 +11,8 @@
 
   systemd.services.set-performance-profile = {
     description = "Set power profile to performance";
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = [ "power-profiles-daemon.service" ];
     after = [ "power-profiles-daemon.service" ];
-    requires = [ "power-profiles-daemon.service" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance";

@@ -34,15 +34,11 @@
     options = [ "defaults" "nofail" ];
   };
 
-  # Libvirt for VMs
-  virtualisation.libvirtd.enable = true;
-
-  # Wooting Keyboard
+   # Wooting Keyboard
   hardware.wooting.enable = true;
 
   # PC Specific Apps
   environment.systemPackages = with pkgs; [
-    virt-manager
     wootility
   ];
 

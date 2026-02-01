@@ -24,7 +24,27 @@
   # Network
   networking.networkmanager.enable = true;
 
-  # Timezone
+  # Disable WiFi power saving to prevent disconnects on screen lock
+  networking.networkmanager.wifi.powersave = false;
+
+  # Libvirt for VMs
+  virtualisation.libvirtd.enable = true;
+
+  services.gvfs.enable = true;  # For file manager integration
+
+  # Run dynamically linked executables (for non-NixOS binaries)
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    glib
+    gtk3
+    SDL2
+    libGL
+    openssl
+  ];
+
+   # Timezone
   time.timeZone = "America/Vancouver";
 
   # User definition 
@@ -82,7 +102,8 @@
     fzf
 
     # ── CLI Utils ──────────────────────────────────────────────────────
-    
+
+    android-tools  # adb & fastboot
     git
     wget
     curl
@@ -136,6 +157,8 @@
 
     # Languages
     go
+    mold
+    rustc
     python3
     jdk17
     graalvmPackages.graalvm-oracle_17
@@ -148,8 +171,10 @@
     ninja
 
     # AI 
-    claude-code
     antigravity
+
+    # VM
+    virt-manager
 
     # ── Libraries ──────────────────────────────────────────────────────
     
@@ -203,7 +228,6 @@
 
     # ── Misc ────────────────────────────────────────────────────────────
     
-    zoom-us
 
 
   ];

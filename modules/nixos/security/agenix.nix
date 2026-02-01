@@ -30,6 +30,21 @@
       group = "users";
       mode = "0644";
     };
+    # TODO: Re-encrypt these with correct keys
+    # "ssh-pro-private-key" = {
+    #   file = ../../../secrets/ssh/id_ed2026.age;
+    #   path = "/home/${userName}/.ssh/id_ed2026";
+    #   owner = userName;
+    #   group = "users";
+    #   mode = "0600";
+    # };
+    # "ssh-pro-public-key" = {
+    #   file = ../../../secrets/ssh/id_ed2026.pub.age;
+    #   path = "/home/${userName}/.ssh/id_ed2026.pub";
+    #   owner = userName;
+    #   group = "users";
+    #   mode = "0644";
+    # };
 
     # App secrets
     waywall-oauth = {
@@ -44,6 +59,15 @@
       group = "users";
       mode = "0400";
     };
+
+    # Git identity
+    # TODO: Re-encrypt with correct keys
+    # professional-identity = {
+    #   file = ../../../secrets/professional-identity.age;
+    #   owner = userName;
+    #   group = "users";
+    #   mode = "0400";
+    # };
 
     # Wallpapers
     "wallpaper-rabbit-forest" = {

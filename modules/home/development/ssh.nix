@@ -1,4 +1,4 @@
-{ config, lib, userName, ... }:
+{ config, lib, pkgs, userName, ... }:
 
 {
   programs.ssh = {
@@ -23,8 +23,8 @@
 
   programs.git = {
     enable = true;
-    userName = "flammablebunny";
-    userEmail = "theflammablebunny@gmail.com";
+    settings.user.name = "flammablebunny";
+    settings.user.email = "theflammablebunny@gmail.com";
 
     includes = [
       {
@@ -42,17 +42,10 @@
     if [ -f "$IDENTITY_FILE" ]; then
       mkdir -p "$OUTPUT_DIR"
 
-      # Read name and email from the decrypted secret
-      # Expected format: name=Your Name\nemail=your@email.com
-      PRO_NAME=$(grep '^name=' "$IDENTITY_FILE" | cut -d'=' -f2-)
-      PRO_EMAIL=$(grep '^email=' "$IDENTITY_FILE" | cut -d'=' -f2-)
+      PRO_NAME=$(${lib.getExe' pkgs.gnugrep "grep"} '^name=' "$IDENTITY_FILE" | cut -d'=' -f2-)
+      PRO_EMAIL=$(${lib.getExe' pkgs.gnugrep "grep"} '^email=' "$IDENTITY_FILE" | cut -d'=' -f2-)
 
-      # Generate gitconfig include
-      cat > "$OUTPUT_FILE" << EOF
-[user]
-    name = $PRO_NAME
-    email = $PRO_EMAIL
-EOF
+      printf '[user]\n    name = %s\n    email = %s\n' "$PRO_NAME" "$PRO_EMAIL" > "$OUTPUT_FILE"
       chmod 600 "$OUTPUT_FILE"
     fi
   '';

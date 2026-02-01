@@ -18,5 +18,15 @@
     cursor = {
       hotspot_padding = 1;
     };
+    
+    device = [
+      {
+        name = "turtle-beach-burst-ii-air-dongle-mouse";
+        accel_profile = "flat";
+        sensitivity = -0.86;
+        natural_scroll = false;
+      }
+    ];    
+
   };
 }

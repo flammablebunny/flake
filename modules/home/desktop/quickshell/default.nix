@@ -3,6 +3,14 @@
 let
   quickshellConfigSrc = ./config;
 
+  # Fetch shapes library (QML rounded polygon drawing)
+  shapesLib = pkgs.fetchFromGitHub {
+    owner = "end-4";
+    repo = "rounded-polygon-qmljs";
+    rev = "b62e4482af56722840dd4b86c4dab41d5c9f2dda";
+    hash = "sha256-WVkjTpFtJt6TFCi7tTBjsTUjRCFmYoQAlfqRwSCT2lY=";
+  };
+
   # Build QML import path from packages
   # Use unwrapped kirigami to get actual QML modules
   kirigamiUnwrapped = pkgs.kdePackages.kirigami.unwrapped or pkgs.kdePackages.kirigami;
@@ -29,21 +37,17 @@ in {
     QML2_IMPORT_PATH = qmlImportPath;
   };
 
-  # Copy end-4's quickshell config - use xdg to avoid symlinks
   xdg.configFile."quickshell" = {
     source = quickshellConfigSrc;
     recursive = true;
-    # Force actual files, not symlinks
-    onChange = ''
-      # Ensure files are real, not symlinks for quickshell module resolution
-      find ~/.config/quickshell -type l -delete 2>/dev/null || true
-      cp -rL ${quickshellConfigSrc}/* ~/.config/quickshell/ 2>/dev/null || true
-      # Clone shapes submodule if missing
-      if [ ! -d ~/.config/quickshell/modules/common/widgets/shapes/.git ]; then
-        rm -rf ~/.config/quickshell/modules/common/widgets/shapes
-        ${pkgs.git}/bin/git clone --quiet https://github.com/end-4/rounded-polygon-qmljs.git ~/.config/quickshell/modules/common/widgets/shapes
-      fi
-    '';
+    force = true; 
+  };
+
+  # Shapes library
+  xdg.configFile."quickshell/modules/common/widgets/shapes" = {
+    source = shapesLib;
+    recursive = true;
+    force = true;
   };
 
   # QuickShell config JSON - end-4 expects this at ~/.config/illogical-impulse/
@@ -61,7 +65,7 @@ in {
         expressive = "Rubik";
       };
       colors = {
-        type = "scheme-expressive";  # Options: auto, scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
+        type = "scheme-expressive";  # Options: scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
       };
       transparency = {
         enable = true;
@@ -88,7 +92,7 @@ in {
       bottom = false;
       cornerStyle = 1;  # 0: Hug | 1: Float | 2: Plain
       verbose = true;
-      topLeftIcon = "nixos";  # Use NixOS logo instead of AI icon
+      topLeftIcon = "nixos"; 
       workspaces = {
         shown = 10;
         showAppIcons = false;
@@ -120,7 +124,7 @@ in {
     };
 
     lock = {
-      launchOnStartup = true;
+      launchOnStartup = false;  # Don't auto-lock on QuickShell start
       blur = {
         extraZoom = 1.05;
       };
@@ -144,7 +148,7 @@ in {
       cornerOpen = {
         enable = true;
         bottom = false;  # Use top corners (TopLeft for left sidebar, TopRight for right sidebar)
-        cornerRegionWidth = 5;
+        cornerRegionWidth = 10;  # Wider for easier scroll at edge
         cornerRegionHeight = 1440;  # Full screen height (2560x1440)
         clickless = true;  # Open on hover, no click needed
         clicklessCornerEnd = true;  # Also trigger when mouse reaches edge
@@ -158,9 +162,9 @@ in {
             { size = 2; type = "network"; }
             { size = 2; type = "bluetooth"; }
             { size = 1; type = "idleInhibitor"; }
-            { size = 1; type = "mic"; }
+            { size = 2; type = "mic"; }
             { size = 2; type = "audio"; }
-            { size = 2; type = "nightLight"; }
+            { size = 1; type = "nightLight"; }
             { size = 1; type = "darkMode"; }
             { size = 1; type = "powerProfile"; }
             { size = 1; type = "gameMode"; }
@@ -215,10 +219,8 @@ in {
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      # Wrapper for QuickShell screenshot IPC with retry logic
       ACTION="''${1:-edit}"
 
-      # Try the IPC call up to 3 times with small delays
       for i in 1 2 3; do
         if quickshell ipc call region "$ACTION" 2>/dev/null; then
           exit 0
@@ -226,7 +228,6 @@ in {
         sleep 0.05
       done
 
-      # Fallback: if QuickShell IPC fails, use grim+slurp
       if [ "$ACTION" = "edit" ]; then
         grim -g "$(slurp)" - | swappy -f -
       else

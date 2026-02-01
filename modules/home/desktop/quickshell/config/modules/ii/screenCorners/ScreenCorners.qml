@@ -100,23 +100,29 @@ Scope {
                     onScrollDown: {
                         if (!Config.options.sidebar.cornerOpen.valueScroll)
                             return;
-                        if (cornerWidget.isLeft)
-                            cornerPanelWindow.brightnessMonitor.setBrightness(cornerPanelWindow.brightnessMonitor.brightness - 0.05);
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume -= step;
+                        if (cornerWidget.isLeft) {
+                            if (cornerPanelWindow.brightnessMonitor)
+                                cornerPanelWindow.brightnessMonitor.setBrightness(cornerPanelWindow.brightnessMonitor.brightness - 0.05);
+                        } else {
+                            if (Audio.sink?.audio) {
+                                const currentVolume = Audio.sink.audio.volume;
+                                const step = currentVolume < 0.1 ? 0.01 : 0.05;
+                                Audio.sink.audio.volume = Math.max(0, Audio.sink.audio.volume - step);
+                            }
                         }
                     }
                     onScrollUp: {
                         if (!Config.options.sidebar.cornerOpen.valueScroll)
                             return;
-                        if (cornerWidget.isLeft)
-                            cornerPanelWindow.brightnessMonitor.setBrightness(cornerPanelWindow.brightnessMonitor.brightness + 0.05);
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + step);
+                        if (cornerWidget.isLeft) {
+                            if (cornerPanelWindow.brightnessMonitor)
+                                cornerPanelWindow.brightnessMonitor.setBrightness(cornerPanelWindow.brightnessMonitor.brightness + 0.05);
+                        } else {
+                            if (Audio.sink?.audio) {
+                                const currentVolume = Audio.sink.audio.volume;
+                                const step = currentVolume < 0.1 ? 0.01 : 0.05;
+                                Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + step);
+                            }
                         }
                     }
                     onMovedAway: {
