@@ -1,8 +1,8 @@
 { config, lib, pkgs, inputs, userName, ... }:
 
 {
-  # Laptop-specific NixOS config
-  # TODO: Generate hardware-configuration.nix on laptop with nixos-generate-config
+  # Laptop NixOS config
+  
 
   # PipeWire
   services.pipewire = {
@@ -10,6 +10,6 @@
     pulse.enable = true;
   };
 
-  # Laptop-specific: Battery management, power saving
-  # TODO: Add laptop-specific hardware config
+
+
 }

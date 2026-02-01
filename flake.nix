@@ -45,12 +45,12 @@
     };
 
     nixcraft = {
-      url = "git+file:///home/bunny/IdeaProjects/nixcraft";
+      url = "github:flammablebunny/nixcraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland = {
-      url = "git+file:///home/bunny/IdeaProjects/Hyprland";
+      url = "github:flammablebunny/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

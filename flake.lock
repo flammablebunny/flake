@@ -554,16 +554,16 @@
       },
       "locked": {
         "lastModified": 1766522606,
-        "narHash": "sha256-AC43zplw5xmVyyAt9Ah5liQ4OCAz0jXBddET58W9chA=",
-        "ref": "refs/heads/main",
+        "narHash": "sha256-F99r3MJ8TeCs3vOYB8oyv3Na6xLP9hq5LWEHARo/V+k=",
+        "owner": "flammablebunny",
+        "repo": "Hyprland",
         "rev": "88891f15aa2d857a87a9ccf6d0479570e4e0cb17",
-        "revCount": 6728,
-        "type": "git",
-        "url": "file:///home/bunny/IdeaProjects/Hyprland"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/bunny/IdeaProjects/Hyprland"
+        "owner": "flammablebunny",
+        "repo": "Hyprland",
+        "type": "github"
       }
     },
     "hyprland-guiutils": {
@@ -895,17 +895,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1766525467,
-        "narHash": "sha256-oAZxRPjReHVJ13XIpPVV6+704UogYpWKUJuaiBPrNP4=",
-        "ref": "refs/heads/main",
-        "rev": "69cf937683bd2fffe2263be8a3ee50a8cd21d1cb",
-        "revCount": 149,
-        "type": "git",
-        "url": "file:///home/bunny/IdeaProjects/nixcraft"
+        "lastModified": 1766632879,
+        "narHash": "sha256-CmrphHVa5sh0Xrf2OUNfRfyZd11Tas/xw7rjpNX2UDY=",
+        "owner": "flammablebunny",
+        "repo": "nixcraft",
+        "rev": "1ef570e98b5e0b06413cf85f75ff78e226d50d26",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/bunny/IdeaProjects/nixcraft"
+        "owner": "flammablebunny",
+        "repo": "nixcraft",
+        "type": "github"
       }
     },
     "nixpkgs": {
