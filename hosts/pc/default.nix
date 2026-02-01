@@ -37,12 +37,14 @@
    # Wooting Keyboard
   hardware.wooting.enable = true;
 
-  # OpenRGB for RGB Control (Airgoo controller + motherboard)
+  # OpenRGB for RGB Control
   services.hardware.openrgb = {
     enable = true;
     package = pkgs.openrgb-with-all-plugins;
     motherboard = "amd";
   };
+
+  networking.firewall.allowedUDPPorts = [ 6767 ];
 
   # I2C for better RGB device detection
   hardware.i2c.enable = true;

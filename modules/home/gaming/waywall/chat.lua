@@ -264,10 +264,19 @@ local function new_chat(channel, x, y, size)
 
 	-- Initialize connection + load emotes
 	function CHAT:open()
-		if self.has_connected then
+		local still_connected = self.irc_client and self.irc_client:connected()
+		if self.has_connected and still_connected then
 			print("Chat already connected, returning early")
 			return
 		end
+
+		if self.irc_client and not still_connected then
+			print("IRC client disconnected; recreating")
+			pcall(function() self.irc_client:close() end)
+			self.irc_client = nil
+			self.has_connected = false
+		end
+
 		self.has_connected = true
 		print("Starting Chat...")
 
@@ -296,14 +305,27 @@ local function new_chat(channel, x, y, size)
 
 		-- IRC connection
 		print("Creating IRC client to " .. self.ip .. ":" .. self.port)
-		self.irc_client = waywall.irc_client_create(
+		local client = waywall.irc_client_create(
 			self.ip, self.port, self.username, self.token, irc_callback
 		)
+		if not client then
+			self.has_connected = false
+			print("Failed to create IRC client")
+			return
+		end
+		self.irc_client = client
 		print("IRC client created, sleeping 3s...")
 		waywall.sleep(3000)
 		print("Sending CAP REQ and JOIN...")
-		self.irc_client:send("CAP REQ :twitch.tv/tags twitch.tv/commands\r\n")
-		self.irc_client:send("JOIN #" .. self.channel .. "\r\n")
+		local ok_cap = self.irc_client:send("CAP REQ :twitch.tv/tags twitch.tv/commands\r\n")
+		local ok_join = self.irc_client:send("JOIN #" .. self.channel .. "\r\n")
+		if not (ok_cap and ok_join) then
+			print("IRC send failed; resetting chat state")
+			self.has_connected = false
+			pcall(function() self.irc_client:close() end)
+			self.irc_client = nil
+			return
+		end
 		print("Chat initialization complete")
 	end
 
@@ -311,3 +333,4 @@ local function new_chat(channel, x, y, size)
 end
 
 return new_chat
+

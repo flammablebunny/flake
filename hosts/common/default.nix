@@ -92,7 +92,6 @@
     polkit_gnome
     gnome-keyring
     gvfs
-    fuzzel
     libnotify
 
     # ── System Utilities ───────────────────────────────────────────────
@@ -117,7 +116,7 @@
     eza
     fzf
 
-    # ── CLI Utils ──────────────────────────────────────────────────────
+    # ── CLI & TUI Utils ──────────────────────────────────────────────────────
 
     android-tools 
     git
@@ -135,6 +134,7 @@
     inotify-tools
     radeontop
     amdgpu_top
+    cava
 
     # ── Wayland Utilities ──────────────────────────────────────────────
     
@@ -214,7 +214,6 @@
     qt6Packages.qt6ct
 
     # QuickShell deps    
-    cava
     libqalculate
     matugen
     ddcutil        
@@ -240,6 +239,7 @@
     bluez-tools
     pavucontrol
     easyeffects
+    pulseaudio
 
     # Misc
     icu
