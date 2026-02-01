@@ -22,18 +22,17 @@
       frameless = false;
       notifyAboutUpdates = false;
       transparent = false;
-      useQuickCSS = false;
       
       enabledThemes = [ "Caelestia" ];
       themes = {
-        "Caelestia" = builtins.readFile /etc/nixos/themes/caelestia/caelestia.theme.css;
+        # We must use ./ for relative paths to avoid the "absolute path forbidden" error
+        "Caelestia" = builtins.readFile ./themes/caelestia/caelestia.theme.css;
       };
 
       plugins = {
-
-        "AllCallTimers" = {
+        allCallTimers = {
           enable = true;
-          format = "human";
+          format = "stopwatch";
           showRoleColor = true;
           showSeconds = true;
           showWithoutHover = true;
@@ -41,36 +40,37 @@
           watchLargeGuilds = false;
         };
 
-        "AlwaysExpandProfiles" = {
+        alwaysAnimate = {
+          enable = true;
+          icons = true;
+          nameplates = true;
+          roleGradients = true;
+          serverBanners = true;
+          statusEmojis = true;
+        };
+
+        alwaysExpandProfiles = {
           enable = true;
         };
 
-        "Anammox" = {
+        anammox = {
           enable = true;
-          billing = false;
+          billing = true;
           dms = true;
-          emojiList = false;
+          emojiList = true;
           gift = true;
           serverBoost = true;
         };
 
-        "BetterActivities" = {
-          enable = true;
-          memberList = true;
-          iconSize = 15;
-          specialFirst = true;
-          renderGifs = true;
-          removeGameActivityStatus = false;
-          userPopout = true;
-          hideTooltip = true;
-          allActivitiesStyle = "carousel"";
-        };
-
-        "BetterBlockedUsers" = {
+        betterActivities = {
           enable = true;
         };
 
-        "BetterFolders" = {
+        betterBlockedUsers = {
+          enable = true;
+        };
+
+        betterFolders = {
           enable = true;
           closeAllFolders = false;
           closeAllHomeButton = false;
@@ -78,16 +78,16 @@
           closeServerFolder = false;
           forceOpen = false;
           keepIcons = false;
-          showFolderIcon = "FolderIconDisplay.Always";
+          showFolderIcon = 1;
           sidebar = true;
           sidebarAnim = true;
         };
 
-        "BetterGifPicker" = {
+        betterGifPicker = {
           enable = true;
         };
 
-        "BetterQuickReact" = {
+        betterQuickReact = {
           enable = true;
           columns = 4.0;
           compactMode = false;
@@ -96,99 +96,105 @@
           scroll = true;
         };
 
-        "BlurNsfw" = {
+        blurNsfw = {
           enable = true;
           blurAllChannels = false;
           blurAmount = 10;
         };
 
-        "CallTimer" = {
+        callTimer = {
           enable = true;
-          format = "human";
+          format = "stopwatch";
         };
 
-        "ClearUrLs" = {
-          enable = true;
-        };
-
-        "CopyFileContents" = {
+        clearUrLs = {
           enable = true;
         };
 
-        "CrashHandler" = {
+        copyFileContents = {
+          enable = true;
+        };
+
+        crashHandler = {
           enable = true;
           attemptToNavigateToHome = false;
           attemptToPreventCrashes = true;
         };
 
-        "DisableCallIdle" = {
+        disableCallIdle = {
           enable = true;
         };
 
-        "ExpressionCloner" = {
+        expressionCloner = {
           enable = true;
         };
 
-        "FavoriteGifSearch" = {
+        favoriteGifSearch = {
           enable = true;
-          searchOption = "url";
+          searchOption = "hostandpath";
         };
 
-        "FixImagesQuality" = {
+        fixImagesQuality = {
           enable = true;
         };
 
-        "FixSpotifyEmbeds" = {
+        fixSpotifyEmbeds = {
           enable = true;
           volume = 10.0;
         };
 
-        "FixYoutubeEmbeds" = {
+        fixYoutubeEmbeds = {
           enable = true;
         };
 
-        "ForceOwnerCrown" = {
+        fontLoader = {
+          enable = true;
+          applyOnCodeBlocks = false;
+          fontSearch = {};
+        };
+
+        forceOwnerCrown = {
           enable = true;
         };
 
-        "GifPaste" = {
+        gifPaste = {
           enable = true;
         };
 
-        "GifRoulette" = {
+        gifRoulette = {
           enable = true;
-          pingOwnerChance = false;
+          pingOwnerChance = true;
         };
 
-        "IgnoreTerms" = {
+        ignoreTerms = {
           enable = true;
         };
 
-        "ImageZoom" = {
+        imageZoom = {
           enable = true;
           invertScroll = true;
           nearestNeighbour = false;
           saveZoomValues = true;
           size = 100.0;
-          square = true;
+          square = false;
           zoom = 2.0;
           zoomSpeed = 0.5;
         };
 
-        "KeyboardNavigation" = {
-          enable = true;
+        keyboardNavigation = {
+          enable = false;
           allowMouseControl = true;
           hotkey = [];
         };
 
-        "MemberCount" = {
+        memberCount = {
           enable = true;
           memberList = true;
           toolTip = true;
           voiceActivity = true;
         };
 
-        "MessageClickActions" = {
+        messageClickActions = {
           enable = true;
           enableDeleteOnClick = true;
           enableDoubleClickToEdit = true;
@@ -196,38 +202,44 @@
           requireModifier = false;
         };
 
-        "NoF1" = {
+        noF1 = {
           enable = true;
         };
 
-        "NoOnboardingDelay" = {
+        noOnboardingDelay = {
           enable = true;
         };
 
-        "Petpet" = {
+        petpet = {
           enable = true;
         };
 
-        "ReverseImageSearch" = {
+        reverseImageSearch = {
           enable = true;
         };
 
-        "ShowHiddenThings" = {
-          enable = true;
-          showTimeouts = true;
-          showInvitesPaused = true;
-          showModView = true;
-        };
-
-        "ThemeAttributes" = {
+        showHiddenThings = {
           enable = true;
         };
 
-        "Timezones" = {
+        songLink = {
           enable = true;
-          "24h Time" = true;
+          servicesComponent = {};
+          servicesSettings = {};
+          userCountry = "US";
+        };
+
+        themeAttributes = {
+          enable = true;
+        };
+
+        timezones = {
+          enable = true;
+          _24hTime = false;
           databaseUrl = "https://timezone.creations.works";
           preferDatabaseOverLocal = true;
+          resetDatabaseTimezone = {};
+          setDatabaseTimezone = {};
           showMessageHeaderTime = true;
           showOwnTimezone = true;
           showProfileTime = true;
@@ -235,51 +247,40 @@
           useDatabase = true;
         };
 
-        "Translate" = {
+        translate = {
           enable = true;
           autoTranslate = false;
+          deeplApiKey = "";
           service = "google";
+          shavian = true;
           showAutoTranslateTooltip = true;
+          sitelen = true;
           target = "en";
+          toki = true;
         };
 
-        "VoiceMessages" = {
+        voiceMessages = {
           enable = true;
           echoCancellation = true;
           noiseSuppression = true;
         };
 
-        "VolumeBooster" = {
+        volumeBooster = {
           enable = true;
           multiplier = 2.0;
         };
 
-        "WhosWatching" = {
+        whosWatching = {
           enable = true;
           showPanel = true;
         };
 
-        "EquicordHelper" = {
+        equicordHelper = {
           enable = true;
           disableDmContextMenu = false;
           noMirroredCamera = false;
-          removeActivitySection = true;
+          removeActivitySection = false;
         };
-
-        "NoTrack" = {
-          enable = true;
-          disableAnalytics = true;
-        };
-
-        "Settings" = {
-          enable = true;
-          SettingsLocation = "top";
-        };
-
-        "SupportHelper" = {
-          enable = true;
-        };
-
       };
     };
   };

@@ -1,8 +1,8 @@
 { inputs, pkgs, ... }:
 let
   ranked-mrpack = pkgs.fetchurl {
-    url = "https://redlime.github.io/MCSRMods/modpacks/v4/MCSRRanked-Linux-1.16.1.mrpack";
-    hash = "sha256:10lqn5m3gxm8dzjw71abzp0cjq1pn3gd5mf30zgzawb81ilqbcsx";
+    url = "https://redlime.github.io/MCSRMods/modpacks/v4/MCSRRanked-Linux-1.16.1-All.mrpack";
+    hash = "sha256-mPerodqNklfLpeNzcJqe5g/wf9mGFwPNl7vApl/RggI=";
   };
 
   rsg-mrpack = pkgs.fetchurl {
@@ -27,13 +27,20 @@ in
           file = ranked-mrpack;
         };
 
+        lwjglVersion = "3.3.3";
+        mangohud.enable = true;
+
         java = {
           package = pkgs.jdk17;
           maxMemory = 4096;
           minMemory = 512;
         };
 
-        waywall.enable = true;
+        waywall = {
+          enable = true;
+          binaryPath = "/home/bunny/IdeaProjects/waywall/result/bin/waywall";
+          glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
+        };
 
         binEntry = {
           enable = true;
@@ -43,6 +50,16 @@ in
         desktopEntry = {
           enable = true;
           name = "MCSR Ranked";
+          icon = /home/bunny/.local/share/nixcraft/client/instances/Ranked/ranked.png;
+        };
+
+        account = {
+          username = "Flammable_Bunny";
+          accessTokenPath = "/home/bunny/.local/share/nixcraft/auth/access_token";
+          skin = {
+            file = /home/bunny/.local/share/nixcraft/skins/aroace.png;
+            variant = "classic";
+          };
         };
       };
 
@@ -53,6 +70,9 @@ in
           enable = true;
           file = rsg-mrpack;
         };
+
+        lwjglVersion = "3.3.3";
+        mangohud.enable = true;
 
         java = {
           package = pkgs.graalvmPackages.graalvm-oracle_17;
@@ -96,7 +116,11 @@ in
           ];
         };
 
-        waywall.enable = true;
+        waywall = {
+          enable = true;
+          binaryPath = "/home/bunny/mcsr/waywall/bin/waywall";
+          glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
+        };
 
         binEntry = {
           enable = true;
@@ -106,6 +130,7 @@ in
         desktopEntry = {
           enable = true;
           name = "SeedQueue";
+          icon = /home/bunny/.local/share/nixcraft/client/instances/RSG/RSG.png;
         };
       };
     };

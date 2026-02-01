@@ -24,7 +24,12 @@
       "Bash(nix run:*)",
       "Bash(nix flake show:*)",
       "Bash(nix-env:*)",
-      "Bash(nix search:*)"
+      "Bash(nix search:*)",
+      "Bash(sudo nix flake update:*)",
+      "Bash(cat:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(nixcraft-skin apply:*)"
     ],
     "deny": [],
     "ask": []

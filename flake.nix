@@ -39,21 +39,38 @@
     };
 
     nixcraft = {
-      url = "github:loystonpais/nixcraft";
+      url = "github:Flammable-Bunny/nixcraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, agenix, ... }@inputs: {
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
+      # ./intel-arc-b580.nix  # TEMP: Remove when swapping back to regular GPU
+        agenix.nixosModules.default
         home-manager.nixosModules.home-manager
 
         ({ pkgs, inputs, ... }: {
           nixpkgs.config.allowUnfree = true;
+
+          # Overlay to build quickshell with Release mode for better performance
+          nixpkgs.overlays = [
+            (final: prev: {
+              quickshell = prev.quickshell.overrideAttrs (old: {
+                cmakeBuildType = "Release";
+                dontStrip = false;
+              });
+            })
+          ];
 
           # Home Manager configuration
           home-manager.useGlobalPkgs = true;
@@ -62,7 +79,11 @@
           home-manager.users.bunny = import ./home.nix;
 
           programs.dconf.enable = true;
-          programs.hyprland.enable = true;
+          programs.hyprland = {
+            enable = true;
+            xwayland.enable = true;
+            withUWSM = false;
+          };
           programs.fish.enable = true;
           programs.xfconf.enable = true;
 
@@ -131,6 +152,8 @@
             '')
 
             (caelestia-shell.packages.${pkgs.system}.default.overrideAttrs (old: {
+              cmakeBuildType = "Release";
+              dontStrip = false;
               postPatch = (old.postPatch or "") + ''
                 find . -type f -name "*.qml" -exec sed -i 's|https://wttr.in|http://wttr.in|g' {} +
               '';
@@ -157,6 +180,7 @@
 
             # Core tools
             pkgs.git
+            pkgs.fd
 	         pkgs.wget
             pkgs.socat
 	         pkgs.os-prober
@@ -218,8 +242,13 @@
             pkgs.antigravity
 
             # Java
-            pkgs.jdk17
+            pkgs.jdk21
             pkgs.graalvmPackages.graalvm-oracle_17
+
+            # Nixcraft tools
+            nixcraft.packages.${pkgs.system}.nixcraft-cli
+            nixcraft.packages.${pkgs.system}.nixcraft-auth
+            nixcraft.packages.${pkgs.system}.nixcraft-skin
 
             # Waywall dependencies
             pkgs.waywall
@@ -248,6 +277,89 @@
             pkgs.libxkbcommon
             pkgs.libxkbcommon.dev
 	    pkgs.mangohud
+
+            # Secrets management
+            agenix.packages.${pkgs.system}.default
+          ];
+
+          # Agenix secrets configuration
+          # Uses dedicated age key (no passphrase) for automatic decryption
+          age.identityPaths = [ "/home/bunny/.config/agenix/key.txt" ];
+          age.secrets = {
+            waywall-oauth = {
+              file = ./secrets/waywall-oauth.age;
+              owner = "bunny";
+              group = "users";
+              mode = "0400";
+            };
+            paceman-key = {
+              file = ./secrets/paceman-key.age;
+              owner = "bunny";
+              group = "users";
+              mode = "0400";
+            };
+            # Wallpapers
+            "wallpaper-rabbit-forest" = {
+              file = ./secrets/wallpapers/rabbit_forest.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-grain" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_grain.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no grain.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-grain-no-particles" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_grain_no_particles.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no grain no particles.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-particles" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_particles.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no particles.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-sign" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_sign.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no sign.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-sign-no-grain" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_sign_no_grain.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no sign no grain.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-sign-no-grain-no-particles" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_sign_no_grain_no_particles.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no sign no grain no particles.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+            "wallpaper-rabbit-forest-no-sign-no-particles" = {
+              file = ./secrets/wallpapers/rabbit_forest_no_sign_no_particles.png.age;
+              path = "/home/bunny/Pictures/Wallpapers/rabbit forest no sign no particles.png";
+              owner = "bunny";
+              group = "users";
+              mode = "0644";
+            };
+          };
+
+          # Ensure wallpapers directory exists
+          systemd.tmpfiles.rules = [
+            "d /home/bunny/Pictures/Wallpapers 0755 bunny users -"
           ];
 
           systemd.user.services.polkit-gnome-authentication-agent-1 = {
