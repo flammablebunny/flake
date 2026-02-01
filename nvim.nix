@@ -44,13 +44,13 @@ in
           { "folke/snacks.nvim" },
           { "folke/trouble.nvim" },
           { "folke/which-key.nvim" },
-          { "telescope-nvim" },
+          { "nvim-telescope/telescope.nvim" },
           { "nvim-neo-tree/neo-tree.nvim" },
           { "nvim-treesitter/nvim-treesitter" },
           { "nvim-treesitter/nvim-treesitter-textobjects" },
-          { "nvim-lspconfig" },
-          { "nvim-cmp", lazy = true },
-          { "LuaSnip", lazy = true },
+          { "neovim/nvim-lspconfig" },
+          { "hrsh7th/nvim-cmp", lazy = true },
+          { "L3MON4D3/LuaSnip", lazy = true },
 
           -- Cord for Discord RPC
           {
