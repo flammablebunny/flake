@@ -46,11 +46,11 @@ in
             dependencies = { "nvim-lua/plenary.nvim" },
           },
 
-          -- Presence.nvim for Discord RPC (simpler alternative to cord)
-          {
-            "andweeb/presence.nvim",
-            lazy = false,  -- Load immediately
-          },
+          -- Presence.nvim for Discord RPC (DISABLED - causes segfault on load)
+          -- {
+          --   "andweeb/presence.nvim",
+          --   lazy = false,
+          -- },
 
           -- Noice for enhanced command-line UI (DISABLED - causes segfault on load)
           -- {
@@ -106,7 +106,6 @@ in
 
       catppuccin-nvim
       claude-code-nvim
-      presence-nvim
     ];
 
     extraPackages = with pkgs; [
