@@ -1,6 +1,16 @@
 { pkgs, inputs, ... }:
 
 let
+  # Pin nvim-treesitter to master branch (old API) until nvf catches up
+  nvim-treesitter-master = pkgs.vimPlugins.nvim-treesitter.overrideAttrs (old: {
+    src = pkgs.fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "nvim-treesitter";
+      rev = "master";
+      sha256 = "sha256-GUwkRJzDWNKy4kLMh9O/WAU/zQfzLFdvLqQbSyStXbU=";
+    };
+  });
+
   claude-code-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "claude-code-nvim";
     src = pkgs.fetchFromGitHub {
@@ -57,10 +67,9 @@ in
         style = "mocha";
       };
 
-      # Treesitter
+      # Treesitter - disabled until nvf updates for new API
       treesitter = {
-        enable = true;
-        autotagHtml = true;
+        enable = false;
       };
 
       # LSP
@@ -71,8 +80,6 @@ in
 
       # Languages
       languages = {
-        enableLSP = true;
-        enableTreesitter = true;
         nix.enable = true;
         lua.enable = true;
         rust.enable = true;

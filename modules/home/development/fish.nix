@@ -21,9 +21,6 @@
       # Java fix
       set -gx JAVA_HOME (dirname (dirname (readlink -f (which java))))
 
-      # Custom colours
-      cat ~/.local/state/caelestia/sequences.txt 2> /dev/null
-
       # For jumping between prompts in foot terminal
       function mark_prompt_start --on-event fish_prompt
           echo -en "\e]133;A\e\\"
@@ -58,8 +55,8 @@
       # NixOS rebuild
       nr = "/etc/nixos/scripts/rebuild.sh";
 
-      csd = "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic caelestia shell -d";
-      csk = "caelestia-shell kill";
+      sd = "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d";
+      sk = "quickshell kill";
     };
   };
 }

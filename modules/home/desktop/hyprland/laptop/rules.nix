@@ -108,11 +108,10 @@ in
       "match:namespace launcher, animation popin 80%"
       "match:namespace launcher, blur true"
 
-      # Shell
-      "match:namespace caelestia-(border-exclusion|area-picker), no_anim true"
-      "match:namespace caelestia-(drawers|background), animation fade"
-      "match:namespace caelestia-drawers, blur true"
-      "match:namespace caelestia-drawers, ignore_alpha 0.57"
+      # QuickShell
+      "match:namespace quickshell:.*, animation fade"
+      "match:namespace quickshell:.*, blur true"
+      "match:namespace quickshell:.*, ignore_alpha 0.57"
     ];
   };
 }

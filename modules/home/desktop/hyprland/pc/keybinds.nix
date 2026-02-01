@@ -7,27 +7,26 @@ let
   volumeStep = vars.misc.volumeStep;
 
   wsaction = "$HOME/.config/hypr/scripts/wsaction.fish";
-
-  caelestia = "caelestia";
+  toggleWs = "$HOME/.config/hypr/scripts/toggle-workspace.sh";
 in
 {
   wayland.windowManager.hyprland.settings = {
     exec = [ "hyprctl dispatch submap global" ];
 
     "$wsaction" = wsaction;
-    "$caelestia" = caelestia;
+    "$toggleWs" = toggleWs;
 
     submap = "global";
 
     # Regular binds
     bind = [
-      # Shell keybinds - Launcher
-      "Super, Space, global, caelestia:launcher"
+      # Shell keybinds - Launcher (QuickShell)
+      "Super, Space, exec, quickshell ipc call search toggle"
 
       # Misc shell
-      "${kb.session}, global, caelestia:session"
-      "${kb.showPanels}, global, caelestia:showall"
-      "${kb.lock}, global, caelestia:lock"
+      "${kb.session}, exec, quickshell ipc call session toggle"
+      "${kb.showPanels}, exec, quickshell ipc call sidebarRight toggle"
+      "${kb.lock}, exec, quickshell ipc call lock activate"
 
       # Go to workspace
       "${kb.goToWs}, 1, exec, $wsaction workspace 1"
@@ -53,8 +52,8 @@ in
       "${kb.goToWsGroup}, 9, exec, $wsaction -g workspace 9"
       "${kb.goToWsGroup}, 0, exec, $wsaction -g workspace 10"
 
-      # Toggle special workspace
-      "${kb.toggleSpecialWs}, exec, $caelestia toggle specialws"
+      # Toggle special workspace (generic)
+      "${kb.toggleSpecialWs}, togglespecialworkspace, special"
 
       # Move window to workspace
       "${kb.moveWinToWs}, 1, exec, $wsaction movetoworkspace 1"
@@ -108,18 +107,20 @@ in
       "Ctrl+Super, Backslash, centerwindow, 1"
       "Ctrl+Super+Alt, Backslash, resizeactive, exact 55% 70%"
       "Ctrl+Super+Alt, Backslash, centerwindow, 1"
-      "${kb.windowPip}, exec, $caelestia resizer pip"
+      # PIP mode - resize to corner
+      "${kb.windowPip}, resizeactive, exact 25% 25%"
+      "${kb.windowPip}, moveactive, exact 73% 73%"
       "${kb.pinWindow}, pin"
       "${kb.windowFullscreen}, fullscreen, 0"
       "${kb.windowBorderedFullscreen}, fullscreen, 1"
       "${kb.toggleWindowFloating}, togglefloating,"
       "${kb.closeWindow}, killactive,"
 
-      # Special workspace toggles
-      "${kb.systemMonitor}, exec, $caelestia toggle sysmon"
-      "${kb.communication}, exec, $caelestia toggle communication"
-      "${kb.recording}, exec, $caelestia toggle recording"
-      "${kb.music}, exec, $caelestia toggle music"
+      # Special workspace toggles (using toggle-workspace.sh)
+      "${kb.systemMonitor}, exec, $toggleWs sysmon btop 'foot --app-id=btop btop'"
+      "${kb.communication}, exec, $toggleWs communication discord discord"
+      "${kb.recording}, exec, $toggleWs recording com.obsproject.Studio obs"
+      "${kb.music}, exec, $toggleWs music Spotify spotify"
 
       # Apps
       "${kb.terminal}, exec, app2unit -- ${apps.terminal}"
@@ -129,51 +130,45 @@ in
       "Ctrl+Alt, Escape, exec, app2unit -- qps"
       "Ctrl+Alt, V, exec, app2unit -- pavucontrol"
 
-      # Utilities
-      "Super+Shift, S, global, caelestia:screenshotFreeze"
-      "Super+Shift+Alt, S, global, caelestia:screenshot"
-      "Super+Alt, R, exec, $caelestia record -s"
-      "Ctrl+Alt, R, exec, $caelestia record"
-      "Super+Shift+Alt, R, exec, $caelestia record -r"
+      # Utilities - Screenshots with grim/slurp/swappy
+      "Super+Shift, S, exec, grim -g \"$(slurp)\" - | swappy -f -"
+      "Super+Shift+Alt, S, exec, grim -g \"$(slurp)\" - | wl-copy"
       "Super+Shift, C, exec, hyprpicker -a"
 
       # Sleep
       "Super+Shift, L, exec, systemctl suspend-then-hibernate"
 
-      # Clipboard and emoji picker
-      "Super, V, exec, pkill fuzzel || $caelestia clipboard"
-      "Super+Alt, V, exec, pkill fuzzel || $caelestia clipboard -d"
-      "Super, Period, exec, pkill fuzzel || $caelestia emoji -p"
+      # Clipboard and emoji picker (QuickShell)
+      "Super, V, exec, quickshell ipc call search clipboardToggle"
+      "Super+Alt, V, exec, cliphist list | fuzzel -d | cliphist delete"
+      "Super, Period, exec, fuzzel-emoji"
     ];
 
     # Lock-screen-safe binds (bindl)
     bindl = [
-      "${kb.clearNotifs}, global, caelestia:clearNotifs"
-
       # Restore lock
-      "${kb.restoreLock}, exec, env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic $caelestia shell -d"
-      "${kb.restoreLock}, global, caelestia:lock"
+      "${kb.restoreLock}, exec, quickshell ipc call lock focus"
 
-      # Brightness
-      ", XF86MonBrightnessUp, global, caelestia:brightnessUp"
-      ", XF86MonBrightnessDown, global, caelestia:brightnessDown"
+      # Brightness (QuickShell)
+      ", XF86MonBrightnessUp, exec, quickshell ipc call brightness increment"
+      ", XF86MonBrightnessDown, exec, quickshell ipc call brightness decrement"
 
-      # Media
-      "Ctrl+Super, Space, global, caelestia:mediaToggle"
-      ", XF86AudioPlay, global, caelestia:mediaToggle"
-      ", XF86AudioPause, global, caelestia:mediaToggle"
-      "Ctrl+Super, Equal, global, caelestia:mediaNext"
-      ", XF86AudioNext, global, caelestia:mediaNext"
-      "Ctrl+Super, Minus, global, caelestia:mediaPrev"
-      ", XF86AudioPrev, global, caelestia:mediaPrev"
-      ", XF86AudioStop, global, caelestia:mediaStop"
+      # Media (QuickShell)
+      "Ctrl+Super, Space, exec, quickshell ipc call mpris playPause"
+      ", XF86AudioPlay, exec, quickshell ipc call mpris playPause"
+      ", XF86AudioPause, exec, quickshell ipc call mpris playPause"
+      "Ctrl+Super, Equal, exec, quickshell ipc call mpris next"
+      ", XF86AudioNext, exec, quickshell ipc call mpris next"
+      "Ctrl+Super, Minus, exec, quickshell ipc call mpris previous"
+      ", XF86AudioPrev, exec, quickshell ipc call mpris previous"
+      ", XF86AudioStop, exec, quickshell ipc call mpris pauseAll"
 
       # Volume
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       "Super+Shift, M, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
       # Screenshot
-      ", Print, exec, $caelestia screenshot"
+      ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
 
       # Clipboard paste
       "Ctrl+Shift+Alt, V, exec, sleep 0.5s && ydotool type -d 1 \"$(cliphist list | head -1 | cliphist decode)\""
@@ -210,13 +205,13 @@ in
       # Volume
       ", XF86AudioRaiseVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ ${toString volumeStep}%+"
       ", XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ ${toString volumeStep}%-"
-    ]; 
+    ];
 
     # Release binds (bindr)
     bindr = [
-      # Kill/restart shell
-      "Ctrl+Super+Shift, R, exec, $caelestia shell -k"
-      "Ctrl+Super+Alt, R, exec, $caelestia shell -k; env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic $caelestia shell -d"
+      # Kill/restart QuickShell
+      "Ctrl+Super+Shift, R, exec, pkill quickshell"
+      "Ctrl+Super+Alt, R, exec, pkill quickshell; sleep 0.5; env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d &"
     ];
 
     # Mouse binds for dragging windows

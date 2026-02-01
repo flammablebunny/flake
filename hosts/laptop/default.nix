@@ -2,7 +2,7 @@
 
 {
   # Laptop NixOS config
-  
+
 
   # PipeWire
   services.pipewire = {

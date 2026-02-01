@@ -12,12 +12,12 @@ fi
 
 echo "Rebuilding NixOS for $HOST..."
 
-# Only kill Caelestia Shell if it's currently running
-if command -v caelestia-shell >/dev/null 2>&1; then
-  if caelestia-shell list 2>/dev/null | grep -q "^Instance "; then
-    caelestia-shell kill
+# Only kill Quickshell if it's currently running
+if command -v quickshell >/dev/null 2>&1; then
+  if quickshell list 2>/dev/null | grep -q "^Instance "; then
+    quickshell kill
   else
-    echo "Caelestia Shell not running; skipping kill."
+    echo "Quickshell not running; skipping kill."
   fi
 fi
 
@@ -27,8 +27,8 @@ rm -f ~/.config/Equicord/settings/settings.json
 
 sudo nixos-rebuild switch --flake /etc/nixos#"$HOST" --impure
 
-# Relaunch Caelestia Shell if available
-if command -v caelestia-shell >/dev/null 2>&1; then
-  env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic caelestia-shell -d
+# Relaunch Quickshell if available
+if command -v quickshell >/dev/null 2>&1; then
+  env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d
 fi
 echo "Done!"

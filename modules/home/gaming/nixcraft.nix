@@ -2,7 +2,7 @@
 let
   ranked-mrpack = pkgs.fetchurl {
     url = "https://redlime.github.io/MCSRMods/modpacks/v4/MCSRRanked-Linux-1.16.1-All.mrpack";
-    hash = "sha256-mPerodqNklfLpeNzcJqe5g/wf9mGFwPNl7vApl/RggI=";
+    hash = "sha256-/lYIASwBA62TKhLer3jYzZqUD7NUjqjY7GRQk1Hkd5Y=";
   };
 
   rsg-mrpack = pkgs.fetchurl {
@@ -40,7 +40,7 @@ in
           enable = true;
           binaryPath = "/home/bunny/IdeaProjects/waywall/builddir/waywall/waywall";
           glfwPath = "/home/bunny/mcsr/glfw/libglfw.so";
-          rawCommand = "env WAYWALL_VK_PROXY_GAME=1 WAYWALL_VK_VENDOR=amd WAYWALL_DMABUF_ALLOW_MODIFIERS=1 WAYWALL_SUBPROC_DRI_PRIME=0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
+          rawCommand = "env WAYWALL_VK_PR_GAME=1 WAYWALL_VK_VENDOR=amd WAYWALL_DMABUF_ALLOW_MODIFIERS=1 WAYWALL_SUBPROC_DRI_PRIME=0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD128 AMD_DEBUG=forcegtt,nodcc,nohyperz,nowc /home/bunny/IdeaProjects/waywall/builddir/waywall/waywall wrap -- env __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD129 DRI_PRIME=1 $GAME_SCRIPT";
         };
 
         binEntry = {

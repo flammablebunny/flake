@@ -30,6 +30,9 @@ in
 
       # Others
       "_JAVA_AWT_WM_NONREPARENTING, 1"
+
+      # QuickShell QML imports (for Qt5Compat.GraphicalEffects)
+      "QML2_IMPORT_PATH, /run/current-system/sw/lib/qt-6/qml"
     ];
   };
 }

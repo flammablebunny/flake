@@ -26,11 +26,11 @@
       # Forward bluetooth media commands to MPRIS
       "mpris-proxy"
 
-      # Resize and move windows based on matches (e.g. pip)
-      "caelestia resizer -d"
+      # Start QuickShell (QSG_RHI_BACKEND=opengl needed for DMA-BUF textures)
+      "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d"
 
-      # Start shell (QSG_RHI_BACKEND=opengl needed for DMA-BUF textures)
-      "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic caelestia shell -d"
+      # Start hypridle for screen lock timeout
+      "hypridle"
 
       # Start EasyEffects
       "easyeffects --gapplication-service"

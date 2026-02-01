@@ -45,15 +45,8 @@
       nohup "$@" >/dev/null 2>&1 &
     '')
 
-    (inputs.caelestia-shell.packages.${system}.default.overrideAttrs (old: {
-      cmakeBuildType = "Release";
-      dontStrip = false;
-      postPatch = (old.postPatch or "") + ''
-        find . -type f -name "*.qml" -exec sed -i 's|https://wttr.in|http://wttr.in|g' {} +
-      '';
-    }))
+    inputs.quickshell.packages.${system}.default
     inputs.zen-browser.packages.${system}.default
-    inputs.caelestia-cli.packages.${system}.default
     inputs.nixcraft.packages.${system}.nixcraft-cli
     inputs.nixcraft.packages.${system}.nixcraft-auth
     inputs.nixcraft.packages.${system}.nixcraft-skin
@@ -110,6 +103,7 @@
     cliphist
     grim
     slurp
+    swappy
     hyprpicker
     brightnessctl
     gammastep
@@ -132,6 +126,7 @@
     wineWowPackages.wayland
     mangohud
     waywall
+    xorg.libXtst
     luajit
 
     # ── Development ────────────────────────────────────────────────────
@@ -158,11 +153,29 @@
 
     # ── Libraries ──────────────────────────────────────────────────────
     
-    # Qt
+    # Qt (for QuickShell)
     qt6.qtwayland
     qt6.qmake
+    qt6.qt5compat
+    qt6.qtdeclarative
+    qt6.qtmultimedia
+    qt6.qtpositioning
+    qt6.qtsensors
+    qt6.qtsvg
+    qt6.qtimageformats
+    qt6.qtvirtualkeyboard
+    kdePackages.kirigami
+    kdePackages.syntax-highlighting
     libsForQt5.qt5ct
     qt6Packages.qt6ct
+
+    # QuickShell deps    
+    cava
+    libqalculate
+    matugen
+    ddcutil        
+    imagemagick   
+    libsecret     
 
     # Wayland
     wayland
