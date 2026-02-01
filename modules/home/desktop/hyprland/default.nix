@@ -10,14 +10,12 @@ let
 in
 {
   imports = [
-    # Device-specific configs (env.nix, input.nix, general.nix) are imported per-host in hosts/*/home.nix
+    # Device-specific configs (env.nix, input.nix, general.nix, variables.nix, rules.nix, keybinds.nix) are imported per-host in hosts/*/home.nix
     (import ./common/decoration.nix moduleArgs)
     (import ./common/animations.nix moduleArgs)
     (import ./common/misc.nix moduleArgs)
     (import ./common/group.nix moduleArgs)
-    (import ./common/rules.nix moduleArgs)
     (import ./common/execs.nix moduleArgs)
-    (import ./common/keybinds.nix moduleArgs)
     (import ./common/scripts.nix moduleArgs)
   ];
 

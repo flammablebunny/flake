@@ -1,6 +1,7 @@
-{ vars, ... }:
+{ ... }:
 
 let
+  vars = import ./variables.nix;
   kb = vars.keybinds;
   apps = vars.apps;
   volumeStep = vars.misc.volumeStep;

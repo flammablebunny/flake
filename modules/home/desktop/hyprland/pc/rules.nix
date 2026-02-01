@@ -1,5 +1,8 @@
-{ vars, ... }:
+{ ... }:
 
+let
+  vars = import ./variables.nix;
+in
 {
   wayland.windowManager.hyprland.settings = {
     # Window rules (v3 syntax: match:<prop> <value>, <effect> <value>)
