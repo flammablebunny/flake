@@ -11,7 +11,7 @@ in
       "match:fullscreen 0, opacity ${toString vars.window.opacity} override"
 
       # Opaque windows (native transparency or we want them opaque)
-      "match:class foot|equibop|org\\.quickshell|imv|swappy, opaque true"
+      "match:class foot|org\\.quickshell|imv|swappy, opaque true"
 
       # Center all floating windows (not xwayland cause popups)
       "match:float 1, match:xwayland 0, center 1"
@@ -53,7 +53,7 @@ in
       # Special workspaces
       "match:class btop, workspace special:sysmon"
       "match:class Spotify, workspace special:music"
-      "match:class discord|equibop, workspace special:communication"
+      "match:class discord, workspace special:communication"
       "match:class Slack, workspace special:slack"
       "match:class com.obsproject.Studio|obs, workspace special:recording"
 

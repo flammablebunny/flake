@@ -8,8 +8,13 @@
   programs.nixcord = {
     enable = true;
 
-    discord.enable = false;
-    equibop.enable = true;
+    discord = {
+    enable = true; 
+    openASAR.enable = true;
+    equicord.enable = true;
+    vencord.enable = false;
+  };
+    
 
     config = {
       autoUpdate = false;
