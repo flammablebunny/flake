@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    (import ./env.nix moduleArgs)
+    # env.nix is imported per-host in hosts/*/home.nix
     (import ./general.nix moduleArgs)
     (import ./input.nix moduleArgs)
     (import ./decoration.nix moduleArgs)

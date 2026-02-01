@@ -10,8 +10,8 @@
         prompt = "❯ ";
         icon-theme = "Papirus-Dark";
         font = "JetBrainsMono Nerd Font:size=14";
-        width = 80;
-        lines = 12;
+        width = 100;
+        lines = 15;
       };
       colors = {
         background = "1e1e2edd";

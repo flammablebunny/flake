@@ -7,7 +7,8 @@
     settings = {
       add_newline = true;
 
-      format = "$username$hostname:$directory$git_branch$git_status$character";
+      format = "$username$hostname:$directory$character";
+      right_format = "$git_branch$git_status";
 
       username = {
         show_always = true;
