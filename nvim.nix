@@ -60,19 +60,21 @@ in
           {
             "vyfor/cord.nvim",
             build = false,  -- Disable native build to avoid segfault
-            config = function()
-              require("cord").setup()
-            end,
+            -- config disabled to test if setup() call causes segfault
+            -- config = function()
+            --   require("cord").setup()
+            -- end,
           },
 
-          -- Noice for enhanced command-line UI (TEMPORARILY DISABLED FOR TESTING)
-          -- {
-          --   "folke/noice.nvim",
-          --   dependencies = { "MunifTanjim/nui.nvim" },
-          --   config = function()
-          --     require("noice").setup()
-          --   end,
-          -- },
+          -- Noice for enhanced command-line UI
+          {
+            "folke/noice.nvim",
+            dependencies = { "MunifTanjim/nui.nvim" },
+            -- config disabled to test if setup() call causes segfault
+            -- config = function()
+            --   require("noice").setup()
+            -- end,
+          },
 
           {
             "saghen/blink.cmp",
