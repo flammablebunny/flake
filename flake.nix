@@ -44,7 +44,7 @@
     };
 
     hyprland = {
-      url = "github:Flammable-Bunny/Hyprland";
+      url = "git+file:///home/bunny/IdeaProjects/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -222,6 +222,8 @@
             pkgs.wineWowPackages.wayland
             pkgs.steam
             pkgs.virt-manager
+            pkgs.radeontop
+            pkgs.amdgpu_top
 
             # CLI tools
             pkgs.fastfetch

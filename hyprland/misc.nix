@@ -11,7 +11,6 @@
 
       disable_hyprland_logo = true;
       force_default_wallpaper = 0;
-      disable_watchdog_warning = true;
 
       allow_session_lock_restore = true;
       middle_click_paste = false;
@@ -22,10 +21,12 @@
       key_press_enables_dpms = true;
 
       background_color = "rgb(${colors.surfaceContainer})";
+
+
+      disable_watchdog_warning = true;
     };
 
     debug = {
-      error_position = 1;
       # suppress_errors = true;
     };
   };

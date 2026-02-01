@@ -1,4 +1,4 @@
-# Combined configuration for AMD + Intel B580 (Battlemage) Multi-GPU
+# Configuration Settings for Dual Dedicated GPU (Intel B580 + 7900xtx) Setup.
 
 { config, pkgs, lib, ... }:
 

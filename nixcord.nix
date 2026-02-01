@@ -25,7 +25,6 @@
       
       enabledThemes = [ "Caelestia" ];
       themes = {
-        # We must use ./ for relative paths to avoid the "absolute path forbidden" error
         "Caelestia" = builtins.readFile ./themes/caelestia/caelestia.theme.css;
       };
 

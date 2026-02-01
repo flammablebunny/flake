@@ -5,10 +5,8 @@ let
   apps = vars.apps;
   volumeStep = vars.misc.volumeStep;
 
-  # Script path for workspace actions
-  wsaction = "~/.config/hypr/scripts/wsaction.fish";
+  wsaction = "/home/bunny/.config/hypr/scripts/wsaction.fish";
 
-  # Caelestia CLI command
   caelestia = "caelestia";
 in
 {
@@ -53,12 +51,6 @@ in
       "${kb.goToWsGroup}, 8, exec, $wsaction -g workspace 8"
       "${kb.goToWsGroup}, 9, exec, $wsaction -g workspace 9"
       "${kb.goToWsGroup}, 0, exec, $wsaction -g workspace 10"
-
-      # Mouse workspace navigation
-      "Super, mouse_down, workspace, -1"
-      "Super, mouse_up, workspace, +1"
-      "Ctrl+Super, mouse_down, workspace, -10"
-      "Ctrl+Super, mouse_up, workspace, +10"
 
       # Toggle special workspace
       "${kb.toggleSpecialWs}, exec, $caelestia toggle specialws"
@@ -226,7 +218,7 @@ in
       "Ctrl+Super+Alt, R, exec, $caelestia shell -k; env QSG_RENDER_LOOP=basic $caelestia shell -d"
     ];
 
-    # Mouse binds (bindm) - for dragging windows
+    # Mouse binds for dragging windows
     bindm = [
       "Super, mouse:272, movewindow"
       "Super, mouse:273, resizewindow"

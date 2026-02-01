@@ -31,7 +31,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "iusenixbtw"; # Define your hostname.
+  networking.hostName = "iusenixbtw"; 
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
@@ -39,6 +39,7 @@
   # Set your time zone.
   time.timeZone = "America/Vancouver";
 
+  # Auto Mount External Disk(s)
   fileSystems."/mnt/OBS" = {
     device = "/dev/disk/by-uuid/d561203b-5da5-436a-ae47-732bd2310955";
     fsType = "ext4";
