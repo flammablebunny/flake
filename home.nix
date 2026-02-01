@@ -1,10 +1,10 @@
 { inputs, pkgs, ... }:
-let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-in
+
 {
   imports = [
-    inputs.spicetify-nix.homeManagerModules.default
+    ./spicetify.nix
+    ./nixcraft.nix
+    ./nixcord.nix
   ];
 
   home.username = "bunny";
@@ -13,17 +13,6 @@ in
 
   programs.home-manager.enable = true;
 
-  # Spicetify configuration
-  programs.spicetify = {
-    enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      beautifulLyrics
-      SmoothScrolling
-      shuffle
-    ];
-    enabledCustomApps = with spicePkgs.apps; [
-      marketplace
-    ];
-  };
+  xdg.configFile."caelestia/shell.json".source = ./shell.json;
+ 
 }
-

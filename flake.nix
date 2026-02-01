@@ -28,9 +28,18 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixcord = {
+      url = "github:kaylorben/nixcord";
+    };
+
+    nixcraft = {
+      url = "github:loystonpais/nixcraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, zen-browser, spicetify-nix, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, zen-browser, spicetify-nix, nixcord, nixcraft, ... }@inputs: {
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -65,6 +74,21 @@
           services.udisks2.enable = true;
           services.gnome.gnome-keyring.enable = true;
           services.geoclue2.enable = true;
+          services.upower.enable = true;
+          services.power-profiles-daemon.enable = true;
+          systemd.services.set-performance-profile = {
+            description = "Set power profile to performance";
+            wantedBy = [ "multi-user.target" ];
+            after = [ "power-profiles-daemon.service" ];
+            requires = [ "power-profiles-daemon.service" ];
+            serviceConfig = {
+              Type = "oneshot";
+              ExecStart = "${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance";
+              RemainAfterExit = true;
+            };
+          };
+          hardware.bluetooth.enable = true;
+          services.blueman.enable = true;
 
           security.rtkit.enable = true;
           security.polkit.enable = true;
@@ -72,12 +96,12 @@
           services.pipewire.alsa.enable = true;
           services.pipewire.jack.enable = true;
 
-          fonts.packages = with pkgs; [ 
+          fonts.packages = with pkgs; [
             nerd-fonts.jetbrains-mono
           ];
 
           xdg.portal = {
-            enable = true; 
+            enable = true;
             extraPortals = [
               pkgs.xdg-desktop-portal-hyprland
               pkgs.xdg-desktop-portal-gtk
@@ -92,19 +116,23 @@
             GTK_THEME = "adw-gtk3";
             MOZ_ENABLE_WAYLAND = "1";
             XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
+            JAVA_HOME = "${pkgs.jdk17}/lib/openjdk";
           };
 
           environment.systemPackages = [
-            # app2unit helper script
             (pkgs.writeShellScriptBin "app2unit" ''
               #!/bin/sh
               if [ "$1" = "--" ]; then shift; fi
               nohup "$@" >/dev/null 2>&1 &
             '')
-            
-            # Caelestia packages
+
+            (caelestia-shell.packages.${pkgs.system}.default.overrideAttrs (old: {
+              postPatch = (old.postPatch or "") + ''
+                find . -type f -name "*.qml" -exec sed -i 's|https://wttr.in|http://wttr.in|g' {} +
+              '';
+            }))
+
             inputs.zen-browser.packages.${pkgs.system}.default
-            caelestia-shell.packages.${pkgs.system}.default
             caelestia-cli.packages.${pkgs.system}.default
 
             # Desktop environment essentials
@@ -122,28 +150,32 @@
             pkgs.bibata-cursors
             pkgs.gtk3
 
-            # Nvim and Plugins
-            pkgs.neovim
-            pkgs.vimPlugins.nvim-tree-lua
-            pkgs.vimPlugins.nvim-web-devicons
-
             # Core tools
             pkgs.git
+	    pkgs.wget
             pkgs.socat
             pkgs.libnotify
             pkgs.qt6.qtwayland
             pkgs.qt6.qmake
             pkgs.libsForQt5.qt5ct
             pkgs.qt6Packages.qt6ct
-            pkgs.firefox
+            pkgs.neovim
+            pkgs.os-prober
+            pkgs.vimPlugins.nvim-tree-lua
+            pkgs.vimPlugins.nvim-web-devicons
 
             # Apps
             pkgs.foot
-            pkgs.obs-studio
-            pkgs.equicord
-            (pkgs.discord.override { withOpenASAR = true; })
+            (pkgs.wrapOBS {
+              plugins = with pkgs.obs-studio-plugins; [
+                wlrobs
+                obs-pipewire-audio-capture
+              ];
+            })
             pkgs.pavucontrol
             pkgs.easyeffects
+            pkgs.prismlauncher
+            pkgs.file-roller
 
             # CLI tools
             pkgs.fastfetch
@@ -161,6 +193,7 @@
             pkgs.grim
             pkgs.slurp
             pkgs.playerctl
+            pkgs.p7zip
 
             # Caelestia dependencies
             pkgs.brightnessctl
@@ -169,11 +202,43 @@
             pkgs.wireplumber
             pkgs.ydotool
 
+            # Coding
             pkgs.jetbrains.idea-ultimate
+            pkgs.gradle
             pkgs.claude-code
+
+            # Java
+            pkgs.jdk17
+
+            # Waywall dependencies
+            pkgs.waywall
+            pkgs.gcc
+            pkgs.gnumake
+            pkgs.cmake
+            pkgs.meson
+            pkgs.ninja
+            pkgs.pkg-config
+            pkgs.libGL
+            pkgs.mesa
+            pkgs.luajit
+            pkgs.libspng
+            pkgs.wayland
+            pkgs.wayland.dev
+            pkgs.wayland-scanner
+            pkgs.wayland-protocols
+            pkgs.xorg.libxcb
+            pkgs.xorg.libxcb.dev
+            pkgs.xorg.xcbutilwm
+            pkgs.xorg.xcbutilimage
+            pkgs.xorg.libXcomposite
+            pkgs.xorg.libXres
+            pkgs.xorg.libXtst
+            pkgs.xwayland
+            pkgs.libxkbcommon
+            pkgs.libxkbcommon.dev
+	    pkgs.mangohud
           ];
 
-          # Polkit agent systemd service
           systemd.user.services.polkit-gnome-authentication-agent-1 = {
             description = "polkit-gnome-authentication-agent-1";
             wantedBy = [ "graphical-session.target" ];
