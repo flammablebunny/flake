@@ -12,6 +12,9 @@
 #   # Or if you already cloned:
 #   /etc/nixos/scripts/install.sh
 #
+#   # Non-interactive (auto-detects age key, no prompts):
+#   /etc/nixos/scripts/install.sh --auto
+#
 
 set -euo pipefail
 
@@ -22,6 +25,7 @@ set -euo pipefail
 REPO_URL="https://github.com/Flammable-Bunny/nix.git"
 NIXOS_DIR="/etc/nixos"
 AGE_KEY_PATH="$HOME/.config/agenix/key.txt"
+AUTO_MODE=false  # Non-interactive mode
 
 # Common locations to search for age key backup
 AGE_KEY_SEARCH_PATHS=(
@@ -149,6 +153,14 @@ setup_age_key() {
     local backup_key
     if backup_key=$(find_age_key_backup); then
         info "Found age key backup at: $backup_key"
+        if [[ "$AUTO_MODE" == true ]]; then
+            # Auto mode: use backup automatically
+            mkdir -p "$(dirname "$AGE_KEY_PATH")"
+            cp "$backup_key" "$AGE_KEY_PATH"
+            chmod 600 "$AGE_KEY_PATH"
+            success "Age key auto-copied from backup"
+            return 0
+        fi
         read -rp "Use this key? [Y/n]: " use_backup
         if [[ "${use_backup,,}" != "n" ]]; then
             mkdir -p "$(dirname "$AGE_KEY_PATH")"
@@ -157,6 +169,12 @@ setup_age_key() {
             success "Age key copied from backup"
             return 0
         fi
+    fi
+
+    # Auto mode without backup found: skip age key setup
+    if [[ "$AUTO_MODE" == true ]]; then
+        warn "Auto mode: No age key backup found, continuing without secrets"
+        return 0
     fi
 
     # Manual setup
@@ -278,10 +296,40 @@ run_rebuild() {
     info "This may take a while on first run..."
     echo ""
 
-    sudo nixos-rebuild switch --flake "$NIXOS_DIR#default" --impure || die "Rebuild failed!"
+    sudo nixos-rebuild switch --flake "$NIXOS_DIR#iusenixbtw" --impure || die "Rebuild failed!"
 
     echo ""
     success "NixOS configuration activated!"
+}
+
+# ============================================================================
+# Start Caelestia Shell
+# ============================================================================
+
+start_shell() {
+    step "Starting Caelestia Shell"
+
+    if command -v caelestia-shell &>/dev/null; then
+        # Kill existing instance if running
+        if caelestia-shell list 2>/dev/null | grep -q "^Instance "; then
+            info "Stopping existing Caelestia Shell instance..."
+            caelestia-shell kill 2>/dev/null || true
+            sleep 1
+        fi
+
+        info "Launching Caelestia Shell..."
+        env QSG_RENDER_LOOP=basic caelestia-shell -d &>/dev/null &
+        disown
+        sleep 2
+
+        if caelestia-shell list 2>/dev/null | grep -q "^Instance "; then
+            success "Caelestia Shell started!"
+        else
+            warn "Caelestia Shell may not have started correctly"
+        fi
+    else
+        warn "Caelestia Shell not found (will be available after reboot)"
+    fi
 }
 
 # ============================================================================
@@ -336,6 +384,28 @@ verify() {
 # ============================================================================
 
 main() {
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --auto|-a)
+                AUTO_MODE=true
+                shift
+                ;;
+            --help|-h)
+                echo "Usage: $0 [OPTIONS]"
+                echo ""
+                echo "Options:"
+                echo "  --auto, -a    Non-interactive mode (auto-detects age key)"
+                echo "  --help, -h    Show this help message"
+                exit 0
+                ;;
+            *)
+                warn "Unknown option: $1"
+                shift
+                ;;
+        esac
+    done
+
     clear 2>/dev/null || true
 
     echo ""
@@ -344,11 +414,14 @@ main() {
     echo -e "${BOLD}║                                                                ║${NC}"
     echo -e "${BOLD}║   Installs the complete reproducible NixOS configuration.     ║${NC}"
     echo -e "${BOLD}║   You only need to enter your password ${GREEN}once${NC}${BOLD}.                  ║${NC}"
+    if [[ "$AUTO_MODE" == true ]]; then
+    echo -e "${BOLD}║                    ${YELLOW}[AUTO MODE]${NC}${BOLD}                              ║${NC}"
+    fi
     echo -e "${BOLD}╚════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
     # Step 0: Dependencies
-    ensure_deps "$@"
+    ensure_deps
 
     # Step 1: Sudo (only password prompt!)
     sudo_keepalive_start
@@ -365,7 +438,10 @@ main() {
     # Step 5: Rebuild
     run_rebuild
 
-    # Step 6: Verify
+    # Step 6: Start shell
+    start_shell
+
+    # Step 7: Verify
     verify
 
     echo ""

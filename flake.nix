@@ -52,14 +52,9 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    ninjabrainbot = {
-      url = "github:RoshanAH/ninjabrainbot-flake";
-    };
-
   };
 
-  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, hyprland, agenix, ninjabrainbot, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, caelestia-shell, caelestia-cli, lazyvim-module, zen-browser, spicetify-nix, nixcord, nixcraft, hyprland, agenix,  ... }@inputs: {
     nixosConfigurations.iusenixbtw = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };

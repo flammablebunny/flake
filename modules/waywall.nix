@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 
 let
+  # Font path needs to be dynamic based on the nix store
   jetbrainsMono = pkgs.nerd-fonts.jetbrains-mono;
   fontPath = "${jetbrainsMono}/share/fonts/truetype/NerdFonts/JetBrainsMono/JetBrainsMonoNerdFontMono-Medium.ttf";
   javaX11LibPath = pkgs.lib.makeLibraryPath [
@@ -19,6 +20,8 @@ let
   ];
 in
 {
+  # The priv.lua file will be created by agenix activation
+  # See secrets.nix for the secret definition
 
   xdg.configFile = {
     "waywall/init.lua".text = ''
@@ -29,8 +32,8 @@ in
       local primary_col = "#26bb98"
       local secondary_col = "#ff00ff"
 
-      local ninbot_anchor = "topright"
-      local ninbot_opacity = 1
+      local ninbot_anchor = "topright" -- topleft, top, topright, left, right, bottomleft, bottomright
+      local ninbot_opacity = 1 -- 0 to 1
 
       local emote_downloader = require("fetch_emotes")
       local chat = require("chat")
@@ -106,7 +109,7 @@ in
           experimental = {
               debug = false,
               jit = false,
-              tearing = false,
+              tearing = true,
               force_composition = true,
               subprocess_dri_prime = "1",
       		  scene_add_text = true,
@@ -145,7 +148,7 @@ in
 
       --*********************************************************************************************** NINJABRAIN
       local is_ninb_running = function()
-      	local handle = io.popen("pgrep -f 'Ninjabrain'")
+      	local handle = io.popen("pgrep -f 'Ninjabrain.*jar'")
       	local result = handle:read("*l")
       	handle:close()
       	return result ~= nil
@@ -153,7 +156,9 @@ in
 
       local exec_ninb = function()
       	if not is_ninb_running() then
-      	   waywall.exec("_JAVA_AWT_WM_NONREPARENTING=1 NinjaBrain-Bot")	
+      		-- Force X11 so the window is managed by Waywall's nested Xwayland (and doesn't pop out
+      		-- as a Wayland client on the host compositor).
+      		waywall.exec("env -u WAYLAND_DISPLAY -u WAYLAND_SOCKET _JAVA_AWT_WM_NONREPARENTING=1 LD_LIBRARY_PATH=${javaX11LibPath} java -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel -Dawt.useSystemAAFontSettings=on -jar " .. nb_path)
       	end
       end
 
@@ -527,6 +532,7 @@ in
       local paths = {
           bg_path = toggles.toggle_bg_picture and (home .. "/Pictures/Wallpapers/rabbit forest.png") or nil,
           pacem_path   = home .. "/mcsr/paceman-tracker-0.7.1.jar",
+          nb_path      = home .. "/mcsr/Ninjabrain-Bot-1.5.1.jar",
           overlay_path = home .. "/.config/waywall/images/measuring_overlay.png",
           lingle_path  = home .. "/IdeaProjects/Lingle/build/libs/Lingle-v1.0.0.jar",
       }
