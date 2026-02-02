@@ -153,6 +153,7 @@
     socat
     toybox
     btop-gpu
+    nvtopPackages.intel
     rocmPackages.rocm-device-libs
     rocmPackages.rocm-smi
     rocmPackages.amdsmi
