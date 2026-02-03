@@ -6,21 +6,11 @@
     ../../modules/nixos/hardware
     ../../modules/nixos/security
     ../../modules/nixos/gaming
+    ../../modules/nixos/persistence
   ];
 
   # Enable Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Intel Mesa (iris) linear dmabuf stride padding for cross-GPU P2P
-  nixpkgs.overlays = [
-    (final: prev: {
-      mesa = prev.mesa.overrideAttrs (old: {
-        patches = (old.patches or []) ++ [
-          /home/bunny/waywall-chat-vulkan/patches/mesa-iris-linear-stride-256.patch
-        ];
-      });
-    })
-  ];
 
   # Boot loader
   boot.loader.grub.enable = true;
@@ -31,12 +21,6 @@
 
   # Use latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  # Disable IOMMU
-# boot.kernelParams = [
-#     "iommu=off"
-#     "amd_iommu=off"
-#  ];
 
   # Network
   networking.networkmanager.enable = true;

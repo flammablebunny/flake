@@ -8,5 +8,6 @@
     ./easyeffects
     ./fastfetch
     ./thunar
+    ./zen
   ];
 }

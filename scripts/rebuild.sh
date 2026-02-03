@@ -10,6 +10,14 @@ else
   HOST="laptop"
 fi
 
+# Run backup before rebuild
+echo "Backing up files before rebuild..."
+if command -v persist-backup-now &>/dev/null; then
+  persist-backup-now
+else
+  echo "persist-backup-now not found (run rebuild first to install it)"
+fi
+
 echo "Rebuilding NixOS for $HOST..."
 
 # Remove Equicord settings.json so home-manager can recreate symlink
@@ -17,5 +25,11 @@ echo "Rebuilding NixOS for $HOST..."
 rm -f ~/.config/Equicord/settings/settings.json
 
 sudo nixos-rebuild switch --flake /etc/nixos#"$HOST" --impure
+
+# Run backup after rebuild
+echo "Backing up files after rebuild..."
+if command -v persist-backup-now &>/dev/null; then
+  persist-backup-now
+fi
 
 echo "Done!"

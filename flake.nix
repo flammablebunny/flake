@@ -38,14 +38,30 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland = {
+    # Custom Hyprland fork for PC (cross-GPU P2P support)
+    hyprland-custom = {
       url = "github:flammablebunny/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.aquamarine.url = "github:flammablebunny/aquamarine";
     };
 
+    # Standard Hyprland for laptop
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     agenix = {
       url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -60,15 +76,19 @@
       then builtins.replaceStrings ["\n"] [""] (builtins.readFile laptopUserFile)
       else "nixos"; 
 
-    mkHost = { hostDir, userName }: nixpkgs.lib.nixosSystem {
+    mkHost = { hostDir, userName, useCustomHyprland ? false }: nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit userName inputs; };
       modules = [
         ./hosts/common/default.nix
         ./hosts/${hostDir}/default.nix
         ./hosts/${hostDir}/hardware-configuration.nix
-        inputs.hyprland.nixosModules.default
+        # Use custom Hyprland fork for PC, standard for laptop
+        (if useCustomHyprland
+          then inputs.hyprland-custom.nixosModules.default
+          else inputs.hyprland.nixosModules.default)
         inputs.agenix.nixosModules.default
+        inputs.impermanence.nixosModules.impermanence
         home-manager.nixosModules.home-manager
         {
           networking.hostName = "iusenixbtw";
@@ -76,6 +96,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            backupFileExtension = "backup";
             extraSpecialArgs = { inherit userName inputs; };
             users.${userName} = { ... }: {
               imports = [
@@ -89,9 +110,9 @@
     };
   in {
     nixosConfigurations = {
-      pc = mkHost { hostDir = "pc"; userName = "bunny"; };
-      laptop = mkHost { hostDir = "laptop"; userName = laptopUser; };
-      iusenixbtw = mkHost { hostDir = "pc"; userName = "bunny"; };
+      pc = mkHost { hostDir = "pc"; userName = "bunny"; useCustomHyprland = true; };
+      laptop = mkHost { hostDir = "laptop"; userName = laptopUser; useCustomHyprland = false; };
+      iusenixbtw = mkHost { hostDir = "pc"; userName = "bunny"; useCustomHyprland = true; };
     };
   };
 }

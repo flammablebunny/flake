@@ -6,6 +6,7 @@
     ../../modules/home/development
     ../../modules/home/apps
     ../../modules/home/services
+    ../../modules/home/persistence
   ];
 
   home.username = userName;
@@ -50,6 +51,74 @@
   ];
 
   xdg.portal.config.common.default = "*";
+
+  # Auto-encrypted git backup for user files
+  services.persist-backup = {
+    enable = true;
+    ageRecipient = "age1vt7xwl0rgxcn2dadz7cq33vq74wzvcf6n9c4c09wgca0hrdqsecssyth5t";
+    watchDirs = [
+      # User files
+      "$HOME/Documents"
+      "$HOME/Downloads"
+      "$HOME/Pictures"
+      "$HOME/Music"
+      "$HOME/Videos"
+      "$HOME/Important"
+      "$HOME/Commisions"
+
+      # Code projects
+      "$HOME/pro"
+      "$HOME/Projects"
+
+      # Browser profiles
+      "$HOME/.zen"
+      "$HOME/.mozilla"
+
+      # SSH and Git (critical)
+      "$HOME/.ssh"
+      "$HOME/.config/git"
+
+      # AI tools
+      "$HOME/.claude"
+      "$HOME/.codex"
+      "$HOME/.config/Antigravity"
+
+      # App configs (small, important settings)
+      "$HOME/.config/discord"
+      "$HOME/.config/Equicord"
+      "$HOME/.config/spotify"
+      "$HOME/.config/obs-studio"
+      "$HOME/.config/easyeffects"
+      "$HOME/.local/share/easyeffects"
+      "$HOME/.config/Mullvad VPN"
+      "$HOME/.config/OpenRGB"
+      "$HOME/.config/cava"
+      "$HOME/.config/lact"
+      "$HOME/.config/JetBrains"
+
+      # Gaming (configs and saves, not games)
+      "$HOME/mcsr"
+      "$HOME/Doki_Doki_Mods"
+      "$HOME/.local/share/PrismLauncher"
+      "$HOME/.local/share/MCSRLauncher"
+      "$HOME/.minecraft"
+      "$HOME/.renpy"
+
+      # Shell and editor state
+      "$HOME/.local/share/fish"
+      "$HOME/.local/share/nvim"
+      "$HOME/.local/state/nvim"
+
+      # System (keyrings, clipboard)
+      "$HOME/.local/share/keyrings"
+      "$HOME/.cache/cliphist"
+      "$HOME/.config/agenix"
+
+      # Media production
+      "$HOME/.local/share/DaVinciResolve"
+    ];
+    remoteUrl = "git@gitlab.com:flammablebunny/flake-persistent.git";
+  };
 
   xdg.desktopEntries."org.quickshell" = {
     name = "Quickshell";

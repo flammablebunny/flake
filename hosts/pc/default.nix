@@ -1,8 +1,26 @@
 { config, lib, pkgs, inputs, userName, ... }:
 
+let
+  # Patches fetched from GitHub for cross-GPU P2P support
+  patchRepo = "https://raw.githubusercontent.com/flammablebunny/waywall-vulkan-chat/main/patches";
+in
 {
   imports = [
     ../../modules/nixos/hardware/intel-arc.nix
+  ];
+
+  # Intel Mesa (iris) linear dmabuf stride padding for cross-GPU P2P (PC only)
+  nixpkgs.overlays = [
+    (final: prev: {
+      mesa = prev.mesa.overrideAttrs (old: {
+        patches = (old.patches or []) ++ [
+          (pkgs.fetchpatch {
+            url = "${patchRepo}/mesa-iris-linear-stride-256.patch";
+            hash = "sha256-A0hWyO67AlF6eDyohIv+HFqTfWGI0Phq6W3VWb4gEO4=";
+          })
+        ];
+      });
+    })
   ];
 
   # Passwordless Sudo For (PC only for security)
@@ -13,7 +31,7 @@
     }
   ];
 
-  # Duplicate Dual GPU Kernel Params
+  # Dual GPU Kernel Params
   boot.kernelParams = [
     "amdgpu.sg_display=0"
     "amdgpu.ppfeaturemask=0xffffffff"  # Enable AMD GPU overclocking
@@ -25,10 +43,28 @@
   ];
 
   boot.kernelPatches = [
-    { name = "xe-p2p-no-wait-gpu"; patch = /home/bunny/waywall-chat-vulkan/patches/xe-p2p-no-wait-gpu-6.18.7.patch; }
-    { name = "xe-dmabuf-pin-vram"; patch = /home/bunny/waywall-chat-vulkan/patches/xe-dmabuf-pin-vram-6.18.7.patch; }
-    { name = "amdgpu-allow-p2p-scanout"; patch = /home/bunny/waywall-chat-vulkan/patches/amdgpu-allow-p2p-scanout-6.18.7.patch; }
-   ];
+    {
+      name = "xe-p2p-no-wait-gpu";
+      patch = pkgs.fetchpatch {
+        url = "${patchRepo}/xe-p2p-no-wait-gpu-6.18.7.patch";
+        hash = "sha256-bpcJdiK95NujTYeByQWORCPnNaghljw2fAXq4/JJL60=";
+      };
+    }
+    {
+      name = "xe-dmabuf-pin-vram";
+      patch = pkgs.fetchpatch {
+        url = "${patchRepo}/xe-dmabuf-pin-vram-6.18.7.patch";
+        hash = "sha256-dJyQkhe0gsGWBnkA3JJcWRJFleoqVPGJ6Hhe3xNU9G8=";
+      };
+    }
+    {
+      name = "amdgpu-allow-p2p-scanout";
+      patch = pkgs.fetchpatch {
+        url = "${patchRepo}/amdgpu-allow-p2p-scanout-6.18.7.patch";
+        hash = "sha256-gWUEAJht6SbnbXkM5xXoAnDm2UGg5GS0/xJwX3Xv0uI=";
+      };
+    }
+  ];
 
   environment.sessionVariables.HYPRLAND_TRACE_FENCE_WAIT = "1";
 
