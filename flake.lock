@@ -76,11 +76,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769887794,
-        "narHash": "sha256-xvafam9KR2BuxnG2p3Ywc0PKDDRoMfHTxt0ZY+LthGw=",
+        "lastModified": 1770155822,
+        "narHash": "sha256-+Cu/x0/UX5mBYfmgAtMX/dMnD+0aQzyTS6pt3pTbF/8=",
         "owner": "flammablebunny",
         "repo": "aquamarine",
-        "rev": "630207b85686814ac761c49d34d0b5c540268dc3",
+        "rev": "914c6155d5a548912ddddb59ca86aa42a58d7d8c",
         "type": "github"
       },
       "original": {
@@ -668,11 +668,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1770079745,
-        "narHash": "sha256-R1jcgcb7y4QSJVR3vorQefKazXw5cYG9nUhhOnTPQxk=",
+        "lastModified": 1770151481,
+        "narHash": "sha256-yMq5Rs6ldsMBfhunttmtfJBcIx6w2u54TiLKalVgSGU=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "30756d871845a6058a840642ab1a4c3979f6d782",
+        "rev": "cd7bdc7a43542370b5f57b97b25302a24abce126",
         "type": "github"
       },
       "original": {
@@ -700,11 +700,11 @@
         "xdph": "xdph_2"
       },
       "locked": {
-        "lastModified": 1769904867,
-        "narHash": "sha256-Pb4kKhprgeEtYqV2mHvSujbcltBVZAjW892axdXvV9s=",
+        "lastModified": 1770155655,
+        "narHash": "sha256-KwsyxMBvw/B6GEEAz0aSVphMsH4sa2NxX0FmAPzX7vM=",
         "owner": "flammablebunny",
         "repo": "Hyprland",
-        "rev": "e1f1e2119740519f5fbe53a7f5d4aa4dd4cc530e",
+        "rev": "78be47185b06b5ba16d05e89f77f76ec22cdb491",
         "type": "github"
       },
       "original": {
