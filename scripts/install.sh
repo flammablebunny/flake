@@ -408,14 +408,14 @@ restore_backup() {
     # Check for age key
     if [[ ! -f "$age_key" ]]; then
         warn "No age key found at $age_key - skipping backup restore"
-        warn "Run 'persist-restore' manually after adding your key"
+        warn "Run 'flake-restore' manually after adding your key"
         return 0
     fi
 
     # Check for SSH key (needed for private repo)
     if [[ ! -f "$ssh_key" ]]; then
         warn "No SSH key found - cannot clone private backup repo"
-        warn "Run 'persist-restore' after SSH key is set up"
+        warn "Run 'flake-restore' after SSH key is set up"
         return 0
     fi
 
@@ -427,7 +427,7 @@ restore_backup() {
         age_cmd="nix-shell -p age --run age"
     else
         warn "age not found - skipping backup restore"
-        warn "Run 'persist-restore' after system is fully set up"
+        warn "Run 'flake-restore' after system is fully set up"
         return 0
     fi
 
@@ -443,7 +443,7 @@ restore_backup() {
             success "Backup repository cloned"
         else
             warn "Could not clone backup repo"
-            warn "Run 'persist-restore' after first boot to restore files"
+            warn "Run 'flake-restore' after first boot to restore files"
             return 0
         fi
     fi
@@ -515,7 +515,7 @@ main() {
 
     info "Future rebuilds: ${BOLD}rebuild${NC}"
     if [[ "$PUBLIC_MODE" != "true" ]]; then
-        info "Manual backup restore: ${BOLD}persist-restore${NC}"
+        info "Manual backup restore: ${BOLD}flake-restore${NC}"
     fi
     echo ""
 }

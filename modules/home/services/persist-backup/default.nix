@@ -174,7 +174,7 @@ let
 
       echo "Decrypting: $REL_PATH -> ''${REL_PATH%.age}"
       mkdir -p "$(dirname "$DEST")"
-      ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c -o "$DEST"
+      ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST"
     done
 
     echo "Restore complete!"
@@ -317,8 +317,8 @@ in
       pkgs.age
       pkgs.zstd
       pkgs.inotify-tools
-      (pkgs.writeShellScriptBin "persist-restore" "${restoreScript}")
-      (pkgs.writeShellScriptBin "persist-backup-now" "${backupNowScript}")
+      (pkgs.writeShellScriptBin "flake-restore" "${restoreScript}")
+      (pkgs.writeShellScriptBin "flake-backup-now" "${backupNowScript}")
     ];
 
     # Watcher service
