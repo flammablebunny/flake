@@ -175,6 +175,10 @@ let
       REL_PATH="''${ENCRYPTED#$BACKUP_REPO/}"
       DEST="$HOME/''${REL_PATH%.age}"
 
+      # Skip the age key itself (would overwrite the key we're using)
+      [[ "$DEST" == "$AGE_KEY" ]] && continue
+      [[ "$DEST" == *"agenix/key.txt"* ]] && continue
+
       echo "Decrypting: $REL_PATH -> ''${REL_PATH%.age}"
       mkdir -p "$(dirname "$DEST")"
 
