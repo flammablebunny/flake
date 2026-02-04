@@ -169,12 +169,19 @@ let
     echo "Restoring from $BACKUP_REPO..."
 
     find "$BACKUP_REPO" -name "*.age" -type f | while read -r ENCRYPTED; do
+      # Skip .git directory
+      [[ "$ENCRYPTED" == *"/.git/"* ]] && continue
+
       REL_PATH="''${ENCRYPTED#$BACKUP_REPO/}"
       DEST="$HOME/''${REL_PATH%.age}"
 
       echo "Decrypting: $REL_PATH -> ''${REL_PATH%.age}"
       mkdir -p "$(dirname "$DEST")"
-      ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST"
+
+      # Try decompression first, fall back to raw decryption for old uncompressed files
+      if ! ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST" 2>/dev/null; then
+        ${pkgs.age}/bin/age -d -i "$AGE_KEY" -o "$DEST" "$ENCRYPTED"
+      fi
     done
 
     echo "Restore complete!"
