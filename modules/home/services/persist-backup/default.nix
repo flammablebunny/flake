@@ -318,7 +318,7 @@ in
       pkgs.zstd
       pkgs.inotify-tools
       (pkgs.writeShellScriptBin "flake-restore" "${restoreScript}")
-      (pkgs.writeShellScriptBin "flake-backup-now" "${backupNowScript}")
+      (pkgs.writeShellScriptBin "flake-backup" "${backupNowScript}")
     ];
 
     # Watcher service
