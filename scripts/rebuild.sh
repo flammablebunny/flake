@@ -20,9 +20,10 @@ fi
 
 echo "Rebuilding NixOS for $HOST..."
 
-# Remove Equicord settings.json so home-manager can recreate symlink
+# Remove Equicord settings.json and any backup so home-manager can recreate symlink
 # (discord-streaming service will convert it back to a real file)
 rm -f ~/.config/Equicord/settings/settings.json
+rm -f ~/.config/Equicord/settings/settings.json.backup
 
 sudo nixos-rebuild switch --flake /etc/nixos#"$HOST" --impure
 

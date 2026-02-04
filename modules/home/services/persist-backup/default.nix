@@ -191,7 +191,7 @@ let
       mkdir -p "$(dirname "$DEST")"
 
       # Try decompression first, fall back to raw decryption for old uncompressed files
-      if ! ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST" 2>/dev/null; then
+      if ! (${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST") 2>/dev/null; then
         ${pkgs.age}/bin/age -d -i "$AGE_KEY" -o "$DEST" "$ENCRYPTED" 2>/dev/null || echo "  Failed: ''${REL_PATH%.age}"
       fi
     done
