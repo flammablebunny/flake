@@ -179,12 +179,20 @@ let
       [[ "$DEST" == "$AGE_KEY" ]] && continue
       [[ "$DEST" == *"agenix/key.txt"* ]] && continue
 
+      # Skip if file exists and is read-only or on read-only filesystem
+      if [ -e "$DEST" ]; then
+        if ! touch "$DEST" 2>/dev/null; then
+          echo "  Skipping (read-only): ''${REL_PATH%.age}"
+          continue
+        fi
+      fi
+
       echo "Decrypting: $REL_PATH -> ''${REL_PATH%.age}"
       mkdir -p "$(dirname "$DEST")"
 
       # Try decompression first, fall back to raw decryption for old uncompressed files
       if ! ${pkgs.age}/bin/age -d -i "$AGE_KEY" "$ENCRYPTED" | ${pkgs.zstd}/bin/zstd -d -c > "$DEST" 2>/dev/null; then
-        ${pkgs.age}/bin/age -d -i "$AGE_KEY" -o "$DEST" "$ENCRYPTED"
+        ${pkgs.age}/bin/age -d -i "$AGE_KEY" -o "$DEST" "$ENCRYPTED" 2>/dev/null || echo "  Failed: ''${REL_PATH%.age}"
       fi
     done
 
