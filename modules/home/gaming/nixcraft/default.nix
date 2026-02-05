@@ -44,9 +44,9 @@ in
 
         waywall = {
           enable = true;
-          binaryPath = "/home/bunny/waywall-chat-vulkan/build/waywall/waywall";
+          binaryPath = "/home/bunny/Projects/waywall-vulkan-chat/build/waywall/waywall";
           glfwPath = "/nix/store/bqa2lamm4z1iw5q95dj02mh7abh3zskz-glfw-minecraft-3.4/lib/libglfw.so";
-          rawCommand = "env WAYWALL_ASYNC_PIPELINING=1 DRI_PRIME=pci-0000_03_00_0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD130 /home/bunny/waywall-chat-vulkan/build/waywall/waywall wrap -- env DRI_PRIME=pci-0000_09_00_0 __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD128 $GAME_SCRIPT";
+          rawCommand = "env WAYWALL_ASYNC_PIPELINING=1 DRI_PRIME=pci-0000_03_00_0 __GLX_VENDOR_LIBRARY_NAME=amd GBM_DEVICE=/dev/dri/renderD130 /home/bunny/Projects/waywall-vulkan-chat/build/waywall/waywall wrap -- env DRI_PRIME=pci-0000_09_00_0 __GLX_VENDOR_LIBRARY_NAME=intel GBM_DEVICE=/dev/dri/renderD128 $GAME_SCRIPT";
         };
 
         useDiscreteGPU = false;

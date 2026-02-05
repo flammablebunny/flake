@@ -1,7 +1,7 @@
 { config, lib, pkgs, inputs, userName, ... }:
 
 let
-  # Patches fetched from GitHub for cross-GPU P2P support
+  # Patches fetched from GitHub
   patchRepo = "https://raw.githubusercontent.com/flammablebunny/waywall-vulkan-chat/main/patches";
 in
 {
