@@ -19,6 +19,8 @@
   environment.systemPackages = with pkgs; [
     slack
     chromium
+    moonlight-qt  # Remote desktop client for Sunshine
+    wakeonlan     # Wake-on-LAN utility
   ];
 
 
