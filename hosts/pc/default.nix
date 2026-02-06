@@ -121,6 +121,7 @@ in
   systemd.tmpfiles.rules = [
     "d /home/bunny/mcsr/tmpfs/ranked 0755 bunny users -"
     "d /home/bunny/mcsr/tmpfs/SeedQueue 0755 bunny users -"
+    "d /home/bunny/mcsr/tmpfs/RPS 0755 bunny users -"
   ];
 
   systemd.services.mc-tmpfs-setup = {
@@ -167,6 +168,12 @@ in
             cd /home/bunny/mcsr/tmpfs/SeedQueue
             ls -t1 --ignore='Z*' 2>/dev/null | tail -n +7 | while read save; do
               rm -rf "/home/bunny/mcsr/tmpfs/SeedQueue/$save"
+            done
+          fi
+          if [ -d /home/bunny/mcsr/tmpfs/RPS ]; then
+            cd /home/bunny/mcsr/tmpfs/RPS
+            ls -t1 --ignore='Z*' 2>/dev/null | tail -n +7 | while read save; do
+              rm -rf "/home/bunny/mcsr/tmpfs/RPS/$save"
             done
           fi
           sleep 300
