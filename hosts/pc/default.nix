@@ -7,6 +7,7 @@ in
 {
   imports = [
     ../../modules/nixos/hardware/intel-arc.nix
+    ../../modules/nixos/remotessh
   ];
 
   # Intel Mesa (iris) linear dmabuf stride padding for cross-GPU P2P (PC only)
