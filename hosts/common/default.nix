@@ -32,6 +32,9 @@
   services.mullvad-vpn.enable = true;
   networking.firewall.checkReversePath = "loose";  # Required for WireGuard
 
+  # Tailscale for remote access to home network
+  services.tailscale.enable = true;
+
   # Libvirt for VMs
   virtualisation.libvirtd.enable = true;
 

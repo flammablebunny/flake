@@ -19,7 +19,7 @@ for i in {1..30}; do
         echo "PC is online at $PC_IP"
         echo "Starting Moonlight..."
         sleep 3
-        moonlight-qt &
+        moonlight &
         echo "Add the PC in Moonlight using IP: $PC_IP"
         exit 0
     fi

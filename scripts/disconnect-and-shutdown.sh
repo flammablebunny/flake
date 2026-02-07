@@ -13,7 +13,7 @@ source "$CONFIG_FILE"
 echo "Shutting down PC at $PC_IP..."
 
 # Kill any running Moonlight instances
-pkill -f moonlight-qt 2>/dev/null
+pkill -f moonlight 2>/dev/null
 
 # SSH in and shutdown
 ssh ${PC_USER}@${PC_IP} "systemctl poweroff" 2>/dev/null

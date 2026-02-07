@@ -11,4 +11,4 @@ fi
 source "$CONFIG_FILE"
 
 echo "Connecting to PC at $PC_IP..."
-moonlight-qt &
+moonlight &
