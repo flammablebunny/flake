@@ -10,6 +10,9 @@
 
   # Firewall rules for Sunshine
   networking.firewall = {
+    # Trust Tailscale interface for remote access
+    trustedInterfaces = [ "tailscale0" ];
+
     allowedTCPPorts = [
       47984  # HTTPS Web UI
       47989  # HTTP Web UI
