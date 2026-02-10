@@ -105,7 +105,7 @@
 
     # ── System Utilities ───────────────────────────────────────────────
     
-    xfce.thunar
+    thunar
     file-roller
 
     # ── Theming ────────────────────────────────────────────────────────
@@ -179,7 +179,7 @@
     wineWowPackages.wayland
     mangohud
     waywall
-    xorg.libXtst
+    libxtst
     luajit
 
     # ── Development ────────────────────────────────────────────────────

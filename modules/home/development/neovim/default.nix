@@ -77,7 +77,7 @@ in
         lua.enable = true;
         rust.enable = true;
         ts.enable = true;
-        html.enable = true;
+        html.enable = false;  # disabled - superhtml package broken upstream
         css.enable = true;
         bash.enable = true;
       };

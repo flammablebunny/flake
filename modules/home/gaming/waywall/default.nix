@@ -6,17 +6,17 @@ let
   fontPath = "${jetbrainsMono}/share/fonts/truetype/NerdFonts/JetBrainsMono/JetBrainsMonoNerdFontMono-Medium.ttf";
   javaX11LibPath = pkgs.lib.makeLibraryPath [
     pkgs.libxkbcommon
-    pkgs.xorg.libX11
-    pkgs.xorg.libxcb
-    pkgs.xorg.libXt
-    pkgs.xorg.libXtst
-    pkgs.xorg.libXi
-    pkgs.xorg.libXext
-    pkgs.xorg.libXinerama
-    pkgs.xorg.libXrender
-    pkgs.xorg.libXfixes
-    pkgs.xorg.libXrandr
-    pkgs.xorg.libXcursor
+    pkgs.libx11
+    pkgs.libxcb
+    pkgs.libxt
+    pkgs.libxtst
+    pkgs.libxi
+    pkgs.libxext
+    pkgs.libxinerama
+    pkgs.libxrender
+    pkgs.libxfixes
+    pkgs.libxrandr
+    pkgs.libxcursor
   ];
 in
 {
