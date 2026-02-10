@@ -3,8 +3,52 @@
 let
   # Firefox addons from the flake
   addons = inputs.firefox-addons.packages.${pkgs.system};
+
+  # Wrapper that forces Zen to use the HM-managed profile directory,
+  # bypassing the install-hash profile selection that creates stale
+  # "Default (release)" profiles on every package rebuild.
+  zenLauncher = pkgs.writeShellScriptBin "zen-launch" ''
+    exec zen-beta --profile "$HOME/.zen/vt6h1pep.Default Profile" "$@"
+  '';
 in
 {
+  home.packages = [ zenLauncher ];
+
+  xdg.desktopEntries."zen-beta" = {
+    name = "Zen Browser (Beta)";
+    genericName = "Web Browser";
+    exec = "zen-launch --name zen-beta %U";
+    icon = "zen-browser";
+    terminal = false;
+    categories = [ "Network" "WebBrowser" ];
+    mimeType = [
+      "text/html"
+      "text/xml"
+      "application/xhtml+xml"
+      "application/vnd.mozilla.xul+xml"
+      "x-scheme-handler/http"
+      "x-scheme-handler/https"
+    ];
+    startupNotify = true;
+    settings = {
+      StartupWMClass = "zen-beta";
+    };
+    actions = {
+      "new-private-window" = {
+        name = "New Private Window";
+        exec = "zen-launch --private-window %U";
+      };
+      "new-window" = {
+        name = "New Window";
+        exec = "zen-launch --new-window %U";
+      };
+      "profile-manager-window" = {
+        name = "Profile Manager";
+        exec = "zen-beta --ProfileManager";
+      };
+    };
+  };
+
   programs.firefox = {
     enable = true;
     package = inputs.zen-browser.packages.${pkgs.system}.default;
