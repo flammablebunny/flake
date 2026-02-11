@@ -52,8 +52,10 @@
       la = "ls -a";
       lla = "ls -la";
 
-      # NixOS rebuild
+      # NixOS
       nr = "/etc/nixos/scripts/rebuild.sh";
+      fu = "nix flake update --flake /etc/nixos";
+      fup = "nix flake update --flake /etc/nixos && cd /etc/nixos && git add . && git commit -m 'flake.lock: Update' && git push";
 
       sd = "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d";
       sk = "quickshell kill";
