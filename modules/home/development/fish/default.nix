@@ -29,7 +29,6 @@
 
     shellAbbrs = {
       # Git 
-      lg = "lazygit";
       gd = "git diff";
       ga = "git add .";
       gc = "git commit -am";
