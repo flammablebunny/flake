@@ -28,7 +28,7 @@
     '';
 
     shellAbbrs = {
-      # Git abbreviations
+      # Git 
       lg = "lazygit";
       gd = "git diff";
       ga = "git add .";
@@ -46,7 +46,7 @@
       gco = "git checkout";
       gsh = "git show";
 
-      # ls abbreviations
+      # ls 
       l = "ls";
       ll = "ls -l";
       la = "ls -a";
@@ -57,6 +57,7 @@
       fu = "nix flake update --flake /etc/nixos";
       fup = "nix flake update --flake /etc/nixos && cd /etc/nixos && git add . && git commit -m 'flake.lock: Update' && git push";
 
+      # Quickshell
       sd = "env QSG_RHI_BACKEND=opengl QSG_RENDER_LOOP=basic quickshell -d";
       sk = "quickshell kill";
     };
