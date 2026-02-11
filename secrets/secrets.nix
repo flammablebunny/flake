@@ -1,5 +1,5 @@
 let
-  # User's personal age key (for encrypting/editing secrets)
+  # personal age key (for encrypting/editing secrets)
   bunnyAge = "age1vt7xwl0rgxcn2dadz7cq33vq74wzvcf6n9c4c09wgca0hrdqsecssyth5t";
 
   # Age public keys derived from SSH host keys (use: ssh-to-age -i /etc/ssh/ssh_host_ed25519_key.pub)
@@ -11,7 +11,7 @@ let
   pcKeys = [ bunnyAge ] ++ (if pc != "" then [ pc ] else []);
 in
 {
-  # SSH keys (needed on all machines)
+  # SSH keys
   "ssh/id_ed25519.age".publicKeys = allKeys;
   "ssh/id_ed25519.pub.age".publicKeys = allKeys;
   "ssh/id_ed2026.age".publicKeys = allKeys;
