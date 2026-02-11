@@ -37,6 +37,9 @@ in
 
       # Start EasyEffects
       "easyeffects --gapplication-service"
+
+      # Start Sunshine
+      "systemctl --user start sunshine"
     ];
   };
 }
