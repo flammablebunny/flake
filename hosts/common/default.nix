@@ -186,6 +186,7 @@
     
     # IDEs
     jetbrains.idea-oss
+    vscode
 
     # Languages
     go
