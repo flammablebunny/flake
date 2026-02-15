@@ -9,8 +9,20 @@
     ../../modules/nixos/persistence
   ];
 
-  # Enable Flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Nix settings
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;  # Deduplicate files in store via hardlinks
+    };
+
+    # Automatic garbage collection
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "-d";
+    };
+  };
 
   # Boot loader
   boot.loader.grub.enable = true;
