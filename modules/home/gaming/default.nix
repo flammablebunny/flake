@@ -5,6 +5,6 @@
     ./nixcraft
     ./waywall
     ./mangohud
-    ./paceman
+    ./mcsr
   ];
 }

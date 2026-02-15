@@ -1,6 +1,11 @@
-{ config, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
+  # Install paceman-tracker from mcsr-nixos
+  home.packages = [
+    inputs.mcsr-nixos.packages.${pkgs.system}.paceman-tracker
+  ];
+
   # PaceMan config is generated from agenix secret on activation
   home.activation.pacemanSetup = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p $HOME/.config/PaceMan

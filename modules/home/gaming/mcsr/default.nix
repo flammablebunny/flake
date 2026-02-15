@@ -1,0 +1,9 @@
+{ ... }:
+
+{
+  imports = [
+    ./ninjabrain
+    ./paceman
+    ./modcheck
+  ];
+}
