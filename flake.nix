@@ -64,6 +64,16 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mcsr-nixos = {
+      url = "git+https://git.uku3lig.net/uku/mcsr-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ninjabrain-bot-nix = {
+      url = "https://tangled.org/althaea.zone/ninjabrain-bot-nix/archive/trunk";
+      inputs.mcsr-nixos.follows = "mcsr-nixos";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
