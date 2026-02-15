@@ -75,7 +75,7 @@ in
       languages = {
         nix.enable = true;
         lua.enable = true;
-        rust.enable = true;
+        rust.enable = false;  # using rustaceanvim instead
         ts.enable = true;
         html.enable = false;  # disabled - superhtml package broken upstream
         css.enable = true;
@@ -244,6 +244,18 @@ in
         };
       };
 
+      # Disable semantic tokens (prevents green overload from rust-analyzer)
+      luaConfigRC.semantic-tokens = ''
+        vim.api.nvim_create_autocmd("LspAttach", {
+          callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client then
+              client.server_capabilities.semanticTokensProvider = nil
+            end
+          end,
+        })
+      '';
+
       # Disable Arrow Keys
       luaConfigRC.keymaps = ''
         -- Disable arrow keys in all modes
@@ -278,6 +290,7 @@ in
         shfmt
         cargo
         rustc
+        rust-analyzer
         tree-sitter
         jdt-language-server
         maven
