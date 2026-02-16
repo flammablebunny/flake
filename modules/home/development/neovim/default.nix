@@ -63,6 +63,14 @@ in
       # Treesitter
       treesitter = {
         enable = true;
+        addDefaultGrammars = true;
+        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+          markdown
+          markdown_inline
+          html
+          latex
+          yaml
+        ];
       };
 
       # LSP
@@ -241,6 +249,12 @@ in
         # Java LSP
         nvim-jdtls = {
           package = pkgs.vimPlugins.nvim-jdtls;
+        };
+
+        # Markdown preview/rendering
+        markview = {
+          package = pkgs.vimPlugins.markview-nvim;
+          setup = "require('markview').setup {}";
         };
       };
 
