@@ -141,7 +141,7 @@ in
       # Clipboard and emoji picker (QuickShell)
       "Super, V, exec, quickshell ipc call search clipboardToggle"
       "Super+Alt, V, exec, cliphist list | fuzzel -d | cliphist delete"
-      "Super, Period, exec, fuzzel-emoji"
+      "Super, Period, exec, quickshell ipc call search emojiToggle"
     ];
 
     # Lock-screen-safe binds (bindl)

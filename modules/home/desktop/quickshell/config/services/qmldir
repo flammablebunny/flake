@@ -6,6 +6,7 @@ singleton Brightness Brightness.qml
 singleton Cliphist Cliphist.qml
 singleton ConflictKiller ConflictKiller.qml
 singleton DateTime DateTime.qml
+singleton Emojis Emojis.qml
 singleton FirstRunExperience FirstRunExperience.qml
 singleton GlobalFocusGrab GlobalFocusGrab.qml
 singleton HyprlandData HyprlandData.qml
