@@ -256,6 +256,11 @@ in
           package = pkgs.vimPlugins.markview-nvim;
           setup = "require('markview').setup {}";
         };
+
+        # Markdown browser preview
+        markdown-preview = {
+          package = pkgs.vimPlugins.markdown-preview-nvim;
+        };
       };
 
       # Disable semantic tokens (prevents green overload from rust-analyzer)
@@ -270,6 +275,8 @@ in
         })
       '';
 
+
+/*
       # Disable Arrow Keys
       luaConfigRC.keymaps = ''
         -- Disable arrow keys in all modes
@@ -285,7 +292,7 @@ in
         vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Neo-tree" })
         vim.keymap.set("n", "<leader>E", "<cmd>Neotree reveal<CR>", { desc = "Reveal file in Neo-tree" })
       '';
-
+*/
       # Extra packages for LSP, formatters, etc.
       extraPackages = with pkgs; [
         git
