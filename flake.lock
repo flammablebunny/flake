@@ -866,7 +866,7 @@
       },
       "locked": {
         "lastModified": 1771366929,
-        "narHash": "sha256-j3RLQGjl3L6mzkZxSdOGMHb1/OCBL1P9RI2/ZZsYxlM=",
+        "narHash": "sha256-M0almYmnr1L8ZNM9eqGY1ETgVSf9T1ZcyBG6nA0CCys=",
         "owner": "flammablebunny",
         "repo": "Hyprland",
         "rev": "460dacca522ce0185b785800313983326311574b",
