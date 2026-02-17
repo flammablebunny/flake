@@ -2,6 +2,7 @@
   description = "Bunny's NixOS Flake";
 
   inputs = {
+#    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:nixos/nixpkgs/d03c4f8db69c22c9603da69a8df445f78c69a522";  # Feb 4 - before mesa 26 broke
 
     home-manager = {

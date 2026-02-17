@@ -1,11 +1,14 @@
 { config, lib, pkgs, inputs, ... }:
 
+let
+  hyprPkgs = (inputs.hyprland-custom or inputs.hyprland).packages.${pkgs.system};
+in
 {
   programs.dconf.enable = true;
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+    package = hyprPkgs.hyprland;
+    portalPackage = hyprPkgs.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
     withUWSM = false;
   };
