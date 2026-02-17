@@ -276,7 +276,7 @@ in
       '';
 
 
-/*
+
       # Disable Arrow Keys
       luaConfigRC.keymaps = ''
         -- Disable arrow keys in all modes
@@ -292,7 +292,7 @@ in
         vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Neo-tree" })
         vim.keymap.set("n", "<leader>E", "<cmd>Neotree reveal<CR>", { desc = "Reveal file in Neo-tree" })
       '';
-*/
+                               
       # Extra packages for LSP, formatters, etc.
       extraPackages = with pkgs; [
         git
