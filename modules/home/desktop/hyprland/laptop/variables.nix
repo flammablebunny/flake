@@ -1,7 +1,7 @@
 {
   apps = {
     terminal = "foot";
-    browser = "zen";
+    browser = "zen-beta";
     editor = "codium";
     fileExplorer = "thunar";
     music = "spotify";
