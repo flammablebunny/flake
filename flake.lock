@@ -347,11 +347,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767609335,
-        "narHash": "sha256-feveD98mQpptwrAEggBQKJTYbvwwglSbOv53uCfH9PY=",
+        "lastModified": 1769996383,
+        "narHash": "sha256-AnYjnFWgS49RlqX7LrC4uA+sCCDBj0Ry/WOJ5XWAsa0=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "250481aafeb741edfe23d29195671c19b36b6dca",
+        "rev": "57928607ea566b5db3ad13af0e57e921e6b12381",
         "type": "github"
       },
       "original": {
@@ -625,11 +625,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771269455,
-        "narHash": "sha256-BZ31eN5F99YH6vkc4AhzKGE+tJgJ52kl8f01K7wCs8w=",
+        "lastModified": 1771422582,
+        "narHash": "sha256-xK5kl3OBZaF1VwziVMX+SZ2LT9Fbu5o8vRDt78uR7no=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "5f1d42a97b19803041434f66681d5c44c9ae62e3",
+        "rev": "b3ccd4bb262f4e6d3248b46cede92b90c4a42094",
         "type": "github"
       },
       "original": {
@@ -833,11 +833,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1771336666,
-        "narHash": "sha256-b3UT9mOjQTNwfT/MHO3ZpBHlAvTC+BaqUokqS0VEgRo=",
+        "lastModified": 1771426136,
+        "narHash": "sha256-rCv/KshdV0mexIqJtcws4StyoNdVmyuAyAc8lK8QTAY=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "0de216e783d02748183ac5a5712201517685f492",
+        "rev": "184af52f24c3267a4210239aba45a998404bb073",
         "type": "github"
       },
       "original": {
@@ -1367,11 +1367,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1770482952,
-        "narHash": "sha256-yUnpIcAQmpbkVMHaQo7/Z2+5uX9/T1Q/B6AN0zUHBuY=",
+        "lastModified": 1771411733,
+        "narHash": "sha256-nOiUGtqv5ZdiVh1Ewy8nLxKZTk9RntRwEO6vI/gfCxI=",
         "ref": "refs/heads/main",
-        "rev": "b9b943fe5388c63cce85e98e9e6fbabdbddd1b44",
-        "revCount": 7,
+        "rev": "fe5e28e5e6c2bb746466fe4a1aa7e21184719a57",
+        "revCount": 9,
         "type": "git",
         "url": "https://git.uku3lig.net/uku/mcsr-nixos"
       },
@@ -1684,11 +1684,11 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1771331465,
-        "narHash": "sha256-lTWc6reKRLQfhh4uRsBWGbdwcHt5fQpOxt6jueHZ20c=",
+        "lastModified": 1771439201,
+        "narHash": "sha256-AvWnw0F2IufU4U0Y0P/OzMZMaENUy+mmR6k4IJD8ltM=",
         "owner": "notashelf",
         "repo": "nvf",
-        "rev": "0c650e0801aebbfc2817c11140c90768c178b13b",
+        "rev": "b980b5b3fb6fdf1b941094d3bd4845a3825a36d1",
         "type": "github"
       },
       "original": {
@@ -2018,11 +2018,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771380278,
-        "narHash": "sha256-r1QYNlfh03u6FSI+Zc+lxZaZxWN7Y9f+PMSFWuyPxow=",
+        "lastModified": 1771437627,
+        "narHash": "sha256-mGav6dRJOzHXQzrVAanJXQeGIG7LZr9fB2s024BBggU=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "4cf9e276bcb360afc4ab02f0901b53d7d1f3a733",
+        "rev": "b04b9a92e4ca216bf39de96ad1cdc6af343ce472",
         "type": "github"
       },
       "original": {
