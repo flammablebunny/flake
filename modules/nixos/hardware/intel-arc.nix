@@ -41,6 +41,7 @@ in
     environment.variables = {
       LIBVA_DRIVER_NAME = "iHD";
       AQ_DRM_DEVICES = "/dev/dri/card2;/dev/dri/card1";
+      AQ_SECONDARY_NO_RENDERER = "1";
       __GL_SYNC_TO_VBLANK = "0";
       __GLX_VENDOR_LIBRARY_NAME = "mesa";
       QT_QPA_PLATFORM = "wayland";
