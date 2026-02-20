@@ -128,6 +128,7 @@
     catppuccin-cursors.frappeDark
     gsettings-desktop-schemas
     gtk3
+    jetbrains-mono
 
     # ── Terminal & Shell ───────────────────────────────────────────────
     
