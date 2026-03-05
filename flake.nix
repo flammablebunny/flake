@@ -89,7 +89,7 @@
 
     mkHost = { hostDir, userName, useCustomHyprland ? false }: nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = { inherit userName inputs; };
+      specialArgs = { inherit userName inputs useCustomHyprland; };
       modules = [
         ./hosts/common/default.nix
         ./hosts/${hostDir}/default.nix
@@ -121,7 +121,7 @@
     };
   in {
     nixosConfigurations = {
-      pc = mkHost { hostDir = "pc"; userName = "bunny"; useCustomHyprland = true; };
+      pc = mkHost { hostDir = "pc"; userName = "bunny"; useCustomHyprland = false; };  # TODO: re-enable when 7900XTX is back
       laptop = mkHost { hostDir = "laptop"; userName = laptopUser; useCustomHyprland = false; };
       iusenixbtw = mkHost { hostDir = "pc"; userName = "bunny"; useCustomHyprland = true; };
     };
