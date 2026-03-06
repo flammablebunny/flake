@@ -13,8 +13,9 @@
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      # Enable WOL with magic packet (g flag) on enp13s0
-      ExecStart = "${pkgs.ethtool}/bin/ethtool -s enp13s0 wol g";
+      # Enable WOL with magic packet (g flag) on the ethernet interface
+      # enp13s0 with 7900XTX, enp11s0 without (PCIe renumbering)
+      ExecStart = "${pkgs.ethtool}/bin/ethtool -s enp11s0 wol g";
       RemainAfterExit = true;
     };
   };
