@@ -100,6 +100,18 @@ in
   # PC Specific Apps
   environment.systemPackages = with pkgs; [
     wootility
+
+    # DaVinci Resolve — force AMD GPU for both OpenGL and OpenCL
+    (symlinkJoin {
+      name = "davinci-resolve-wrapped";
+      paths = [ davinci-resolve ];
+      nativeBuildInputs = [ makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/davinci-resolve \
+          --set DRI_PRIME pci-0000:03:00.0 \
+          --set OCL_ICD_VENDORS ${rocmPackages.clr.icd}/etc/OpenCL/vendors
+      '';
+    })
   ];
   
   systemd.services.lactd = {
