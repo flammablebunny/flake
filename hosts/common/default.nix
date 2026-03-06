@@ -42,7 +42,9 @@
 
   # Mullvad VPN
   services.mullvad-vpn.enable = true;
-  networking.firewall.checkReversePath = "loose";  # Required for WireGuard
+  services.resolved.enable = true;                # Required: Mullvad & Tailscale both manage DNS through resolved
+  networking.nftables.enable = true;              # Mullvad uses nftables; must match NixOS firewall backend
+  networking.firewall.checkReversePath = "loose"; # Required for WireGuard
 
   # Tailscale for remote access to home network
   services.tailscale.enable = true;
@@ -161,6 +163,7 @@
     inotify-tools
     radeontop
     amdgpu_top
+    speedtest-cli
     cava
 
     # ── Wayland Utilities ──────────────────────────────────────────────
@@ -170,6 +173,7 @@
     grim
     slurp
     swappy
+    gimp-with-plugins
     hyprpicker
     brightnessctl
     gammastep
@@ -177,13 +181,14 @@
 
     # ── Media ──────────────────────────────────────────────────────────
     
-    mpv-unwrapped 
+    mpv-unwrapped
     playerctl
 
     # ── Security & Privacy ─────────────────────────────────────────────
     
     mullvad-vpn
     mullvad-browser
+    qbittorrent
 
     # ── Gaming ─────────────────────────────────────────────────────────
     
