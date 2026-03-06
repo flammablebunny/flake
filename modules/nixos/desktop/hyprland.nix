@@ -1,7 +1,7 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, useCustomHyprland ? false, ... }:
 
 let
-  hyprPkgs = (inputs.hyprland-custom or inputs.hyprland).packages.${pkgs.system};
+  hyprPkgs = (if useCustomHyprland then inputs.hyprland-custom else inputs.hyprland).packages.${pkgs.system};
 in
 {
   programs.dconf.enable = true;
