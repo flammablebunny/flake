@@ -4,7 +4,7 @@
   # Laptop NixOS config
 
 
-  boot.kernelParams = [ "mem_sleep_default=deep" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "amdgpu.ppfeaturemask=0xffffffff" ];
 
   hardware.cpu.amd.updateMicrocode = true;
 

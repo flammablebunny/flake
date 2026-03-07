@@ -58,6 +58,7 @@
   # Podman for distrobox/containers
   virtualisation.podman.enable = true;
 
+  services.hardware.bolt.enable = true;  # Thunderbolt device authorization (eGPU)
   services.gvfs.enable = true;  # For file manager integration
 
   # Run dynamically linked executables (for non-NixOS binaries)
