@@ -75,6 +75,13 @@
       url = "https://tangled.org/althaea.zone/ninjabrain-bot-nix/archive/trunk";
       inputs.mcsr-nixos.follows = "mcsr-nixos";
     };
+
+    tuxinjector = {                                                                                                                                                                
+      url = "github:flammablebunny/tuxinjector";                                                                                                                                   
+      inputs.nixpkgs.follows = "nixpkgs";                                                                                                                                          
+    };
+
+
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:

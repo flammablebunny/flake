@@ -19,6 +19,7 @@
 
   home.packages = with pkgs; [
     nodejs_22
+    inputs.tuxinjector.packages.x86_64-linux.default
     (writeShellScriptBin "java" ''
       #!/usr/bin/env bash
       set -euo pipefail
