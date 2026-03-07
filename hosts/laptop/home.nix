@@ -3,7 +3,7 @@
 {
   imports = [
     ../../modules/home/gaming/mangohud
-    ../../modules/home/gaming/paceman
+    ../../modules/home/gaming/mcsr/paceman
     ../../modules/home/gaming/waywall
     ../../modules/home/desktop/hyprland/laptop/env.nix
     ../../modules/home/desktop/hyprland/laptop/input.nix
