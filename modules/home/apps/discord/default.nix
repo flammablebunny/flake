@@ -56,18 +56,18 @@
           enable = true;
         };
 
-        betterFolders = {
-          enable = true;
-          closeAllFolders = false;
-          closeAllHomeButton = false;
-          closeOthers = false;
-          closeServerFolder = false;
-          forceOpen = false;
-          keepIcons = false;
-          showFolderIcon = 1;
-          sidebar = true;
-          sidebarAnim = true;
-        };
+#        betterFolders = {
+#          enable = true;
+#          closeAllFolders = false;
+#          closeAllHomeButton = false;
+#          closeOthers = false;
+#          closeServerFolder = false;
+#          forceOpen = false;
+#          keepIcons = false;
+#          showFolderIcon = 1;
+#          sidebar = true;
+#          sidebarAnim = true;
+#        };
 
         betterGifPicker = {
           enable = true;

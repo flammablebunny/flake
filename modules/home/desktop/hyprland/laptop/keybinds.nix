@@ -199,8 +199,8 @@ in
       "Ctrl+Shift+Alt, Tab, changegroupactive, b"
 
       # Split ratio
-      "Super, Minus, splitratio, -0.1"
-      "Super, Equal, splitratio, 0.1"
+      "Super, Minus, layoutmsg, splitratio -0.1"
+      "Super, Equal, layoutmsg, splitratio 0.1"
     ];
 
     # Lock-screen-safe repeat binds (bindle)
