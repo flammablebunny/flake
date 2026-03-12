@@ -17,6 +17,7 @@
 
     cursor = {
       hotspot_padding = 1;
+      no_hardware_cursors = true;
     };
     
     device = [
