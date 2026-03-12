@@ -7,7 +7,7 @@ let
       owner = "greggh";
       repo = "claude-code.nvim";
       rev = "main";
-      sha256 = "0crfj852lwif5gipckb3hzagrvjccl6jg7xghs02d0v1vjx0yhk4";
+      sha256 = "sha256-HBHlP2k4vUCbE+Sgm6vN5XE7UGnioFvj8CI6h5H+8x8=";
     };
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
   };
@@ -18,7 +18,7 @@ let
       owner = "vyfor";
       repo = "cord.nvim";
       rev = "master";
-      sha256 = "sha256-lQgto4Sp50P9PZ3lxdqFaMA1bwidHII9GhTaXwSMW7o=";
+      sha256 = "sha256-qjDAm/KvPtGi80B3EWrPyZEa/2CIa/GfARDyLyFumAs=";
     };
     doCheck = false;
   };
