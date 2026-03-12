@@ -19,7 +19,7 @@
 
   home.packages = with pkgs; [
     nodejs_22
-    inputs.tuxinjector.packages.x86_64-linux.default
+    # inputs.tuxinjector.packages.x86_64-linux.default  # TODO: re-enable when tuxinjector is legal and builds have been released on github.
     (writeShellScriptBin "java" ''
       #!/usr/bin/env bash
       set -euo pipefail
