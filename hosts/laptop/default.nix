@@ -6,10 +6,9 @@
 
   boot.kernelParams = [
     "mem_sleep_default=deep"
-    "amdgpu.ppfeaturemask=0xfffd7fff"  # overclocking without experimental bits that cause crashes
+    "amdgpu.ppfeaturemask=0xffffffff"  # enable all power features including overdrive
     "amdgpu.gfxoff=0"                  # disable GFX power gating (fixes page-flip race)
     "amdgpu.gpu_recovery=1"            # enable GPU reset on hang
-    "pcie_aspm=off"                    # prevent Thunderbolt link downtraining
   ];
 
   hardware.cpu.amd.updateMicrocode = true;
