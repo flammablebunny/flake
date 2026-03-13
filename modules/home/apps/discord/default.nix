@@ -39,14 +39,14 @@
           enable = true;
         };
 
-        anammox = {
-          enable = true;
-          billing = true;
-          dms = true;
-          emojiList = true;
-          gift = true;
-          serverBoost = true;
-        };
+#        anammox = {
+#          enable = true;
+#          billing = true;
+#          dms = true;
+#          emojiList = true;
+#          gift = true;
+#          serverBoost = true;
+#        };
 
         betterActivities = {
           enable = true;
@@ -73,14 +73,14 @@
           enable = true;
         };
 
-        betterQuickReact = {
-          enable = true;
-          columns = 4.0;
-          compactMode = false;
-          frequentEmojis = true;
-          rows = 2.0;
-          scroll = true;
-        };
+#        betterQuickReact = {
+#          enable = true;
+#          columns = 4.0;
+#          compactMode = false;
+#          frequentEmojis = true;
+#          rows = 2.0;
+#          scroll = true;
+#        };
 
         callTimer = {
           enable = true;
@@ -137,14 +137,14 @@
           enable = true;
         };
 
-        gifRoulette = {
-          enable = true;
-          pingOwnerChance = true;
-        };
+#        gifRoulette = {
+#          enable = true;
+#          pingOwnerChance = true;
+#        };
 
-        ignoreTerms = {
-          enable = true;
-        };
+#        ignoreTerms = {
+#          enable = true;
+#        };
 
         imageZoom = {
           enable = true;
@@ -190,30 +190,30 @@
           enable = true;
         };
 
-        songLink = {
-          enable = true;
-          servicesComponent = {};
-          servicesSettings = {};
-          userCountry = "US";
-        };
+#        songLink = {
+#          enable = true;
+#          servicesComponent = {};
+#          servicesSettings = {};
+#          userCountry = "US";
+#        };
 
         themeAttributes = {
           enable = true;
         };
 
-        timezones = {
-          enable = true;
-          _24hTime = false;
-          databaseUrl = "https://timezone.creations.works";
-          preferDatabaseOverLocal = true;
-          resetDatabaseTimezone = {};
-          setDatabaseTimezone = {};
-          showMessageHeaderTime = true;
-          showOwnTimezone = true;
-          showProfileTime = true;
-          showTimezoneInfo = true;
-          useDatabase = true;
-        };
+#       timezones = {
+#          enable = true;
+#          _24hTime = false;
+#          databaseUrl = "https://timezone.creations.works";
+#          preferDatabaseOverLocal = true;
+#          resetDatabaseTimezone = {};
+#          setDatabaseTimezone = {};
+#          showMessageHeaderTime = true;
+#          showOwnTimezone = true;
+#          showProfileTime = true;
+#          showTimezoneInfo = true;
+#          useDatabase = true;
+#        };
 
         translate = {
           enable = true;
