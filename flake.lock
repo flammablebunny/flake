@@ -1991,11 +1991,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773286990,
-        "narHash": "sha256-J9ge9ZlMd7YeTSR3e+mCbtt6LyptaeaozVfQYqbnyt4=",
+        "lastModified": 1773428736,
+        "narHash": "sha256-LH6TLT7+07xsodheVPBQXlKLmYeN1BW58R/+OCu+GXw=",
         "owner": "flammablebunny",
         "repo": "tuxinjector",
-        "rev": "c55bf852a67037194c8a65692de0dbc2b51fc152",
+        "rev": "b5444eab56c7ff382466cfac5c80ed8f3a9a4425",
         "type": "github"
       },
       "original": {
