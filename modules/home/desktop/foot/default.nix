@@ -25,12 +25,12 @@
         beam-thickness = "1.5";
       };
 
-      colors = {
+      colors-dark = {
         alpha = "0.78";
         background = "131317";
         foreground = "e5e1e7";
 
-        # Caelestia terminal colors (from colors.nix)
+        # terminal colors (from colors.nix)
         regular0 = "353434";  # black
         regular1 = "ac73ff";  # red (purple-ish)
         regular2 = "44def5";  # green -> cyan (INFO)
