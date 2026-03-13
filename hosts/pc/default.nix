@@ -17,7 +17,7 @@ in
         patches = (old.patches or []) ++ [
           (pkgs.fetchpatch {
             url = "${patchRepo}/mesa-iris-linear-stride-256.patch";
-            hash = "sha256-A0hWyO67AlF6eDyohIv+HFqTfWGI0Phq6W3VWb4gEO4=";
+            hash = "sha256-sX0cRA0CHa35TvUdsoccP8FRJSvhXnfqkts89SIEMXw=";
           })
         ];
       });
@@ -38,7 +38,6 @@ in
     "amdgpu.ppfeaturemask=0xffffffff"  # Enable AMD GPU overclocking
     "i915.enable_guc=3"
     "xe.vram_bar_size=0"
-    "xe.dmabuf_pin_vram=1"
     "loglevel=3"
     "xe.enable_flipq=1"
   ];
@@ -49,13 +48,6 @@ in
       patch = pkgs.fetchpatch {
         url = "${patchRepo}/xe-p2p-no-wait-gpu-6.18.7.patch";
         hash = "sha256-bpcJdiK95NujTYeByQWORCPnNaghljw2fAXq4/JJL60=";
-      };
-    }
-    {
-      name = "xe-dmabuf-pin-vram";
-      patch = pkgs.fetchpatch {
-        url = "${patchRepo}/xe-dmabuf-pin-vram-6.18.7.patch";
-        hash = "sha256-dJyQkhe0gsGWBnkA3JJcWRJFleoqVPGJ6Hhe3xNU9G8=";
       };
     }
     {
