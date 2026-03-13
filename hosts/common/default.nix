@@ -140,6 +140,8 @@
     starship
     eza
     fzf
+    direnv
+    nix-direnv
 
     # ── CLI & TUI Utils ──────────────────────────────────────────────────────
 
@@ -286,6 +288,7 @@
     
     chromium
     lact
+    sox
 
   ];
 
