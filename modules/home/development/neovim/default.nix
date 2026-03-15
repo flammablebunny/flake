@@ -425,14 +425,14 @@ in
 
       # Disable Arrow Keys + all keymaps
       luaConfigRC.keymaps = ''
-#        -- Disable arrow keys in all modes
-#        local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
-#        local modes = { "n", "i", "v", "x", "s", "o", "c" }
-#        for _, mode in ipairs(modes) do
-#         for _, key in ipairs(arrows) do
-#            vim.keymap.set(mode, key, '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
-#         end
-#        end
+        -- Disable arrow keys in all modes
+        -- local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
+        -- local modes = { "n", "i", "v", "x", "s", "o", "c" }
+        -- for _, mode in ipairs(modes) do
+        --   for _, key in ipairs(arrows) do
+        --     vim.keymap.set(mode, key, '<cmd>echo "NAUGHTLY ARROW KEY USING BUNNY"<CR>')
+        --   end
+        -- end
 
         -- File explorer (Neo-tree)
         vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Neo-tree" })
