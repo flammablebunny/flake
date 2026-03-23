@@ -12,6 +12,18 @@ let
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
   };
 
+  minuet-ai-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "minuet-ai-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "milanglacier";
+      repo = "minuet-ai.nvim";
+      rev = "main";
+      sha256 = "sha256-H0+tBKaJsqtV5RaPrFRynHXfHq1E5oyW4w3U2GzefVo=";
+    };
+    dependencies = [ pkgs.vimPlugins.plenary-nvim ];
+    nvimRequireCheck = "minuet";
+  };
+
 in
 {
   imports = [ inputs.nvf.homeManagerModules.default ];
@@ -277,19 +289,63 @@ in
           package = pkgs.vimPlugins.direnv-vim;
         };
 
+        # AI completions (minuet-ai via local Ollama)
+        minuet-ai = {
+          package = minuet-ai-nvim;
+          setup = ''
+            require('minuet').setup {
+              provider = 'openai_fim_compatible',
+              n_completions = 1,
+              context_window = 512,
+              provider_options = {
+                openai_fim_compatible = {
+                  api_key = 'TERM',
+                  name = 'Ollama',
+                  end_point = 'http://localhost:11434/v1/completions',
+                  model = 'qwen2.5-coder:7b',
+                  optional = {
+                    max_tokens = 56,
+                    top_p = 0.9,
+                  },
+                },
+              },
+            }
+          '';
+        };
+
         # Autocompletion (blink.cmp replaces nvim-cmp)
         blink-cmp = {
           package = pkgs.vimPlugins.blink-cmp;
           setup = ''
             require('blink.cmp').setup {
-              keymap = { preset = 'default' },
+              keymap = {
+                preset = 'none',
+                ['<CR>'] = { 'accept', 'fallback' },
+                ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+                ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+                ['<C-space>'] = { 'show', 'hide' },
+                ['<C-e>'] = { 'cancel', 'fallback' },
+                ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+                ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+              },
+              fuzzy = { implementation = 'lua' },
               appearance = { nerd_font_variant = 'mono' },
               sources = {
-                default = { 'lsp', 'path', 'snippets', 'buffer' },
+                default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+                providers = {
+                  minuet = {
+                    name = 'minuet',
+                    module = 'minuet.blink',
+                    async = true,
+                    timeout_ms = 3000,
+                    score_offset = 50,
+                  },
+                },
               },
               completion = {
                 accept = { auto_brackets = { enabled = true } },
                 documentation = { auto_show = true, auto_show_delay_ms = 200 },
+                trigger = { prefetch_on_insert = false },
               },
               signature = { enabled = true },
             }
