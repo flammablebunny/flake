@@ -59,6 +59,12 @@
   virtualisation.podman.enable = true;
 
   services.hardware.bolt.enable = true;  # Thunderbolt device authorization (eGPU)
+  # Ollama (local LLM inference on Intel Arc B580 via Vulkan)
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-vulkan;
+  };
+
   services.gvfs.enable = true;  # For file manager integration
 
   # Run dynamically linked executables (for non-NixOS binaries)
@@ -79,7 +85,7 @@
   # User definition 
   users.users.${userName} = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "libvirtd" "video" "render" ];
+    extraGroups = [ "wheel" "libvirtd" "video" "render" "input" ];
     packages = with pkgs; [ tree ];
   };
 
@@ -104,6 +110,7 @@
       if [ "$1" = "--" ]; then shift; fi
       nohup "$@" >/dev/null 2>&1 &
     '')
+
 
     inputs.quickshell.packages.${system}.default
     inputs.zen-browser.packages.${system}.default
@@ -152,6 +159,7 @@
     jq
     fd
     ripgrep
+    unrar
     tree
     trash-cli
     p7zip
@@ -196,6 +204,8 @@
     # ── Gaming ─────────────────────────────────────────────────────────
     
     steam
+    xremap
+    gamescope
     prismlauncher
     wineWowPackages.wayland
     mangohud
