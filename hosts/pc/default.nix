@@ -1,9 +1,9 @@
 { config, lib, pkgs, inputs, userName, ... }:
 
-let
-  # Patches fetched from GitHub
-  patchRepo = "https://raw.githubusercontent.com/flammablebunny/waywall-vulkan-chat/main/patches";
-in
+# let
+#   # Patches fetched from GitHub
+#   patchRepo = "https://raw.githubusercontent.com/flammablebunny/waywall-vulkan-chat/main/patches";
+# in
 {
   imports = [
     ../../modules/nixos/hardware/intel-arc.nix
@@ -11,18 +11,19 @@ in
   ];
 
   # Intel Mesa (iris) linear dmabuf stride padding for cross-GPU P2P (PC only)
-  nixpkgs.overlays = [
-    (final: prev: {
-      mesa = prev.mesa.overrideAttrs (old: {
-        patches = (old.patches or []) ++ [
-          (pkgs.fetchpatch {
-            url = "${patchRepo}/mesa-iris-linear-stride-256.patch";
-            hash = "sha256-sX0cRA0CHa35TvUdsoccP8FRJSvhXnfqkts89SIEMXw=";
-          })
-        ];
-      });
-    })
-  ];
+  # re-enable with 7900XTX
+  # nixpkgs.overlays = [
+  #   (final: prev: {
+  #     mesa = prev.mesa.overrideAttrs (old: {
+  #       patches = (old.patches or []) ++ [
+  #         (pkgs.fetchpatch {
+  #           url = "${patchRepo}/mesa-iris-linear-stride-256.patch";
+  #           hash = "sha256-sX0cRA0CHa35TvUdsoccP8FRJSvhXnfqkts89SIEMXw=";
+  #         })
+  #       ];
+  #     });
+  #   })
+  # ];
 
   # Passwordless Sudo For (PC only for security)
   security.sudo.extraRules = [
@@ -32,34 +33,35 @@ in
     }
   ];
 
-  # Dual GPU Kernel Params
+  # Kernel Params
   boot.kernelParams = [
-    "amdgpu.sg_display=0"
-    "amdgpu.ppfeaturemask=0xffffffff"  # Enable AMD GPU overclocking
+    # "amdgpu.sg_display=0"                  # re-enable with 7900XTX
+    # "amdgpu.ppfeaturemask=0xffffffff"       # re-enable with 7900XTX
     "i915.enable_guc=3"
-    "xe.vram_bar_size=0"
+    # "xe.vram_bar_size=0"                    # re-enable with 7900XTX (dual-GPU P2P)
     "loglevel=3"
-    "xe.enable_flipq=1"
+    # "xe.enable_flipq=1"                   # experimental, causes GuC H2G fence failures
   ];
 
-  boot.kernelPatches = [
-    {
-      name = "xe-p2p-no-wait-gpu";
-      patch = pkgs.fetchpatch {
-        url = "${patchRepo}/xe-p2p-no-wait-gpu-6.18.7.patch";
-        hash = "sha256-bpcJdiK95NujTYeByQWORCPnNaghljw2fAXq4/JJL60=";
-      };
-    }
-    {
-      name = "amdgpu-allow-p2p-scanout";
-      patch = pkgs.fetchpatch {
-        url = "${patchRepo}/amdgpu-allow-p2p-scanout-6.18.7.patch";
-        hash = "sha256-gWUEAJht6SbnbXkM5xXoAnDm2UGg5GS0/xJwX3Xv0uI=";
-      };
-    }
-  ];
+  # Dual-GPU kernel patches — re-enable with 7900XTX
+  # boot.kernelPatches = [
+  #   {
+  #     name = "xe-p2p-no-wait-gpu";
+  #     patch = pkgs.fetchpatch {
+  #       url = "${patchRepo}/xe-p2p-no-wait-gpu-6.18.7.patch";
+  #       hash = "sha256-bpcJdiK95NujTYeByQWORCPnNaghljw2fAXq4/JJL60=";
+  #     };
+  #   }
+  #   {
+  #     name = "amdgpu-allow-p2p-scanout";
+  #     patch = pkgs.fetchpatch {
+  #       url = "${patchRepo}/amdgpu-allow-p2p-scanout-6.18.7.patch";
+  #       hash = "sha256-gWUEAJht6SbnbXkM5xXoAnDm2UGg5GS0/xJwX3Xv0uI=";
+  #     };
+  #   }
+  # ];
 
-  environment.sessionVariables.HYPRLAND_TRACE_FENCE_WAIT = "1";
+  # environment.sessionVariables.HYPRLAND_TRACE_FENCE_WAIT = "1";  # re-enable with 7900XTX
 
   # Duplicate Audio Params to Enable Pulse on PC 
   services.pipewire = {
@@ -84,6 +86,7 @@ in
     motherboard = "amd";
   };
 
+  networking.firewall.allowedTCPPorts = [ 8080 ];
   networking.firewall.allowedUDPPorts = [ 6767 ];
 
   # I2C for better RGB device detection
@@ -93,28 +96,29 @@ in
   environment.systemPackages = with pkgs; [
     wootility
 
-    # DaVinci Resolve — force AMD GPU for both OpenGL and OpenCL
-    (symlinkJoin {
-      name = "davinci-resolve-wrapped";
-      paths = [ davinci-resolve ];
-      nativeBuildInputs = [ makeWrapper ];
-      postBuild = ''
-        wrapProgram $out/bin/davinci-resolve \
-          --set DRI_PRIME pci-0000:03:00.0 \
-          --set OCL_ICD_VENDORS ${rocmPackages.clr.icd}/etc/OpenCL/vendors
-      '';
-    })
+    # DaVinci Resolve — force AMD GPU for both OpenGL and OpenCL (re-enable with 7900XTX)
+    # (symlinkJoin {
+    #   name = "davinci-resolve-wrapped";
+    #   paths = [ davinci-resolve ];
+    #   nativeBuildInputs = [ makeWrapper ];
+    #   postBuild = ''
+    #     wrapProgram $out/bin/davinci-resolve \
+    #       --set DRI_PRIME pci-0000:03:00.0 \
+    #       --set OCL_ICD_VENDORS ${rocmPackages.clr.icd}/etc/OpenCL/vendors
+    #   '';
+    # })
   ];
   
-  systemd.services.lactd = {
-    description = "AMDGPU Control Daemon";
-    after = [ "multi-user.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.lact}/bin/lact daemon";
-      Restart = "always";
-    };
-  };
+  # AMDGPU Control Daemon — re-enable with 7900XTX
+  # systemd.services.lactd = {
+  #   description = "AMDGPU Control Daemon";
+  #   after = [ "multi-user.target" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.lact}/bin/lact daemon";
+  #     Restart = "always";
+  #   };
+  # };
 
   # Tmpfs for practice maps)
   fileSystems."/home/bunny/mcsr/tmpfs" = {

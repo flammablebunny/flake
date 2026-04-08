@@ -46,7 +46,7 @@ in
     MOZ_ENABLE_WAYLAND = "1";
     XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
     JAVA_HOME = "${pkgs.jdk17}/lib/openjdk";
-    HYPRLAND_DMABUF_LOG = "1";
+    # HYPRLAND_DMABUF_LOG = "1";  # debug tracing overhead
     # HYPRLAND_DMABUF_DISABLE_CPU_FALLBACK = "1";  # disabled: causes crashes on single-GPU setups when DMA-BUF fails
     QSG_RHI_BACKEND = "vulkan";
   };
