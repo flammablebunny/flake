@@ -87,6 +87,9 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "libvirtd" "video" "render" "input" ];
     packages = with pkgs; [ tree ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHgsCClEAX9+zinuQojwkFUluCZw41AybWpLpJJBtX0Q theflammablebunny@gmail.com"
+    ];
   };
 
   nixpkgs.config.allowUnfree = true;

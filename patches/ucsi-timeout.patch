@@ -1,0 +1,10 @@
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -18,7 +18,7 @@
+  * before it is actually passed to the PPM.
+  */
+-#define UCSI_TIMEOUT_MS		10000
++#define UCSI_TIMEOUT_MS		30000
+
+ /*
+  * UCSI_SWAP_TIMEOUT_MS - Timeout for role swap requests
