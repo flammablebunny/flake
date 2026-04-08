@@ -61,7 +61,12 @@
     openssh
   ];
 
-
-
-
+  # Ollama (local LLM inference on 7900 XTX via ROCm)
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-rocm;
+    environmentVariables = {
+      ROCR_VISIBLE_DEVICES = "0";
+    };
+  };
 }

@@ -83,11 +83,7 @@
   virtualisation.podman.enable = true;
 
   services.hardware.bolt.enable = true;  # Thunderbolt device authorization (eGPU)
-  # Ollama (local LLM inference on Intel Arc B580 via Vulkan)
-  services.ollama = {
-    enable = true;
-    package = pkgs.ollama-vulkan;
-  };
+
 
   # Open WebUI (chat history, memory, and session management for Ollama)
   services.open-webui = {

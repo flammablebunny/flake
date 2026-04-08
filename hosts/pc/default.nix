@@ -124,6 +124,12 @@
     # })
   ];
   
+  # Ollama (local LLM inference on Intel Arc B580 via Vulkan)
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-vulkan;
+  };
+
   # AMDGPU Control Daemon — re-enable with 7900XTX
   # systemd.services.lactd = {
   #   description = "AMDGPU Control Daemon";
