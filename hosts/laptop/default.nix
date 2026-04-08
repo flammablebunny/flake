@@ -41,10 +41,22 @@
   };
 
    # Laptop Specific Apps
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; let
+    btop-gpu = btop.overrideAttrs (old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/btop \
+          --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
+            rocmPackages.rocm-smi
+            rocmPackages.amdsmi
+          ]}
+      '';
+    });
+  in [
+    btop-gpu
     slack
     chromium
-    moonlight-qt  
+    moonlight-qt
     wakeonlan
     openssh
   ];

@@ -92,6 +92,21 @@
   # I2C for better RGB device detection
   hardware.i2c.enable = true;
 
+  # btop with Intel Xe GPU support (PR #1457) + sysfs access
+  security.wrappers.btop = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_perfmon+ep";
+    source = "${pkgs.btop.overrideAttrs (old: {
+      src = pkgs.fetchFromGitHub {
+        owner = "deveworld";
+        repo = "btop";
+        rev = "922a37e43b098bde231a03e8379628d0b186f885";
+        hash = "sha256-c6C7Vn6BzOh8DjJvc111wV1hD1sh2WdyQOQ9V2XmBR0=";
+      };
+    })}/bin/btop";
+  };
+
   # PC Specific Apps
   environment.systemPackages = with pkgs; [
     wootility

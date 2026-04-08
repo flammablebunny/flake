@@ -129,37 +129,9 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # btop with Intel Xe GPU support (PR #1457) + sysfs access
-  security.wrappers.btop = {
-    owner = "root";
-    group = "root";
-    capabilities = "cap_perfmon+ep";
-    source = "${pkgs.btop.overrideAttrs (old: {
-      src = pkgs.fetchFromGitHub {
-        owner = "deveworld";
-        repo = "btop";
-        rev = "922a37e43b098bde231a03e8379628d0b186f885";
-        hash = "sha256-c6C7Vn6BzOh8DjJvc111wV1hD1sh2WdyQOQ9V2XmBR0=";
-      };
-    })}/bin/btop";
-  };
 
   # Universal Packages
   environment.systemPackages = with pkgs; [
-    # btop-gpu with ROCm - re-enable with 7900XTX
-    # let
-    #   btop-gpu = btop.overrideAttrs (old: {
-    #     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
-    #     postFixup = (old.postFixup or "") + ''
-    #       wrapProgram $out/bin/btop \
-    #         --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
-    #           rocmPackages.rocm-smi
-    #           rocmPackages.amdsmi
-    #         ]}
-    #     '';
-    #   });
-    # in [
-
     (writeShellScriptBin "app2unit" ''
       #!/bin/sh
       if [ "$1" = "--" ]; then shift; fi
