@@ -1,7 +1,6 @@
 -- ===========================================================================
 --  fetch_emotes.lua
 --  Waywall 7TV Emote Fetcher
---  Rewritten with full comments for clarity and correctness.
 -- ===========================================================================
 
 local waywall = require("waywall")
