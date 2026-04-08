@@ -17,8 +17,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "milanglacier";
       repo = "minuet-ai.nvim";
-      rev = "main";
-      sha256 = "sha256-btwpr9eDCtVRxlWTJ8Asl0lITESIRn/ByGDamaa3f7k=";
+      rev = "33c6f4ad809bb28347c275cffc3e5700057d1c3c";
+      sha256 = "sha256-7s3t1mr6BFQD9bP3Wzg/m0SDWswufrVVYaxLSG4zt8k=";
     };
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
     nvimRequireCheck = "minuet";
