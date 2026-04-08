@@ -18,7 +18,7 @@ let
       owner = "milanglacier";
       repo = "minuet-ai.nvim";
       rev = "main";
-      sha256 = "sha256-H0+tBKaJsqtV5RaPrFRynHXfHq1E5oyW4w3U2GzefVo=";
+      sha256 = "sha256-btwpr9eDCtVRxlWTJ8Asl0lITESIRn/ByGDamaa3f7k=";
     };
     dependencies = [ pkgs.vimPlugins.plenary-nvim ];
     nvimRequireCheck = "minuet";
@@ -566,7 +566,7 @@ in
         maven
         # Linters
         shellcheck
-        nodePackages.eslint
+        eslint
         # Debugger adapter
         lldb
         # Image preview
