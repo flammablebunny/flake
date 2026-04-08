@@ -26,10 +26,6 @@
       disable_watchdog_warning = true;
     };
 
-    cursor = {
-      no_hardware_cursors = false;
-    };
-
     debug = {
       # suppress_errors = true;
     };
