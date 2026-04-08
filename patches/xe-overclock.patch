@@ -1,0 +1,245 @@
+diff -ruN a/drivers/gpu/drm/xe/xe_gt_freq.c b/drivers/gpu/drm/xe/xe_gt_freq.c
+--- a/drivers/gpu/drm/xe/xe_gt_freq.c	2026-04-01 12:42:56.515149694 -0700
++++ b/drivers/gpu/drm/xe/xe_gt_freq.c	2026-04-01 12:47:03.391044746 -0700
+@@ -251,6 +251,38 @@
+ }
+ static struct kobj_attribute attr_power_profile = __ATTR_RW(power_profile);
+ 
++static ssize_t oc_offset_show(struct kobject *kobj,
++			       struct kobj_attribute *attr, char *buf)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct xe_guc_pc *pc = dev_to_pc(dev);
++
++	return sysfs_emit(buf, "%d\n", xe_guc_pc_get_oc_freq(pc));
++}
++
++static ssize_t oc_offset_store(struct kobject *kobj,
++				struct kobj_attribute *attr,
++				const char *buff, size_t count)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct xe_guc_pc *pc = dev_to_pc(dev);
++	u32 freq;
++	ssize_t ret;
++
++	ret = kstrtou32(buff, 0, &freq);
++	if (ret)
++		return ret;
++
++	xe_pm_runtime_get(dev_to_xe(dev));
++	ret = xe_guc_pc_set_oc_freq(pc, freq);
++	xe_pm_runtime_put(dev_to_xe(dev));
++	if (ret)
++		return ret;
++
++	return count;
++}
++static struct kobj_attribute attr_oc_offset = __ATTR_RW(oc_offset);
++
+ static const struct attribute *freq_attrs[] = {
+ 	&attr_act_freq.attr,
+ 	&attr_cur_freq.attr,
+@@ -261,6 +293,7 @@
+ 	&attr_min_freq.attr,
+ 	&attr_max_freq.attr,
+ 	&attr_power_profile.attr,
++	&attr_oc_offset.attr,
+ 	NULL
+ };
+ 
+diff -ruN a/drivers/gpu/drm/xe/xe_guc_pc.c b/drivers/gpu/drm/xe/xe_guc_pc.c
+--- a/drivers/gpu/drm/xe/xe_guc_pc.c	2026-04-01 12:42:56.513370272 -0700
++++ b/drivers/gpu/drm/xe/xe_guc_pc.c	2026-04-01 12:45:52.508137956 -0700
+@@ -323,7 +323,7 @@
+ 	 * Let's only check for the rpn-rp0 range. If max < min,
+ 	 * min becomes a fixed request.
+ 	 */
+-	if (freq < pc->rpn_freq || freq > pc->rp0_freq)
++	if (freq < pc->rpn_freq || freq > pc->rp0_freq + pc->oc_freq)
+ 		return -EINVAL;
+ 
+ 	/*
+@@ -353,9 +353,8 @@
+ 	/*
+ 	 * Let's only check for the rpn-rp0 range. If max < min,
+ 	 * min becomes a fixed request.
+-	 * Also, overclocking is not supported.
+ 	 */
+-	if (freq < pc->rpn_freq || freq > pc->rp0_freq)
++	if (freq < pc->rpn_freq || freq > pc->rp0_freq + pc->oc_freq)
+ 		return -EINVAL;
+ 
+ 	return pc_action_set_param(pc,
+@@ -723,6 +722,71 @@
+ }
+ 
+ /**
++ * xe_guc_pc_set_oc_freq - Set overclock frequency offset
++ * @pc: The GuC PC
++ * @offset: Frequency offset in MHz above RP0 (0 to disable)
++ *
++ * Sets the GPU overclock ceiling via GuC SLPC parameters 14/15.
++ * The GuC firmware uses this as the new maximum boost target.
++ *
++ * Returns: 0 on success, negative error code on failure.
++ */
++int xe_guc_pc_set_oc_freq(struct xe_guc_pc *pc, u32 offset)
++{
++	u32 target;
++	int ret;
++
++	if (offset > 500)
++		return -EINVAL;
++
++	guard(mutex)(&pc->freq_lock);
++
++	if (!pc->freq_ready)
++		return -EAGAIN;
++
++	target = pc->rp0_freq + offset;
++	pc->oc_freq = offset;
++
++	if (offset) {
++		ret = pc_action_set_param(pc,
++					  SLPC_PARAM_GLOBAL_OC_UNSLICE_FREQ_MHZ,
++					  target);
++		if (ret)
++			return ret;
++
++		ret = pc_action_set_param(pc,
++					  SLPC_PARAM_GLOBAL_OC_SLICE_FREQ_MHZ,
++					  target);
++		if (ret)
++			return ret;
++
++		ret = pc_action_set_param(pc,
++					  SLPC_PARAM_GLOBAL_MAX_GT_UNSLICE_FREQ_MHZ,
++					  target);
++	} else {
++		pc_action_unset_param(pc,
++				      SLPC_PARAM_GLOBAL_OC_UNSLICE_FREQ_MHZ);
++		pc_action_unset_param(pc,
++				      SLPC_PARAM_GLOBAL_OC_SLICE_FREQ_MHZ);
++
++		ret = pc_set_max_freq(pc, pc->rp0_freq);
++	}
++
++	return ret;
++}
++
++/**
++ * xe_guc_pc_get_oc_freq - Get overclock frequency offset
++ * @pc: The GuC PC
++ *
++ * Returns: Current overclock offset in MHz (0 if disabled).
++ */
++u32 xe_guc_pc_get_oc_freq(struct xe_guc_pc *pc)
++{
++	return pc->oc_freq;
++}
++
++/**
+  * xe_guc_pc_c_status - get the current GT C state
+  * @pc: XE_GuC_PC instance
+  */
+@@ -863,6 +927,7 @@
+ static int pc_adjust_freq_bounds(struct xe_guc_pc *pc)
+ {
+ 	struct xe_tile *tile = gt_to_tile(pc_to_gt(pc));
++	u32 max_cap;
+ 	int ret;
+ 
+ 	lockdep_assert_held(&pc->freq_lock);
+@@ -871,13 +936,24 @@
+ 	if (ret)
+ 		goto out;
+ 
++	max_cap = pc->rp0_freq + pc->oc_freq;
++
++	/* Re-apply OC SLPC params after GuC reset/resume */
++	if (pc->oc_freq) {
++		pc_action_set_param(pc,
++				    SLPC_PARAM_GLOBAL_OC_UNSLICE_FREQ_MHZ,
++				    max_cap);
++		pc_action_set_param(pc,
++				    SLPC_PARAM_GLOBAL_OC_SLICE_FREQ_MHZ,
++				    max_cap);
++	}
++
+ 	/*
+-	 * GuC defaults to some RPmax that is not actually achievable without
+-	 * overclocking. Let's adjust it to the Hardware RP0, which is the
+-	 * regular maximum
++	 * GuC defaults to some RPmax that may exceed the allowed
++	 * maximum. Adjust it to RP0 + any overclock offset.
+ 	 */
+-	if (pc_get_max_freq(pc) > pc->rp0_freq) {
+-		ret = pc_set_max_freq(pc, pc->rp0_freq);
++	if (pc_get_max_freq(pc) > max_cap) {
++		ret = pc_set_max_freq(pc, max_cap);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -886,8 +962,8 @@
+ 	 * Same thing happens for Server platforms where min is listed as
+ 	 * RPMax
+ 	 */
+-	if (pc_get_min_freq(pc) > pc->rp0_freq)
+-		ret = pc_set_min_freq(pc, pc->rp0_freq);
++	if (pc_get_min_freq(pc) > max_cap)
++		ret = pc_set_min_freq(pc, max_cap);
+ 
+ 	if (XE_DEVICE_WA(tile_to_xe(tile), 14022085890))
+ 		ret = pc_set_min_freq(pc, max(BMG_MIN_FREQ, pc_get_min_freq(pc)));
+diff -ruN a/drivers/gpu/drm/xe/xe_guc_pc.h b/drivers/gpu/drm/xe/xe_guc_pc.h
+--- a/drivers/gpu/drm/xe/xe_guc_pc.h	2026-04-01 12:42:56.514421625 -0700
++++ b/drivers/gpu/drm/xe/xe_guc_pc.h	2026-04-01 12:46:43.311071133 -0700
+@@ -31,6 +31,8 @@
+ int xe_guc_pc_set_min_freq(struct xe_guc_pc *pc, u32 freq);
+ int xe_guc_pc_get_max_freq(struct xe_guc_pc *pc, u32 *freq);
+ int xe_guc_pc_set_max_freq(struct xe_guc_pc *pc, u32 freq);
++int xe_guc_pc_set_oc_freq(struct xe_guc_pc *pc, u32 offset);
++u32 xe_guc_pc_get_oc_freq(struct xe_guc_pc *pc);
+ int xe_guc_pc_set_power_profile(struct xe_guc_pc *pc, const char *buf);
+ void xe_guc_pc_get_power_profile(struct xe_guc_pc *pc, char *profile);
+ 
+diff -ruN a/drivers/gpu/drm/xe/xe_guc_pc_types.h b/drivers/gpu/drm/xe/xe_guc_pc_types.h
+--- a/drivers/gpu/drm/xe/xe_guc_pc_types.h	2026-04-01 12:42:56.514814884 -0700
++++ b/drivers/gpu/drm/xe/xe_guc_pc_types.h	2026-04-01 12:43:14.029347085 -0700
+@@ -35,6 +35,8 @@
+ 	bool freq_ready;
+ 	/** @power_profile: Base or power_saving profile */
+ 	u32 power_profile;
++	/** @oc_freq: User-requested overclock frequency offset in MHz */
++	u32 oc_freq;
+ };
+ 
+ #endif	/* _XE_GUC_PC_TYPES_H_ */
+diff -ruN a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
+--- a/drivers/gpu/drm/xe/xe_hwmon.c	2026-04-01 13:18:42.845636056 -0700
++++ b/drivers/gpu/drm/xe/xe_hwmon.c	2026-04-01 13:18:57.319827086 -0700
+@@ -377,20 +377,10 @@
+ 	reg_val = DIV_ROUND_CLOSEST_ULL((u64)value << hwmon->scl_shift_power, SF_POWER);
+ 
+ 	/*
+-	 * Clamp power limit to GPU firmware default as maximum, as an additional protection to
+-	 * pcode clamp.
++	 * Skip driver-side power limit clamp — let pcode enforce
++	 * the hardware maximum directly. This allows overclocking
++	 * scenarios where the user has adequate cooling.
+ 	 */
+-	if (hwmon->xe->info.has_mbx_power_limits) {
+-		max = (attr == PL1_HWMON_ATTR) ?
+-		       hwmon->pl1_on_boot[channel] : hwmon->pl2_on_boot[channel];
+-		max = REG_FIELD_PREP(PWR_LIM_VAL, max);
+-		if (reg_val > max) {
+-			reg_val = max;
+-			drm_dbg(&hwmon->xe->drm,
+-				"Clamping power limit to GPU firmware default 0x%x\n",
+-				reg_val);
+-		}
+-	}
+ 
+ 	reg_val = PWR_LIM_EN | REG_FIELD_PREP(PWR_LIM_VAL, reg_val);
+ 

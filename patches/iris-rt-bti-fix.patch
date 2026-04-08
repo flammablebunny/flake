@@ -1,0 +1,146 @@
+--- a/src/gallium/drivers/iris/iris_screen.h	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_screen.h	2026-04-06 12:41:01.084429984 -0700
+@@ -210,6 +210,9 @@
+       bool disable_threaded_context;
+    } driconf;
+ 
++   /** RCC uses BTP+BTI keying - RT BTI flush can be skipped */
++   bool rt_bt_flush_disabled;
++
+    /** Does the kernel support various features (KERNEL_HAS_* bitfield)? */
+    unsigned kernel_features;
+ #define KERNEL_HAS_WAIT_FOR_SUBMIT   (1U<<0)
+--- a/src/gallium/drivers/iris/iris_batch.h	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_batch.h	2026-04-06 12:41:01.084505203 -0700
+@@ -217,6 +217,13 @@
+    struct intel_ds_queue ds;
+ 
+    uint8_t num_3d_primitives_emitted;
++
++   /**
++    * Deferred barrier coalescing: skip RT BTI flushes when no operations
++    * have written to the render target cache since the last flush.
++    */
++   unsigned num_rt_writes;
++   unsigned last_rt_flush_num_rt_writes;
+ };
+ 
+ void iris_init_batches(struct iris_context *ice);
+--- a/src/gallium/drivers/iris/iris_batch.c	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_batch.c	2026-04-06 12:41:01.084559303 -0700
+@@ -472,6 +472,8 @@
+    batch->primary_batch_size = 0;
+    batch->total_chained_batch_size = 0;
+    batch->contains_draw = false;
++   batch->num_rt_writes = 0;
++   batch->last_rt_flush_num_rt_writes = 0;
+    batch->contains_fence_signal = false;
+    if (devinfo->ver < 11)
+       batch->decoder.surface_base = batch->last_binder_address;
+--- a/src/gallium/drivers/iris/iris_pipe_control.c	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_pipe_control.c	2026-04-06 12:41:01.084613003 -0700
+@@ -339,6 +339,10 @@
+                                       (bits & ~all_flush_bits) |
+                                       (compute_stall_sequence ?
+                                        PIPE_CONTROL_FLUSH_ENABLE : 0));
++
++      /* Track RT flushes for deferred barrier coalescing. */
++      if (bits & PIPE_CONTROL_RENDER_TARGET_FLUSH)
++         batch->last_rt_flush_num_rt_writes = batch->num_rt_writes;
+    }
+ }
+ 
+--- a/src/gallium/drivers/iris/iris_state.c	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_state.c	2026-04-06 12:41:01.084867913 -0700
+@@ -1510,6 +1510,20 @@
+    init_aux_map_state(batch);
+ #endif
+ 
++   /* Program COMMON_SLICE_CHICKEN3 bit 13 to enable BTP+BTI RCC keying.
++    * Eliminates RT cache flush + PS scoreboard stall on BT pointer change.
++    * Requires xe kernel to whitelist register 0x7304.
++    */
++#if GFX_VER >= 11
++   if (devinfo->has_lsc) {
++      iris_emit_cmd(batch, GENX(MI_LOAD_REGISTER_IMM), lri) {
++         lri.RegisterOffset = 0x7304;
++         lri.DataDWord = (1 << 13) | (1 << 29);
++      }
++      batch->screen->rt_bt_flush_disabled = true;
++   }
++#endif
++
+    iris_batch_sync_region_end(batch);
+ }
+ 
+@@ -7392,7 +7406,9 @@
+    iris_emit_push_constants(ice, batch, dirty, stage_dirty);
+    iris_emit_binding_tables(ice, batch, stage_dirty);
+ 
+-   if (GFX_VER >= 11 && (dirty & IRIS_DIRTY_RENDER_BUFFER)) {
++   if (GFX_VER >= 11 && (dirty & IRIS_DIRTY_RENDER_BUFFER) &&
++       !batch->screen->rt_bt_flush_disabled &&
++       batch->num_rt_writes > batch->last_rt_flush_num_rt_writes) {
+       // XXX: we may want to flag IRIS_DIRTY_MULTISAMPLE (or SAMPLE_MASK?)
+       // XXX: see commit 979fc1bc9bcc64027ff2cfafd285676f31b930a6
+ 
+@@ -7408,6 +7424,7 @@
+       iris_emit_pipe_control_flush(batch, "workaround: RT BTI change [draw]",
+                                    PIPE_CONTROL_RENDER_TARGET_FLUSH |
+                                    PIPE_CONTROL_STALL_AT_SCOREBOARD);
++      batch->last_rt_flush_num_rt_writes = batch->num_rt_writes;
+    }
+ 
+    if (dirty & IRIS_DIRTY_RENDER_BUFFER)
+@@ -8650,6 +8667,8 @@
+       batch->contains_draw = true;
+    }
+ 
++   batch->num_rt_writes++;
++
+    if (!batch->contains_draw_with_next_seqno) {
+       iris_restore_render_saved_bos(ice, batch, draw);
+       batch->contains_draw_with_next_seqno = true;
+--- a/src/gallium/drivers/iris/iris_blorp.c	1969-12-31 16:00:01.000000000 -0800
++++ b/src/gallium/drivers/iris/iris_blorp.c	2026-04-06 12:41:19.661353497 -0700
+@@ -318,9 +318,15 @@
+     *     Target Cache Flush by enabling this bit. When render target flush
+     *     is set due to new association of BTI, PS Scoreboard Stall bit must
+     *     be set in this packet."
++    *
++    * Skip entirely when CHICKEN3 bit 13 (BTP+BTI RCC keying) is active,
++    * or when no operations have written to the RT cache since last flush.
+     */
+-   pc_flags = PIPE_CONTROL_RENDER_TARGET_FLUSH |
+-              PIPE_CONTROL_STALL_AT_SCOREBOARD;
++   if (!batch->screen->rt_bt_flush_disabled &&
++       batch->num_rt_writes > batch->last_rt_flush_num_rt_writes) {
++      pc_flags = PIPE_CONTROL_RENDER_TARGET_FLUSH |
++                 PIPE_CONTROL_STALL_AT_SCOREBOARD;
++   }
+ #endif
+ 
+    /* Check if blorp ds state matches ours. */
+@@ -337,6 +343,8 @@
+       iris_emit_pipe_control_flush(batch,
+                                    "workaround: prior to [blorp]",
+                                    pc_flags);
++      if (pc_flags & PIPE_CONTROL_RENDER_TARGET_FLUSH)
++         batch->last_rt_flush_num_rt_writes = batch->num_rt_writes;
+    }
+ 
+    if (params->depth.enabled &&
+@@ -431,9 +439,12 @@
+    if (params->src.enabled)
+       iris_bo_bump_seqno(params->src.addr.buffer, batch->next_seqno,
+                          IRIS_DOMAIN_SAMPLER_READ);
+-   if (params->dst.enabled)
++   if (params->dst.enabled) {
+       iris_bo_bump_seqno(params->dst.addr.buffer, batch->next_seqno,
+                          IRIS_DOMAIN_RENDER_WRITE);
++      /* Track that the RT cache now has data from this blorp operation. */
++      batch->num_rt_writes++;
++   }
+    if (params->depth.enabled)
+       iris_bo_bump_seqno(params->depth.addr.buffer, batch->next_seqno,
+                          IRIS_DOMAIN_DEPTH_WRITE);

@@ -1,0 +1,21 @@
+--- a/drivers/gpu/drm/xe/xe_reg_whitelist.c	2026-04-06 01:33:37.389067030 -0700
++++ b/drivers/gpu/drm/xe/xe_reg_whitelist.c	2026-04-06 01:34:05.618661548 -0700
+@@ -81,6 +81,18 @@
+ 			 WHITELIST(VFLSKPD,
+ 				   RING_FORCE_TO_NONPRIV_ACCESS_RW))
+ 	},
++	/*
++	 * Allow userspace (Mesa) to program COMMON_SLICE_CHICKEN3 bit 13
++	 * (STATE_CACHE_PERF_FIX) on Xe2+ render engines. This lets the
++	 * driver key the render color cache with BTP+BTI instead of BTI
++	 * alone, eliminating the need for RT cache flush + PS scoreboard
++	 * stall on every binding table pointer change.
++	 */
++	{ XE_RTP_NAME("Allow COMMON_SLICE_CHICKEN3 for RCC BTP+BTI keying"),
++	  XE_RTP_RULES(GRAPHICS_VERSION_RANGE(2000, XE_RTP_END_VERSION_UNDEFINED),
++		       ENGINE_CLASS(RENDER)),
++	  XE_RTP_ACTIONS(WHITELIST(XEHP_COMMON_SLICE_CHICKEN3, 0))
++	},
+ 
+ #define WHITELIST_OA_MMIO_TRG(trg, status, head) \
+ 	WHITELIST(trg, RING_FORCE_TO_NONPRIV_ACCESS_RW), \

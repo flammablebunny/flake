@@ -31,8 +31,32 @@
   boot.loader.grub.useOSProber = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Use 7.0-rc7 kernel
+  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_testing.override {
+    argsOverride = rec {
+      version = "7.0.0-rc7";
+      modDirVersion = version;
+      src = pkgs.fetchurl {
+        url = "https://git.kernel.org/torvalds/t/linux-7.0-rc7.tar.gz";
+        hash = "sha256-FsjUyaqZbpY7pu5xOAo2ZZBEpb/TiQkVlwBu0F2+XSM=";
+      };
+    };
+  });
+
+  # Xe driver overclock support (SLPC params 14/15 + sysfs oc_offset knob)
+  boot.kernelPatches = [
+    {
+      name = "xe-overclock";
+      patch = ../../patches/xe-overclock.patch;
+    }
+  ];
+
+  # OBS Virtual Camera
+  boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=1 card_label="OBS Virtual Camera" exclusive_caps=1
+  '';
 
   # Network
   networking.networkmanager.enable = true;
@@ -65,6 +89,17 @@
     package = pkgs.ollama-vulkan;
   };
 
+  # Open WebUI (chat history, memory, and session management for Ollama)
+  services.open-webui = {
+    enable = true;
+    host = "0.0.0.0";
+    port = 8080;
+    environment = {
+      OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
+      WEBUI_AUTH = "false";  # single-user system, no login needed
+    };
+  };
+
   services.gvfs.enable = true;  # For file manager integration
 
   # Run dynamically linked executables (for non-NixOS binaries)
@@ -94,19 +129,36 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Universal Packages 
-  environment.systemPackages = with pkgs; let
-    btop-gpu = btop.overrideAttrs (old: {
-      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
-      postFixup = (old.postFixup or "") + ''
-        wrapProgram $out/bin/btop \
-          --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
-            rocmPackages.rocm-smi
-            rocmPackages.amdsmi
-          ]}
-      '';
-    });
-  in [
+  # btop with Intel Xe GPU support (PR #1457) + sysfs access
+  security.wrappers.btop = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_perfmon+ep";
+    source = "${pkgs.btop.overrideAttrs (old: {
+      src = pkgs.fetchFromGitHub {
+        owner = "deveworld";
+        repo = "btop";
+        rev = "922a37e43b098bde231a03e8379628d0b186f885";
+        hash = "sha256-c6C7Vn6BzOh8DjJvc111wV1hD1sh2WdyQOQ9V2XmBR0=";
+      };
+    })}/bin/btop";
+  };
+
+  # Universal Packages
+  environment.systemPackages = with pkgs; [
+    # btop-gpu with ROCm - re-enable with 7900XTX
+    # let
+    #   btop-gpu = btop.overrideAttrs (old: {
+    #     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
+    #     postFixup = (old.postFixup or "") + ''
+    #       wrapProgram $out/bin/btop \
+    #         --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
+    #           rocmPackages.rocm-smi
+    #           rocmPackages.amdsmi
+    #         ]}
+    #     '';
+    #   });
+    # in [
 
     (writeShellScriptBin "app2unit" ''
       #!/bin/sh
@@ -168,15 +220,15 @@
     p7zip
     socat
     toybox
-    btop-gpu
+    btop
     nvtopPackages.intel
-    rocmPackages.rocm-device-libs
-    rocmPackages.rocm-smi
-    rocmPackages.amdsmi
+    # rocmPackages.rocm-device-libs           # re-enable with 7900XTX
+    # rocmPackages.rocm-smi                   # re-enable with 7900XTX
+    # rocmPackages.amdsmi                     # re-enable with 7900XTX
     lm_sensors
     inotify-tools
-    radeontop
-    amdgpu_top
+    # radeontop                               # re-enable with 7900XTX
+    # amdgpu_top                              # re-enable with 7900XTX
     speedtest-cli
     cava
 
@@ -207,10 +259,11 @@
     # ── Gaming ─────────────────────────────────────────────────────────
     
     steam
+    protonplus
     xremap
     gamescope
     prismlauncher
-    wineWowPackages.wayland
+    wineWowPackages.waylandFull
     mangohud
     waywall
     libxtst
@@ -300,8 +353,9 @@
     # ── Misc ────────────────────────────────────────────────────────────
     
     chromium
-    lact
-    sox
+    # lact                                    # re-enable with 7900XTX
+    freetype
+    fontconfig
 
   ];
 
