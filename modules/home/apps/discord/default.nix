@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs, pkgs, lib, ... }:
 
 {
   imports = [
@@ -9,10 +9,25 @@
     enable = true;
 
     discord = {
-    enable = true; 
+    enable = true;
     openASAR.enable = true;
     equicord.enable = true;
     vencord.enable = false;
+    # Discord downloads OpenH264 from Cisco for H.264 decoding (Tenor MP4 "GIFs"),
+    # but the downloaded .so lacks execute permission and RPATH on NixOS, so dlopen() fails.
+    # Replace it at launch with the nix store version (has RUNPATH + correct perms).
+    package = (pkgs.callPackage "${inputs.nixcord}/pkgs/discord.nix" {}).overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/opt/Discord/Discord \
+          --run '${pkgs.writeShellScript "fix-openh264" ''
+            cache="$HOME/.config/discord/discord_asset_cache/openh264"
+            if [ -d "$cache" ]; then
+              rm -f "$cache"/*.so
+              ln -sf ${pkgs.openh264}/lib/libopenh264.so "$cache/libopenh264-2.5.1-linux64.7.so"
+            fi
+          ''}'
+      '';
+    });
   };
     
 
@@ -56,18 +71,18 @@
           enable = true;
         };
 
-#        betterFolders = {
-#          enable = true;
-#          closeAllFolders = false;
-#          closeAllHomeButton = false;
-#          closeOthers = false;
-#          closeServerFolder = false;
-#          forceOpen = false;
-#          keepIcons = false;
-#          showFolderIcon = 1;
-#          sidebar = true;
-#          sidebarAnim = true;
-#        };
+        betterFolders = {
+          enable = true;
+          closeAllFolders = false;
+          closeAllHomeButton = false;
+          closeOthers = false;
+          closeServerFolder = false;
+          forceOpen = false;
+          keepIcons = false;
+          showFolderIcon = 1;
+          sidebar = true;
+          sidebarAnim = true;
+        };
 
         betterGifPicker = {
           enable = true;
@@ -130,6 +145,10 @@
        # };
 
         forceOwnerCrown = {
+          enable = true;
+        };
+
+        gifCollections = {
           enable = true;
         };
 
