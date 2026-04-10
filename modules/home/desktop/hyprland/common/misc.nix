@@ -3,7 +3,6 @@
 {
   wayland.windowManager.hyprland.settings = {
     misc = {
-      vfr = true;
       vrr = 0;
 
       animate_manual_resizes = false;
