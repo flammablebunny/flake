@@ -10,10 +10,10 @@
   }];
 
   boot.kernelParams = [
-    "mem_sleep_default=deep"
-    "amdgpu.ppfeaturemask=0xffffffff"  # enable all power features including overdrive
-    "amdgpu.gfxoff=0"                  # disable GFX power gating (fixes page-flip race)
-    "amdgpu.gpu_recovery=1"            # enable GPU reset on hang
+    "mem_sleep_default=s2idle"          # hardware only supports S0ix, not S3 deep
+    "amdgpu.ppfeaturemask=0xffff7fff"   # all features + overdrive, minus GFXOFF (bit 15) to fix page-flip race
+    "amdgpu.runpm=0"                    # disable runtime PM - prevents dGPU PCIe bus loss on resume
+    "amdgpu.gpu_recovery=1"             # enable GPU reset on hang
   ];
 
   hardware.cpu.amd.updateMicrocode = true;
@@ -61,12 +61,15 @@
     openssh
   ];
 
+  # Open WebUI access from local network
+  networking.firewall.allowedTCPPorts = [ 8080 ];
+
   # Ollama (local LLM inference on 7900 XTX via ROCm)
   services.ollama = {
     enable = true;
     package = pkgs.ollama-rocm;
     environmentVariables = {
-      ROCR_VISIBLE_DEVICES = "0";
+      ROCR_VISIBLE_DEVICES = "1";
     };
   };
 }
